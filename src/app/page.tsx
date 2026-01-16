@@ -1,12 +1,12 @@
-import LatestNews from "@/news/widgets/LatestNews";
-import BoxLayout from "@/shared/components/layout/box/Layout";
-import SeasonStandingsTableBasicCard from "@/stats/client/widgets/season/standings/SeasonStandingsTableBasicCard";
-import APGPlayerLeadersCard from "@/stats/widgets/season/player/APGPlayerLeadersCard";
-import BPGPlayerLeadersCard from "@/stats/widgets/season/player/BPGPlayerLeadersCard";
-import PPGPlayerLeadersCard from "@/stats/widgets/season/player/PPGPlayerLeadersCard";
-import RPGPlayerLeadersCard from "@/stats/widgets/season/player/RPGPlayerLeadersCard";
-import SPGPlayerLeadersCard from "@/stats/widgets/season/player/SPGPlayerLeadersCard";
-import ThreeFGMPlayerLeadersCard from "@/stats/widgets/season/player/ThreeFGMPlayerLeadersCard";
+import BoxLayout from '@/shared/components/layout/box/Layout';
+import SeasonStandingsTableBasicCard from '@/stats/client/widgets/season/standings/SeasonStandingsTableBasicCard';
+import APGPlayerLeadersCard from '@/stats/widgets/season/player/APGPlayerLeadersCard';
+import BPGPlayerLeadersCard from '@/stats/widgets/season/player/BPGPlayerLeadersCard';
+import PPGPlayerLeadersCard from '@/stats/widgets/season/player/PPGPlayerLeadersCard';
+import RPGPlayerLeadersCard from '@/stats/widgets/season/player/RPGPlayerLeadersCard';
+import SPGPlayerLeadersCard from '@/stats/widgets/season/player/SPGPlayerLeadersCard';
+import ThreeFGMPlayerLeadersCard from '@/stats/widgets/season/player/ThreeFGMPlayerLeadersCard';
+import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
           </div>
           <div className="md:col-span-4">
             <div className="mb-4">
-              <LatestNews />
+              <LatestNewsWidget />
             </div>
             <div className="mb-4">
               <div className="flex justify-center">
@@ -46,7 +46,7 @@ export default function Home() {
             <SPGPlayerLeadersCard />
             <ThreeFGMPlayerLeadersCard />
           </div>
-        </div>        
+        </div>
       </section>
     </BoxLayout>
   );
