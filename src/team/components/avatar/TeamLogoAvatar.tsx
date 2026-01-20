@@ -6,7 +6,7 @@ type Props = {
   rounded?: boolean;
 };
 
-const TEAM_LOGOS = {
+const TEAM_LOGOS: Record<string, string> = {
   AGU: `/assets/images/teams/Aguada.png`,
   ARE: `/assets/images/teams/Arecibo.png`,
   BAY: `/assets/images/teams/Bayamon.png`,
@@ -30,7 +30,7 @@ export default function TeamLogoAvatar({
   size = 50,
 }: Props) {
   const imageSource = useMemo(() => {
-    if (TEAM_LOGOS.hasOwnProperty(teamCode)) {
+    if (teamCode in TEAM_LOGOS) {
       return TEAM_LOGOS[teamCode];
     }
 
