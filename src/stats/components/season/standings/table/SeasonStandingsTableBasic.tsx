@@ -1,44 +1,105 @@
+import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
+
 type Row = {
   team: {
     code: string;
-    name: string;
-  },
+    nickname: string;
+  };
   pg: number;
   pp: number;
   pct: number;
   loc: string;
   vis: string;
-}
+};
 
 type Props = {
+  group: string;
   data: Row[];
 };
 
-export default function SeasonStandingsTableBasic({ data }: Props) {
+export default function SeasonStandingsTableBasic({ group, data }: Props) {
   return (
-    <table className="w-full table-auto border-collapse border border-gray-300">
-      <thead className="bg-gray-200">
-        <tr>
-          <th>Equipo</th>
-          <th>PG</th>
-          <th>PP</th>
-          <th>PCT</th>
-          <th>LOC</th>
-          <th>VIS</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row) => (
-          <tr key={row.team.code}>
-            <td className="border border-gray-300 px-2 py-1">{row.team.name}</td>
-            <td className="border border-gray-300 px-2 py-1">{row.pg}</td>
-            <td className="border border-gray-300 px-2 py-1">{row.pp}</td>
-            <td className="border border-gray-300 px-2 py-1">{row.pct.toFixed(3)}</td>
-            <td className="border border-gray-300 px-2 py-1">{row.loc}</td>
-            <td className="border border-gray-300 px-2 py-1">{row.vis}</td>
-          </tr>
+    <div className="flex flex-col justify-start gap-4">
+      <div>
+        <div className="flex flex-row justify-start items-center">
+          <div className="w-[40%]">
+            <p className="font-special-gothic-condensed-one text-base">
+              {group}
+            </p>
+          </div>
+          <div className="w-[12%]">
+            <p className="font-special-gothic-condensed-one text-base text-right">
+              PG
+            </p>
+          </div>
+          <div className="w-[12%]">
+            <p className="font-special-gothic-condensed-one text-base text-right">
+              PP
+            </p>
+          </div>
+          <div className="w-[12%]">
+            <p className="font-special-gothic-condensed-one text-base text-right">
+              PCT
+            </p>
+          </div>
+          <div className="w-[12%]">
+            <p className="font-special-gothic-condensed-one text-base text-right">
+              LOC
+            </p>
+          </div>
+          <div className="w-[12%]">
+            <p className="font-special-gothic-condensed-one text-base text-right">
+              VIS
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col justify-start gap-4">
+        {data.map((row, index) => (
+          <div
+            key={row.team.code}
+            className="flex flex-row justify-start items-center"
+          >
+            <td className="w-[40%]">
+              <a className="flex flex-row justify-start items-center gap-2">
+                <div className="border border-[rgba(125,125,125,0.13)] rounded-full bg-[rgba(54,54,54,0.18)] w-[25px] h-[25px] flex justify-center items-center">
+                  <p className="font-barlow font-semibold text-sm">
+                    {index + 1}
+                  </p>
+                </div>
+                <TeamLogoAvatar teamCode={row.team.code} size={24} />
+                <p className="font-special-gothic-condensed-one text-base">
+                  {row.team.nickname}
+                </p>
+              </a>
+            </td>
+            <td className="w-[12%]">
+              <p className="font-barlow text-sm text-right">{row.pg}</p>
+            </td>
+            <td className="w-[12%]">
+              <p className="font-barlow text-sm text-right">{row.pp}</p>
+            </td>
+            <td className="w-[12%]">
+              <p className="font-barlow text-sm text-right">
+                {row.pct.toFixed(3)}
+              </p>
+            </td>
+            <td className="w-[12%]">
+              <p className="font-barlow text-sm text-right">{row.loc}</p>
+            </td>
+            <td className="w-[12%]">
+              <p className="font-barlow text-sm text-right">{row.vis}</p>
+            </td>
+          </div>
         ))}
-      </tbody>
-    </table>
+        {data.length === 0 && (
+          <div className="flex flex-row justify-center items-center py-4">
+            <p className="text-center text-gray-500">
+              No hay datos disponibles.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

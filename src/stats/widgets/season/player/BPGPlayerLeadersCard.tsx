@@ -3,55 +3,70 @@ import SeasonPlayerLeadersCard from '@/stats/components/season/leader/player/Sea
 export default function BPGPlayerLeadersCard() {
   return (
     <SeasonPlayerLeadersCard
-      title="Tapones por juego"
+      title="Tapones por juego (ejemplo)"
       data={[
         {
+          position: 1,
           player: {
             id: '1',
             avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
             name: 'John Doe',
-            position: 'PG',
-            jerseyNumber: '12',
+            team: {
+              name: 'Cangrejeros',
+              code: 'SCE',
+            },
           },
           statValue: 25.4,
         },
         {
+          position: 2,
           player: {
             id: '2',
             avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
             name: 'Jane Smith',
-            position: 'SG',
-            jerseyNumber: '8',
+            team: {
+              name: 'Cangrejeros',
+              code: 'SCE',
+            },
           },
           statValue: 23.1,
         },
         {
+          position: 3,
           player: {
             id: '3',
             avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
             name: 'Mike Johnson',
-            position: 'SF',
-            jerseyNumber: '34',
+            team: {
+              name: 'Cangrejeros',
+              code: 'SCE',
+            },
           },
           statValue: 22.8,
         },
         {
+          position: 4,
           player: {
             id: '4',
             avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
             name: 'Emily Davis',
-            position: 'PF',
-            jerseyNumber: '21',
+            team: {
+              name: 'Cangrejeros',
+              code: 'SCE',
+            },
           },
           statValue: 21.5,
         },
         {
+          position: 5,
           player: {
             id: '5',
             avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
             name: 'Chris Wilson',
-            position: 'C',
-            jerseyNumber: '55',
+            team: {
+              name: 'Cangrejeros',
+              code: 'SCE',
+            },
           },
           statValue: 20.9,
         },

@@ -1,61 +1,44 @@
 import SeasonPlayerLeadersCard from '@/stats/components/season/leader/player/SeasonPlayerLeadersCard';
+import graphqlClient from '@/graphql-client';
+import { SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY } from '@/graphql/stats';
+import { TopPlayerLeaderStatsType } from '@/stats/types';
 
-export default function RPGPlayerLeadersCard() {
+const ITEMS_PER_PAGE = 5;
+
+const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
+  const { data, error } = await graphqlClient.query({
+    query: SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY,
+    variables: { statsCode: 'REBOUNDS_AVG', first: ITEMS_PER_PAGE },
+  });
+
+  if (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+
+  return data.seasonPlayerStatsConnection.edges.map(
+    (edge: { node: TopPlayerLeaderStatsType }) => edge.node,
+  );
+};
+
+export default async function RPGPlayerLeadersCard() {
+  const data: TopPlayerLeaderStatsType[] = await fetchTopPlayerLeaders();
   return (
     <SeasonPlayerLeadersCard
       title="Rebotes por juego"
-      data={[
-        {
-          player: {
-            id: '1',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'John Doe',
-            position: 'PG',
-            jerseyNumber: '12',
+      data={data.map((item, index) => ({
+        position: index + 1,
+        player: {
+          id: item.player.providerId,
+          avatarUrl: item.player.avatarUrl,
+          name: item.player.name,
+          team: {
+            code: item.player.teamCode,
+            name: item.player.teamName,
           },
-          statValue: 25.4,
         },
-        {
-          player: {
-            id: '2',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'Jane Smith',
-            position: 'SG',
-            jerseyNumber: '8',
-          },
-          statValue: 23.1,
-        },
-        {
-          player: {
-            id: '3',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'Mike Johnson',
-            position: 'SF',
-            jerseyNumber: '34',
-          },
-          statValue: 22.8,
-        },
-        {
-          player: {
-            id: '4',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'Emily Davis',
-            position: 'PF',
-            jerseyNumber: '21',
-          },
-          statValue: 21.5,
-        },
-        {
-          player: {
-            id: '5',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'Chris Wilson',
-            position: 'C',
-            jerseyNumber: '55',
-          },
-          statValue: 20.9,
-        },
-      ]}
+        statValue: item.value,
+      }))}
     />
   );
 }
