@@ -60,7 +60,7 @@ export default function SeasonStandingsTableBasic({ group, data }: Props) {
             key={row.team.code}
             className="flex flex-row justify-start items-center"
           >
-            <td className="w-[40%]">
+            <div className="w-[40%]">
               <a className="flex flex-row justify-start items-center gap-2">
                 <div className="border border-[rgba(125,125,125,0.13)] rounded-full bg-[rgba(54,54,54,0.18)] w-[25px] h-[25px] flex justify-center items-center">
                   <p className="font-barlow font-semibold text-sm">
@@ -72,24 +72,24 @@ export default function SeasonStandingsTableBasic({ group, data }: Props) {
                   {row.team.nickname}
                 </p>
               </a>
-            </td>
-            <td className="w-[12%]">
+            </div>
+            <div className="w-[12%]">
               <p className="font-barlow text-sm text-right">{row.pg}</p>
-            </td>
-            <td className="w-[12%]">
+            </div>
+            <div className="w-[12%]">
               <p className="font-barlow text-sm text-right">{row.pp}</p>
-            </td>
-            <td className="w-[12%]">
+            </div>
+            <div className="w-[12%]">
               <p className="font-barlow text-sm text-right">
                 {row.pct.toFixed(3)}
               </p>
-            </td>
-            <td className="w-[12%]">
+            </div>
+            <div className="w-[12%]">
               <p className="font-barlow text-sm text-right">{row.loc}</p>
-            </td>
-            <td className="w-[12%]">
+            </div>
+            <div className="w-[12%]">
               <p className="font-barlow text-sm text-right">{row.vis}</p>
-            </td>
+            </div>
           </div>
         ))}
         {data.length === 0 && (
