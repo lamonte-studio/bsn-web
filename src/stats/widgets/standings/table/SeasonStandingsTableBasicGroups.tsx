@@ -1,4 +1,3 @@
-import numeral from 'numeral';
 import SeasonStandingsTableBasic from '@/stats/components/season/standings/table/SeasonStandingsTableBasic';
 import graphqlClient from '@/graphql-client';
 import { STANDINGS_TABLE_BASIC } from '@/graphql/stats';
@@ -54,7 +53,7 @@ export default async function SeasonStandingsTableBasicGroups() {
               },
               pg: team.competitionStandings.won,
               pp: team.competitionStandings.lost,
-              pct: numeral(team.competitionStandings.percentageWon).format('0.00'),
+              pct: team.competitionStandings.percentageWon,
               loc: `${team.competitionStandings.homeWins}-${team.competitionStandings.homeLosses}`,
               vis: `${team.competitionStandings.awayWins}-${team.competitionStandings.awayLosses}`,
             }))}
