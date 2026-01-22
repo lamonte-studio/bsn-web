@@ -3,9 +3,15 @@ import { getClient } from '@/apollo-client';
 import { TOP_PERFORMANCES } from '@/graphql/highlights';
 import TopPerformancesSlider from '../client/components/TopPerformancesSlider';
 
+type TopPerformancesResponse = {
+  topPerformances: {
+    items: TopPerformancesType[];
+  };
+}
+
 
 const fetchTopPerformances = async (): Promise<TopPerformancesType[]> => {
-  const { data, error } = await getClient().query({
+  const { data, error } = await getClient().query<TopPerformancesResponse>({
     query: TOP_PERFORMANCES,
   });
 
@@ -14,7 +20,7 @@ const fetchTopPerformances = async (): Promise<TopPerformancesType[]> => {
     return [];
   }
 
-  return data.topPerformances.items;
+  return data?.topPerformances.items ?? [];
 };
 
 export default async function TopPerformancesWidget() {
