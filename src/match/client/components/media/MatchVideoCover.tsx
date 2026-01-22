@@ -15,7 +15,7 @@ export default function MatchVideoCover({ coverUrl }: Props) {
           position: 'absolute',
           top: '50%',
           left: '50%',
-          transform: [{ translateX: -21 }, { translateY: -21 }],
+          transform: 'translateX(-21px) translateY(-21px)',
           width: 42,
           height: 42,
         }}
