@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import LatestNewsItem from '../components/latest-news/LatestNewsItem';
 import { NewsType } from '../types';
-import graphqlClient from '@/graphql-client';
+import { getClient } from '@/apollo-client';
 import { LATEST_NEWS } from '@/graphql/news';
 
 const NEWS_PER_PAGE = 5;
 
 const fetchLatestNews = async (): Promise<NewsType[]> => {
-  const { data, error } = await graphqlClient.query({
+  const { data, error } = await getClient().query({
     query: LATEST_NEWS,
     variables: { first: NEWS_PER_PAGE },
   });

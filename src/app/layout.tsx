@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow, Special_Gothic_Condensed_One } from "next/font/google";
 import "./globals.css";
+import { ApolloWrapper } from "./ApolloWrapper";
 
 const barlow = Barlow({
   variable: "--font-barlow",
@@ -29,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${barlow.variable} ${specialGothicCondensedOne.variable} antialiased`}
       >
-        {children}
+        <ApolloWrapper>{children}</ApolloWrapper>
       </body>
     </html>
   );

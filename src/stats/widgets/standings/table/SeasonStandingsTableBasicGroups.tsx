@@ -1,5 +1,5 @@
 import SeasonStandingsTableBasic from '@/stats/components/season/standings/table/SeasonStandingsTableBasic';
-import graphqlClient from '@/graphql-client';
+import { getClient } from '@/apollo-client';
 import { STANDINGS_TABLE_BASIC } from '@/graphql/stats';
 
 type StandingsGroupTeam = {
@@ -24,7 +24,7 @@ type StandingsGroup = {
 const fetchSeasonStandingsTableBasicGroups = async (): Promise<
   StandingsGroup[]
 > => {
-  const { data, error } = await graphqlClient.query({
+  const { data, error } = await getClient().query({
     query: STANDINGS_TABLE_BASIC,
   });
 

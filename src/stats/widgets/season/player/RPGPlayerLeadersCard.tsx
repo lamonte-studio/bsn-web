@@ -1,12 +1,12 @@
 import SeasonPlayerLeadersCard from '@/stats/components/season/leader/player/SeasonPlayerLeadersCard';
-import graphqlClient from '@/graphql-client';
+import { getClient } from '@/apollo-client';
 import { SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY } from '@/graphql/stats';
 import { TopPlayerLeaderStatsType } from '@/stats/types';
 
 const ITEMS_PER_PAGE = 5;
 
 const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
-  const { data, error } = await graphqlClient.query({
+  const { data, error } = await getClient().query({
     query: SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY,
     variables: { statsCode: 'REBOUNDS_AVG', first: ITEMS_PER_PAGE },
   });

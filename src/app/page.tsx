@@ -9,10 +9,14 @@ import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
 import SeasonStandingsTableBasicGroups from '@/stats/widgets/standings/table/SeasonStandingsTableBasicGroups';
 import TheRouteWidget from '@/highlights/widgets/TheRouteWidget';
 import TopPerformancesWidget from '@/highlights/widgets/TopPerformancesWidget';
+import DailyMatchesSliderWidget from '@/match/client/containers/DailyMatchesSliderWidget';
 
 export default function Home() {
   return (
     <BoxLayout>
+      <section>
+        <DailyMatchesSliderWidget />
+      </section>
       <section>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="md:col-span-8">

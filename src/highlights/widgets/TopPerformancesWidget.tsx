@@ -1,11 +1,11 @@
 import { TopPerformancesType } from '../types';
-import graphqlClient from '@/graphql-client';
+import { getClient } from '@/apollo-client';
 import { TOP_PERFORMANCES } from '@/graphql/highlights';
 import TopPerformancesSlider from '../client/components/TopPerformancesSlider';
 
 
 const fetchTopPerformances = async (): Promise<TopPerformancesType[]> => {
-  const { data, error } = await graphqlClient.query({
+  const { data, error } = await getClient().query({
     query: TOP_PERFORMANCES,
   });
 

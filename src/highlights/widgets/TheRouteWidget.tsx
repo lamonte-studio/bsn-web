@@ -1,11 +1,11 @@
 import { TheRouteType } from '../types';
-import graphqlClient from '@/graphql-client';
+import { getClient } from '@/apollo-client';
 import { THE_ROUTE } from '@/graphql/highlights';
 import TheRouteSlider from '../client/components/TheRouteSlider';
 
 
 const fetchTheRoute = async (): Promise<TheRouteType[]> => {
-  const { data, error } = await graphqlClient.query({
+  const { data, error } = await getClient().query({
     query: THE_ROUTE,
   });
 
