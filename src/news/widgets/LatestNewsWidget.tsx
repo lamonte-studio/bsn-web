@@ -6,8 +6,14 @@ import { LATEST_NEWS } from '@/graphql/news';
 
 const NEWS_PER_PAGE = 5;
 
+type LatestNewsResponse = {
+  news: {
+    edges: { node: NewsType }[];
+  };
+};
+
 const fetchLatestNews = async (): Promise<NewsType[]> => {
-  const { data, error } = await getClient().query({
+  const { data, error } = await getClient().query<LatestNewsResponse>({
     query: LATEST_NEWS,
     variables: { first: NEWS_PER_PAGE },
   });
@@ -17,7 +23,7 @@ const fetchLatestNews = async (): Promise<NewsType[]> => {
     return [];
   }
 
-  return data.news.edges.map((edge: { node: NewsType }) => edge.node);
+  return data?.news.edges.map((edge: { node: NewsType }) => edge.node) ?? [];
 };
 
 export default async function LatestNewsWidget() {

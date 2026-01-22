@@ -5,8 +5,14 @@ import { TopPlayerLeaderStatsType } from '@/stats/types';
 
 const ITEMS_PER_PAGE = 5;
 
+type PlayerLeadersResponse = {
+  seasonPlayerStatsConnection: {
+    edges: { node: TopPlayerLeaderStatsType }[];
+  };
+};
+
 const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
-  const { data, error } = await getClient().query({
+  const { data, error } = await getClient().query<PlayerLeadersResponse>({
     query: SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY,
     variables: { statsCode: 'ASSISTS_AVG', first: ITEMS_PER_PAGE },
   });
@@ -16,8 +22,10 @@ const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
     return [];
   }
 
-  return data.seasonPlayerStatsConnection.edges.map(
-    (edge: { node: TopPlayerLeaderStatsType }) => edge.node,
+  return (
+    data?.seasonPlayerStatsConnection.edges.map(
+      (edge: { node: TopPlayerLeaderStatsType }) => edge.node,
+    ) ?? []
   );
 };
 

@@ -13,7 +13,7 @@ type StandingsGroupTeam = {
     homeLosses: number;
     awayWins: number;
     awayLosses: number;
-  },
+  };
 };
 
 type StandingsGroup = {
@@ -21,10 +21,16 @@ type StandingsGroup = {
   teams: StandingsGroupTeam[];
 };
 
+type StandingsTableBasicResponse = {
+  standings: {
+    groups: StandingsGroup[];
+  };
+};
+
 const fetchSeasonStandingsTableBasicGroups = async (): Promise<
   StandingsGroup[]
 > => {
-  const { data, error } = await getClient().query({
+  const { data, error } = await getClient().query<StandingsTableBasicResponse>({
     query: STANDINGS_TABLE_BASIC,
   });
 
@@ -33,12 +39,11 @@ const fetchSeasonStandingsTableBasicGroups = async (): Promise<
     return [];
   }
 
-  return data.standings.groups;
+  return data?.standings.groups ?? [];
 };
 
 export default async function SeasonStandingsTableBasicGroups() {
-  const data: StandingsGroup[] =
-    await fetchSeasonStandingsTableBasicGroups();
+  const data: StandingsGroup[] = await fetchSeasonStandingsTableBasicGroups();
   return (
     <div>
       <div className="flex flex-col gap-8">

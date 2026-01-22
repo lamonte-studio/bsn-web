@@ -15,7 +15,7 @@ export default function DailyMatchesSliderWidget() {
   const { data, loading } = useTodayMatches(moment().format('YYYY-MM-DD'));
 
   const sortedMatches = useMemo(() => {
-    return data.slice().sort((a, b) => {
+    return data.slice().sort((a: MatchType, b: MatchType) => {
       if (
         [
           MATCH_STATUS.READY,
