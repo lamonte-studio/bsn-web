@@ -4,6 +4,7 @@ export default function ThreeFGMPlayerLeadersCard() {
   return (
     <SeasonPlayerLeadersCard
       title="3FGM por juego (ejemplo)"
+      subtitle="3FGM"
       data={[
         {
           position: 1,

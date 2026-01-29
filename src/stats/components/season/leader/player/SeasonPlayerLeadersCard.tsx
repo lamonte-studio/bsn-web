@@ -16,30 +16,48 @@ type Row = {
 
 type Props = {
   title: string;
+  subtitle?: string;
   data: Row[];
 };
 
-export default function SeasonPlayerLeadersCard({ title, data }: Props) {
+export default function SeasonPlayerLeadersCard({ title, subtitle, data }: Props) {
   return (
-    <div className="border border-[rgba(125,125,125,0.13)] flex-1 rounded-lg shadow-sm bg-[rgba(54,54,54,0.1)]">
-      <div className="border-b border-gray-200 p-4">
-        <h2 className="font-semibold">{title}</h2>
+    <div className="border border-[#E5E5E5] flex-1 rounded-[12px] bg-[#fdfdfd]">
+      <div className="flex flex-row justify-between items-center p-4">
+        <h2 className="font-special-gothic-condensed-one text-[17px] text-[rgba(15,23,31,0.7)]">
+          {title}
+        </h2>
+        <h4 className="font-barlow text-xs text-[rgba(0,0,0,0.6)]">{subtitle}</h4>
       </div>
-      <div>
+      <div className="px-[20px]">
         <ul>
           {data.map((row, index) => (
-            <li key={index}>
+            <li key={index} className={index < data.length - 1 ? 'border-b border-[rgba(0,0,0,0.07)]' : ''}>
               <SeasonPlayerLeaderItem
                 position={row.position}
                 player={row.player}
                 statValue={row.statValue}
+                avatarSize={index == 0 ? 45 : 30}
               />
             </li>
           ))}
           {data.length === 0 && (
-            <li className="p-4 text-center text-gray-500">No hay datos disponibles.</li>
+            <li className="p-4 text-center text-gray-500">
+              No hay datos disponibles.
+            </li>
           )}
         </ul>
+      </div>
+      <div className="border-t border-[rgba(0,0,0,0.13)] p-3.5">
+        <p className="text-center">
+          <a
+            href="#"
+            className="font-barlow font-medium text-[13px] text-[rgba(15,23,31,0.9)]"
+          >
+            <span className="underline">Ver más estadísticas</span>&nbsp;
+            <img src="/assets/images/icons/icon-arrow-right.png" alt="" className="align-middle inline" />
+          </a>
+        </p>
       </div>
     </div>
   );

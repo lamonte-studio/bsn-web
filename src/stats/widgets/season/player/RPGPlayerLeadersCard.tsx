@@ -34,6 +34,7 @@ export default async function RPGPlayerLeadersCard() {
   return (
     <SeasonPlayerLeadersCard
       title="Rebotes por juego"
+      subtitle="RPG"
       data={data.map((item, index) => ({
         position: index + 1,
         player: {

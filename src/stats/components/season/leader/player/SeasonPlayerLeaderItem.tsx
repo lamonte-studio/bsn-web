@@ -13,33 +13,41 @@ type Props = {
     };
   };
   statValue: number;
+  avatarSize?: number;
 };
 
 export default function SeasonLeaderPlayerItem({
   position = 1,
   player,
   statValue,
+  avatarSize = 30,
 }: Props) {
   return (
     <Link
       href={`/jugadores/${player.id}`}
-      className="flex items-center p-2 gap-3 hover:bg-gray-100"
+      className="flex items-center p-2 gap-3"
     >
       <div className="w-4 text-right">
-        <span className="font-barlow text-base">{position}</span>
+        <span className="font-barlow-condensed text-[15px] text-[rgba(0,0,0,0.8)]">
+          {position}
+        </span>
       </div>
       <div className="flex flex-1 flex-row items-center gap-3">
-        <PlayerPhotoAvatar photoUrl={player.avatarUrl} size={45} name={player.name} />
+        <PlayerPhotoAvatar
+          photoUrl={player.avatarUrl}
+          size={avatarSize}
+          name={player.name}
+        />
         <div className="flex-1">
-          <p className="font-special-gothic-condensed-one text-base/4">
+          <p className="font-special-gothic-condensed-one text-[17px] text-[rgba(15,23,31,0.9)]">
             {player.name}
           </p>
-          <p className="font-barlow text-xs text-gray-500">
+          <p className="font-barlow font-medium text-[13px] text-[rgba(15,23,31,0.5)]">
             {player.team?.name}
           </p>
         </div>
       </div>
-      <div className="font-special-gothic-condensed-one text-3xl">
+      <div className="font-special-gothic-condensed-one text-[32px] text-[rgba(15,23,31,0.9)]">
         {statValue}
       </div>
     </Link>

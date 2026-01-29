@@ -28,20 +28,22 @@ export default function MatchCompetitor({
       <TeamLogoAvatar teamCode={code} size={avatarSize} />
       <div className="flex-1">
         <p
-          className={cx(
-            'font-special-gothic-condensed-one text-lg',
-            disabled && 'text-neutral-50',
-          )}
+          className="font-special-gothic-condensed-one text-lg"
+          style={{
+            color: disabled ? 'rgba(255, 255, 255, 0.5)' : '#fff',
+          }}
         >
           {name}{' '}
           {ranking && (
-            <span className="font-barlow text-xs text-neutral-50">
+            <span className="font-barlow text-xs text-[rgba(255,255,255,0.6)]">
               {' '}
               {ranking}
             </span>
           )}
         </p>
-        <p className="font-barlow text-xs text-neutral-50">{city}</p>
+        <p className="font-barlow text-xs text-[rgba(255,255,255,0.6)]">
+          {city}
+        </p>
       </div>
     </div>
   );

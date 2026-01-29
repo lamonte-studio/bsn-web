@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import LatestNewsItem from '../components/latest-news/LatestNewsItem';
 import { NewsType } from '../types';
 import { getClient } from '@/apollo-client';
@@ -29,23 +28,18 @@ const fetchLatestNews = async (): Promise<NewsType[]> => {
 export default async function LatestNewsWidget() {
   const data: NewsType[] = await fetchLatestNews();
   return (
-    <div className="border border-gray-200 flex-1 rounded-lg shadow-sm bg-white">
-      <div className="border-b border-gray-200 p-4 flex flex-row justify-between items-center mb-4">
+    <div className="border border-[#EAEAEA] flex-1 rounded-[12px] bg-white shadow-[0px_1px_3px_0px_#14181F0A]">
+      <div className="px-[30px] pt-[24px] flex flex-row justify-between items-center">
         <div>
-          <h3 className="font-semibold font-special-gothic-condensed-one text-2xl">
-            Noticias recientes
+          <h3 className="font-semibold font-special-gothic-condensed-one text-[24px] text-black">
+            Lo último en el BSN
           </h3>
         </div>
         <div>
-          <Link
-            href="/noticias"
-            className="text-gray-500 text-sm hover:text-blue-500 hover:underline"
-          >
-            Ver más noticias
-          </Link>
+          <img src="/assets/images/sponsors/coca-cola.png" alt="" />
         </div>
       </div>
-      <div className="p-4 space-y-4">
+      <div className="px-[30px] py-[20px] space-y-4">
         {data.map((item) => (
           <LatestNewsItem
             key={`latest-news-${item.id}`}
@@ -55,6 +49,16 @@ export default async function LatestNewsWidget() {
             thumbnailUrl={item.imageUrl}
           />
         ))}
+      </div>
+      <div className="px-[30px] pb-[20px]">
+        <a
+          href="#"
+          className="bg-[#FCFCFC] block border border-[#D9D3D3] rounded-[12px] p-[12px] text-center"
+        >
+          <span className="font-special-gothic-condensed-one text-base text-black">
+            Ver más noticias
+          </span>
+        </a>
       </div>
     </div>
   );

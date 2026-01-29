@@ -4,6 +4,7 @@ export default function BPGPlayerLeadersCard() {
   return (
     <SeasonPlayerLeadersCard
       title="Tapones por juego (ejemplo)"
+      subtitle="BPG"
       data={[
         {
           position: 1,

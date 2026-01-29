@@ -10,10 +10,11 @@ import {
   CardHeader,
 } from '@/shared/client/components/ui';
 import MatchCompetitor from '../competitor/MatchCompetitor';
-import MatchVideoCover from '../media/MatchVideoCover';
 import { MATCH_DATE_FORMAT } from '@/constants';
+import Link from 'next/link';
 
 type Props = {
+  matchProviderId?: string;
   startAt: string;
   homeTeam: {
     code: string;
@@ -36,17 +37,16 @@ type Props = {
     };
   };
   overtimePeriods?: number;
-  youtubeId?: string;
   isFinals?: boolean;
   finalsDescription?: string;
 };
 
 export default function CompletedMatchCard({
+  matchProviderId,
   startAt,
   homeTeam,
   visitorTeam,
   overtimePeriods = 0,
-  youtubeId,
   isFinals = false,
   finalsDescription = '',
 }: Props) {
@@ -57,18 +57,18 @@ export default function CompletedMatchCard({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="border-b border-b-[rgba(255,255,255,0.05)] mx-5">
         <div className="flex flex-row justify-between items-center">
-          <p className="font-barlow text-base">
+          <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
             Final {overtimePeriods > 0 ? `${overtimePeriods}OT` : ''}
           </p>
-          <p className="font-barlow text-base text-neutral-80">
+          <p className="font-barlow font-medium text-sm text-[rgba(255,255,255,0.8)]">
             {moment(startAt).format(MATCH_DATE_FORMAT)}
           </p>
         </div>
       </CardHeader>
       <CardBody>
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center mb-3">
           <div className="flex flex-1 flex-col gap-2">
             <div className="flex flex-row justify-between items-center gap-3">
               <div className="flex-1">
@@ -85,9 +85,12 @@ export default function CompletedMatchCard({
                 })}
               >
                 <p
-                  className={cx('font-special-gothic-condensed-one text-4xl', {
-                    'text-neutral-50': isHomeTeamWinner,
-                  })}
+                  className="font-special-gothic-condensed-one text-[32px]"
+                  style={{
+                    color: isHomeTeamWinner
+                      ? 'rgba(255, 255, 255, 0.5)'
+                      : '#ffffff',
+                  }}
                 >
                   {visitorTeam.score}
                 </p>
@@ -114,9 +117,12 @@ export default function CompletedMatchCard({
                 })}
               >
                 <p
-                  className={cx('font-special-gothic-condensed-one text-4xl', {
-                    'text-neutral-50': !isHomeTeamWinner,
-                  })}
+                  className="font-special-gothic-condensed-one text-[32px]"
+                  style={{
+                    color: !isHomeTeamWinner
+                      ? 'rgba(255, 255, 255, 0.5)'
+                      : '#ffffff',
+                  }}
                 >
                   {homeTeam.score}
                 </p>
@@ -130,13 +136,17 @@ export default function CompletedMatchCard({
             </div>
           </div>
         </div>
-        {youtubeId && (
-          <div className="mb-2 mt-4">
-            <MatchVideoCover
-              coverUrl={`https://img.youtube.com/vi/${youtubeId}/0.jpg`}
-            />
-          </div>
-        )}
+        <div>
+          <Link
+            href={`/partidos/${matchProviderId}`}
+            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[8px]"
+            style={{ backdropFilter: 'blur(40px)' }}
+          >
+            <span className="font-special-gothic-condensed-one text-base text-white">
+              Ver resultados
+            </span>
+          </Link>
+        </div>
       </CardBody>
       {isFinals && (
         <CardFooter>

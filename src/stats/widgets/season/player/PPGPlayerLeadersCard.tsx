@@ -34,6 +34,7 @@ export default async function PPGPlayerLeadersCard() {
   return (
     <SeasonPlayerLeadersCard
       title="Puntos por juego"
+      subtitle="PPG"
       data={data.map((item, index) => ({
         position: index + 1,
         player: {

@@ -34,6 +34,7 @@ export default async function APGPlayerLeadersCard() {
   return (
     <SeasonPlayerLeadersCard
       title="Asistencias por juego"
+      subtitle="APG"
       data={data.map((item, index) => ({
         position: index + 1,
         player: {

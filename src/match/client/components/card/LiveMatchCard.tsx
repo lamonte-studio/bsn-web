@@ -13,8 +13,10 @@ import Lottie from 'lottie-react';
 import MatchCompetitor from '../competitor/MatchCompetitor';
 
 import animationLiveStreamData from './live-stream.json';
+import Link from 'next/link';
 
 type Props = {
+  matchProviderId?: string;
   homeTeam: {
     code: string;
     nickname: string;
@@ -45,6 +47,7 @@ type Props = {
 };
 
 export default function LiveMatchCard({
+  matchProviderId,
   homeTeam,
   visitorTeam,
   status,
@@ -72,7 +75,7 @@ export default function LiveMatchCard({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="border-b border-b-[rgba(255,255,255,0.05)] mx-5">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row justify-start items-center gap-2">
             <Lottie
@@ -88,52 +91,62 @@ export default function LiveMatchCard({
               MATCH_STATUS.INTERRUPTED,
               MATCH_STATUS.RESCHEDULED,
             ].includes(status) && (
-              <p className="font-barlow font-semibold text-sm">
+              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
                 {currentStatusLabel} - {currentPeriodTime}
               </p>
             )}
             {status === MATCH_STATUS.READY && (
-              <p className="font-barlow font-semibold text-sm">Por comenzar</p>
+              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+                Por comenzar
+              </p>
             )}
             {status === MATCH_STATUS.DELAYED && (
-              <p className="font-barlow font-semibold text-sm">Atrasado</p>
+              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+                Atrasado
+              </p>
             )}
             {status === MATCH_STATUS.PERIOD_BREAK &&
               overtimePeriods === 0 &&
               currentQuarter === '2' && (
-                <p className="font-barlow font-semibold text-sm">Mediotiempo</p>
+                <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+                  Mediotiempo
+                </p>
               )}
             {status === MATCH_STATUS.PERIOD_BREAK &&
               overtimePeriods === 0 &&
               currentQuarter !== '2' && (
-                <p className="font-barlow font-semibold text-sm">
+                <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
                   Fin de Q{currentQuarter}
                 </p>
               )}
             {status === MATCH_STATUS.PERIOD_BREAK && overtimePeriods > 0 && (
-              <p className="font-barlow font-semibold text-sm">
+              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
                 Fin de OT{overtimePeriods > 1 ? overtimePeriods : ''}
               </p>
             )}
             {status === MATCH_STATUS.INTERRUPTED && (
-              <p className="font-barlow font-semibold text-sm">Interrumpido</p>
+              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+                Interrumpido
+              </p>
             )}
             {status === MATCH_STATUS.RESCHEDULED && (
-              <p className="font-barlow font-semibold text-sm">Reprogramado</p>
+              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+                Reprogramado
+              </p>
             )}
           </div>
           <div className="flex flex-row items-center gap-2">
             <img src="/assets/images/icons/icon-tv.png" />
-            <p className="font-barlow text-xs text-neutral-50">
+            <p className="font-barlow font-medium text-sm text-[rgba(255,255,255,0.8)]">
               {mediaProvider}
             </p>
           </div>
         </div>
       </CardHeader>
       <CardBody>
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-col flex-1 gap-4">
-            <div className="flex flex-row justify-between items-center gap-4">
+        <div className="flex flex-row justify-between items-center mb-3">
+          <div className="flex flex-col flex-1 gap-2">
+            <div className="flex flex-row justify-between items-center gap-3">
               <div className="flex-1">
                 <MatchCompetitor
                   code={visitorTeam.code}
@@ -143,12 +156,12 @@ export default function LiveMatchCard({
                 />
               </div>
               <div className="flex flex-row items-center gap-2">
-                <p className="font-special-gothic-condensed-one text-4xl">
+                <p className="font-special-gothic-condensed-one text-[32px] text-white">
                   {visitorTeam.score}
                 </p>
               </div>
             </div>
-            <div className="flex flex-row justify-between items-center gap-4">
+            <div className="flex flex-row justify-between items-center gap-3">
               <div className="flex-1">
                 <MatchCompetitor
                   code={homeTeam.code}
@@ -158,20 +171,23 @@ export default function LiveMatchCard({
                 />
               </div>
               <div className="flex flex-row items-center gap-2">
-                <p className="font-special-gothic-condensed-one text-4xl">
+                <p className="font-special-gothic-condensed-one text-[32px] text-white">
                   {homeTeam.score}
                 </p>
               </div>
             </div>
           </div>
         </div>
-        <div className="mt-2 pb-3">
-          <div className="bg-[rgba(54,54,54,0.19)] border border-[rgba(85,85,85,0.7)] flex flex-row justify-center items-center gap-2 px-6 py-3 rounded-lg w-full">
-            <img src="/assets/images/icons/icon-view-livestream.png" />
-            <p className="font-special-gothic-condensed-one text-base">
-              Ver en vivo
-            </p>
-          </div>
+        <div>
+          <Link
+            href={`/partidos/${matchProviderId}`}
+            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[8px]"
+            style={{ backdropFilter: 'blur(40px)' }}
+          >
+            <span className="font-special-gothic-condensed-one text-base text-white">
+              Ver resultados
+            </span>
+          </Link>
         </div>
       </CardBody>
       {isFinals && (

@@ -4,6 +4,7 @@ export default function SPGPlayerLeadersCard() {
   return (
     <SeasonPlayerLeadersCard
       title="Robos por juego (ejemplo)"
+      subtitle="SPG"
       data={[
         {
           position: 1,

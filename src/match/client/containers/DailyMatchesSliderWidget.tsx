@@ -12,7 +12,7 @@ import ScheduledMatchCard from '../components/card/ScheduledMatchCard';
 import { useTodayMatches } from '../hooks/matches';
 
 export default function DailyMatchesSliderWidget() {
-  const { data, loading } = useTodayMatches(moment().format('YYYY-MM-DD'));
+  const { data, loading, error } = useTodayMatches(moment().format('YYYY-MM-DD'));
 
   const sortedMatches = useMemo(() => {
     return data.slice().sort((a: MatchType, b: MatchType) => {
@@ -54,47 +54,42 @@ export default function DailyMatchesSliderWidget() {
             MATCH_STATUS.FINISHED,
             MATCH_STATUS.SCHEDULED,
           ].includes(item.status ?? '') && (
-            <Link href={`/partido/${item.providerId}`}>
-              <LiveMatchCard
-                homeTeam={item.homeTeam}
-                visitorTeam={item.visitorTeam}
-                currentQuarter={item.currentPeriod}
-                currentTime={item.currentTime}
-                mediaProvider={item.channel || DEFAULT_MEDIA_PROVIDER}
-                status={item.status}
-                overtimePeriods={item.overtimePeriods}
-                isFinals={item.isFinals}
-                finalsDescription={item.finalsDescription}
-              />
-            </Link>
+            <LiveMatchCard
+              homeTeam={item.homeTeam}
+              visitorTeam={item.visitorTeam}
+              currentQuarter={item.currentPeriod}
+              currentTime={item.currentTime}
+              mediaProvider={item.channel || DEFAULT_MEDIA_PROVIDER}
+              status={item.status}
+              overtimePeriods={item.overtimePeriods}
+              isFinals={item.isFinals}
+              finalsDescription={item.finalsDescription}
+            />
           )}
           {[MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(
             item.status,
           ) && (
-            <Link href={`/partido/${item.providerId}`}>
-              <CompletedMatchCard
-                startAt={item.startAt}
-                homeTeam={item.homeTeam}
-                visitorTeam={item.visitorTeam}
-                overtimePeriods={item.overtimePeriods}
-                youtubeId={item.youtube}
-                isFinals={item.isFinals}
-                finalsDescription={item.finalsDescription}
-              />
-            </Link>
+            <CompletedMatchCard
+              matchProviderId={item.providerId}
+              startAt={item.startAt}
+              homeTeam={item.homeTeam}
+              visitorTeam={item.visitorTeam}
+              overtimePeriods={item.overtimePeriods}
+              isFinals={item.isFinals}
+              finalsDescription={item.finalsDescription}
+            />
           )}
           {[MATCH_STATUS.SCHEDULED].includes(item.status) && (
-            <Link href={`/partido/${item.providerId}`}>
-              <ScheduledMatchCard
-                startAt={item.startAt}
-                homeTeam={item.homeTeam}
-                visitorTeam={item.visitorTeam}
-                mediaProvider={item.channel || DEFAULT_MEDIA_PROVIDER}
-                ticketUrl={item.homeTeam.ticketUrl}
-                isFinals={item.isFinals}
-                finalsDescription={item.finalsDescription}
-              />
-            </Link>
+            <ScheduledMatchCard
+              matchProviderId={item.providerId}
+              startAt={item.startAt}
+              homeTeam={item.homeTeam}
+              visitorTeam={item.visitorTeam}
+              mediaProvider={item.channel || DEFAULT_MEDIA_PROVIDER}
+              ticketUrl={item.homeTeam.ticketUrl}
+              isFinals={item.isFinals}
+              finalsDescription={item.finalsDescription}
+            />
           )}
         </div>
       )}

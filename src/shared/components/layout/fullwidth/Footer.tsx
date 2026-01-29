@@ -4,14 +4,14 @@ export default function FooterBoxLayout() {
   return (
     <section className="bg-[#0F171F] py-[50px]">
       <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-12">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
           <div className="md:col-span-6 lg:col-span-3">
-            <p className="md:mb-[58px]">
-              <a href="#">
-                <img src="/assets/images/logo.png" alt="" />
+            <p className="mb-4 text-center md:mb-[58px] md:text-left">
+              <a href="#" className="inline-block">
+                <img src="/assets/images/logo.png" alt="" className="w-[100px] md:w-auto" />
               </a>
             </p>
-            <p className="mb-4">
+            <p className="hidden mb-4 md:block">
               <a
                 href="#"
                 className="font-barlow font-medium text-[20px] text-neutral-500"
@@ -19,7 +19,7 @@ export default function FooterBoxLayout() {
                 #LaLigaMásDura
               </a>
             </p>
-            <div className="flex flex-row gap-[13px] items-center mb-4">
+            <div className="flex flex-row gap-[8px] justify-center items-center mb-4 md:justify-start xl:gap-[13px]">
               <a
                 href="#"
                 className="border border-[rgba(125,125,125,0.24)] flex items-center justify-center h-[40px] w-[40px] rounded-full"
@@ -67,7 +67,7 @@ export default function FooterBoxLayout() {
                 MENÚ
               </h4>
             </div>
-            <ul className="mb-6">
+            <ul className="mb-6 space-y-1">
               <li className="text-center md:text-right lg:text-left">
                 <a
                   href="#"
@@ -119,7 +119,7 @@ export default function FooterBoxLayout() {
             <div className="grid grid-cols-3 gap-[6px] mb-6 md:grid-cols-4 lg:grid-cols-6">
               <Link href="/equipos/AGU">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Aguada.png"
                       alt=""
@@ -134,7 +134,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/ARE">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Arecibo.png"
                       alt=""
@@ -149,7 +149,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/BAY">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Bayamon.png"
                       alt=""
@@ -164,7 +164,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/CAG">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Caguas.png"
                       alt=""
@@ -179,7 +179,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/CAR">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Carolina.png"
                       alt=""
@@ -194,7 +194,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/GUA">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Guaynabo.png"
                       alt=""
@@ -209,7 +209,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/MAN">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Manati.png"
                       alt=""
@@ -224,7 +224,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/MAY">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Mayaguez.png"
                       alt=""
@@ -239,7 +239,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/PON">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Ponce.png"
                       alt=""
@@ -254,7 +254,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/QUE">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Quebradillas.png"
                       alt=""
@@ -269,7 +269,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/SGE">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/San-German.png"
                       alt=""
@@ -284,7 +284,7 @@ export default function FooterBoxLayout() {
               </Link>
               <Link href="/equipos/SCE">
                 <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center gap-0.5">
                     <img
                       src="/assets/images/teams/Santurce.png"
                       alt=""
@@ -301,8 +301,8 @@ export default function FooterBoxLayout() {
           </div>
         </div>
         <div className="border-t border-t-[rgba(255,255,255,0.12)] my-[20px]" />
-        <div className="flex flex-row justify-between items-center">
-          <div>
+        <div className="flex flex-col gap-4 justify-between items-center md:flex-row">
+          <div className="order-last text-center md:order-first md:text-left">
             <p className="font-barlow text-xs text-neutral-500">
               © Baloncesto Superior Nacional 2026. Todos los derechos
               reservados.
