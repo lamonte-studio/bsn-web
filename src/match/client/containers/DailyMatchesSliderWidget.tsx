@@ -48,7 +48,7 @@ export default function DailyMatchesSliderWidget() {
     <DefaultSlider
       data={sortedMatches}
       render={(item: MatchType) => (
-        <div key={`match-${item.providerId}`}>
+        <div key={`match-${item.providerId}`} className="px-1.5">
           {![
             MATCH_STATUS.COMPLETE,
             MATCH_STATUS.FINISHED,
