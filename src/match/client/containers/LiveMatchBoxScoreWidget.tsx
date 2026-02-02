@@ -18,9 +18,9 @@ export default function LiveMatchBoxScoreWidget() {
       </div>
       <div className="">
         {tab === 'SCE' ? (
-          <MatchCompetitorBoxScoreBasicTable />
+          <MatchCompetitorBoxScoreBasicTable team={{ code: 'SCE', nickname: 'Cangrejeros' }} data={[]}/>
         ) : (
-          <MatchCompetitorBoxScoreBasicTable />
+          <MatchCompetitorBoxScoreBasicTable team={{ code: 'CAG', nickname: 'Criollos' }} data={[]}/>
         )}
       </div>
     </div>

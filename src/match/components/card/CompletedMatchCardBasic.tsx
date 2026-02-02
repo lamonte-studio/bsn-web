@@ -20,7 +20,7 @@ export default function CompletedMatchCardBasic({
   startAt,
   homeTeam,
   visitorTeam,
-  overtimePeriods,
+  overtimePeriods = 0,
 }: Props) {
   const isHomeTeamWinner = useMemo(
     () => parseInt(homeTeam.score) > parseInt(visitorTeam.score),
