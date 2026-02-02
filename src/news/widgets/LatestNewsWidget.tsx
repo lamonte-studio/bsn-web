@@ -31,7 +31,7 @@ export default async function LatestNewsWidget() {
     <div className="border border-[#EAEAEA] flex-1 rounded-[12px] bg-white shadow-[0px_1px_3px_0px_#14181F0A]">
       <div className="px-[30px] pt-[24px] flex flex-row justify-between items-center">
         <div>
-          <h3 className="font-semibold font-special-gothic-condensed-one text-[24px] text-black">
+          <h3 className="text-[22px] text-black md:text-[24px]">
             Lo último en el BSN
           </h3>
         </div>

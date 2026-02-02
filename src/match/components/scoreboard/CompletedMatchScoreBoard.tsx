@@ -7,13 +7,17 @@ type Props = {
   startAt: string;
   homeTeam: {
     code: string;
+    nickname: string;
     score: string;
     color: string;
+    city: string;
   };
   visitorTeam: {
     code: string;
+    nickname: string;
     score: string;
     color: string;
+    city: string;
   };
   venue: {
     name: string;
@@ -36,107 +40,120 @@ export default function CompletedMatchScoreBoard({
     return parseInt(visitorTeam.score, 10) > parseInt(homeTeam.score, 10);
   }, [homeTeam.score, visitorTeam.score]);
 
+  const overtimePeriodLabel = useMemo(() => {
+    if (overtimePeriods > 1) {
+      return `OT${overtimePeriods}`;
+    }
+    if (overtimePeriods === 1) {
+      return 'OT';
+    }
+    return '';
+  }, [overtimePeriods]);
+
   return (
     <div>
-      <div className="flex flex-row flex-1 justify-between items-center gap-4">
-        <div className="flex flex-row items-center gap-4">
-          <a href={`/equipos/${homeTeam.code}`}>
-            <div
-              className="flex flex-row items-center justify-center border rounded-full  h-[60px] w-[60px]"
-              style={{
-                borderColor:
-                  homeTeam.color != null
-                    ? homeTeam.color
-                    : 'rgba(255, 255, 255, 0.5)',
-              }}
-            >
-              <TeamLogoAvatar teamCode={homeTeam.code} size={42} />
-            </div>
-          </a>
-          <div className="flex flex-row items-center gap-2">
-            <p
-              className="font-special-gothic-condensed-one text-6xl text-neutral-60"
-              style={{
-                color: isHomeTeamWinner ? homeTeam.color : 'inherit',
-              }}
-            >
-              {homeTeam.score}
-            </p>
-            <img
-              src="/assets/images/icons/icon-caret-winner.png"
-              height="9"
-              width="7"
-              style={{
-                opacity: isHomeTeamWinner ? 1 : 0,
-              }}
-            />
-          </div>
-        </div>
-        <div>
-          <p className="font-barlow font-semibold text-base">
-            Final {overtimePeriods > 0 ? `${overtimePeriods}OT` : ''}
-          </p>
-        </div>
-        <div className="flex flex-row items-center gap-4">
-          <div className="flex flex-row items-center gap-2">
-            <img
-              src="/assets/images/icons/icon-caret-winner.png"
-              className="rotate-180"
-              height="9"
-              width="7"
-              style={{
-                opacity: isVisitorTeamWinner ? 1 : 0,
-              }}
-            />
-            <p
-              className="font-special-gothic-condensed-one text-6xl text-neutral-60"
-              style={{
-                color: isVisitorTeamWinner ? visitorTeam.color : 'inherit',
-              }}
-            >
-              {visitorTeam.score}
+      <div className="flex flex-row justify-between items-start gap-3 md:gap-4">
+        <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
+          <div className="hidden text-right md:block">
+            <h4 className="text-white lg:text-[26px]/8">{homeTeam.nickname}</h4>
+            <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
+              {homeTeam.city}
             </p>
           </div>
-          <a href={`/team/${visitorTeam.code}`}>
-            <div
-              className="flex flex-row items-center justify-center border rounded-full  h-[60px] w-[60px]"
-              style={{
-                borderColor:
-                  visitorTeam.color != null
-                    ? visitorTeam.color
-                    : 'rgba(255, 255, 255, 0.5)',
-              }}
-            >
-              <TeamLogoAvatar teamCode={visitorTeam.code} size={42} />
+          <div
+            className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
+            style={{
+              borderColor:
+                homeTeam.color != null
+                  ? homeTeam.color
+                  : 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            <div className="scale-[0.6] md:scale-[1]">
+              <TeamLogoAvatar teamCode={homeTeam.code} size={60} />
             </div>
-          </a>
+          </div>
+          <div className="md:hidden">
+            <p className="text-[21px] text-white">{homeTeam.code}</p>
+          </div>
         </div>
-      </div>
-      <div className="flex flex-row flex-1 justify-between items-start gap-4">
-        <div className="flex flex-row items-center mt-2 w-[60px]">
-          <p className="font-special-gothic-condensed-one text-6xl">
-            {homeTeam.code}
-          </p>
-        </div>
-        <div className="flex flex-col flex-1 items-center gap-2">
-          <div className="w-[80%]">
-            <p className="font-barlow text-center text-sm">
+        <div className="grow">
+          <div className="flex flex-row items-center justify-between gap-2">
+            <div className="flex flex-row items-center justify-start gap-2 w-[54px] md:w-[100px]">
+              <h4
+                className="text-[42px] md:text-[64px]"
+                style={{
+                  color: isHomeTeamWinner
+                    ? '#ffffff'
+                    : 'rgba(255, 255, 255, 0.5)',
+                }}
+              >
+                {homeTeam.score}
+              </h4>
+              <img
+                src="/assets/images/icons/icon-caret-winner.png"
+                alt=""
+                width="10"
+                style={{ opacity: isHomeTeamWinner ? 1 : 0 }}
+              />
+            </div>
+            <p className="barlow-condensed font-semibold text-base text-white text-center md:text-[25px]">
+              Final {overtimePeriodLabel}
+            </p>
+            <div className="flex flex-row items-center justify-end gap-2 w-[54px] md:w-[100px]">
+              <img
+                src="/assets/images/icons/icon-caret-winner.png"
+                alt=""
+                width="10"
+                className="rotate-180"
+                style={{ opacity: isVisitorTeamWinner ? 1 : 0 }}
+              />
+              <h4
+                className="text-[42px] md:text-[64px]"
+                style={{
+                  color: isVisitorTeamWinner
+                    ? '#ffffff'
+                    : 'rgba(255, 255, 255, 0.5)',
+                }}
+              >
+                {visitorTeam.score}
+              </h4>
+            </div>
+          </div>
+          <div className="md:-mt-6">
+            <p className="font-barlow text-[13px] text-white text-center md:mb-2 md:text-[15px]">
               {moment(startAt).format(MATCH_DATE_FORMAT)}
             </p>
-          </div>
-          <div className="flex flex-row justify-center gap-2 w-[80%]">
-            <img
-              src="/assets/images/icons/icon-map-pin.png"
-              height="11"
-              width="9"
-            />
-            <p className="font-barlow text-sm text-center">{venue.name}</p>
+            <p className="font-barlow-condensed text-sm text-[rgba(255,255,255,0.5)] text-center">
+              {venue.name}
+            </p>
           </div>
         </div>
-        <div className="flex flex-row items-center mt-2 w-[60px]">
-          <p className="font-special-gothic-condensed-one text-6xl">
-            {visitorTeam.code}
-          </p>
+        <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
+          <div
+            className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
+            style={{
+              borderColor:
+                visitorTeam.color != null
+                  ? visitorTeam.color
+                  : 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            <div className="scale-[0.6] md:scale-[1]">
+              <TeamLogoAvatar teamCode={visitorTeam.code} size={60} />
+            </div>
+          </div>
+          <div className="hidden text-left md:block">
+            <h4 className="text-white lg:text-[26px]/8">
+              {visitorTeam.nickname}
+            </h4>
+            <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
+              {visitorTeam.city}
+            </p>
+          </div>
+          <div className="md:hidden">
+            <p className="text-[21px] text-white">{visitorTeam.code}</p>
+          </div>
         </div>
       </div>
     </div>

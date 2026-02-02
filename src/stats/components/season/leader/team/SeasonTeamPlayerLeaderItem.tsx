@@ -7,16 +7,12 @@ type Props = {
     id: string;
     avatarUrl: string;
     name: string;
-    team?: {
-      code: string;
-      name: string;
-    };
   };
   statValue: number;
   avatarSize?: number;
 };
 
-export default function SeasonPlayerLeaderItem({
+export default function SeasonTeamPlayerLeaderItem({
   position = 1,
   player,
   statValue,
@@ -25,7 +21,7 @@ export default function SeasonPlayerLeaderItem({
   return (
     <Link
       href={`/jugadores/${player.id}`}
-      className="flex items-center p-2 gap-3"
+      className="flex items-center py-1 gap-3"
     >
       <div className="w-4 text-right">
         <span className="font-barlow-condensed text-[15px] text-[rgba(0,0,0,0.8)]">
@@ -41,9 +37,6 @@ export default function SeasonPlayerLeaderItem({
         <div className="flex-1">
           <p className="font-special-gothic-condensed-one text-[17px] text-[rgba(15,23,31,0.9)]">
             {player.name}
-          </p>
-          <p className="font-barlow font-medium text-[13px] text-[rgba(15,23,31,0.5)]">
-            {player.team?.name}
           </p>
         </div>
       </div>
