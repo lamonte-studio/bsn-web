@@ -139,11 +139,13 @@ export const MATCH = gql`
     match(geniusMatchId: $geniusMatchId, providerMatchId: $providerMatchId) {
       id
       geniusId
+      providerId
       startAt
       status
       currentPeriod
       currentTime
       homeTeam {
+        providerId
         code
         name
         nickname
@@ -158,6 +160,7 @@ export const MATCH = gql`
         ticketUrl
       }
       visitorTeam {
+        providerId
         code
         name
         nickname
@@ -195,9 +198,12 @@ export const GET_PLAYOFFS = gql`
   }
 `;
 
-export const MATCH_TEAM_BOXSCORE = gql`
+export const MATCH_TEAMS_BOXSCORE = gql`
   query findMatchTeamBoxscore($geniusMatchId: Int!, $providerMatchId: String) {
-    matchTeamsBoxscore(geniusMatchId: $geniusMatchId, providerMatchId: $providerMatchId) {
+    matchTeamsBoxscore(
+      geniusMatchId: $geniusMatchId
+      providerMatchId: $providerMatchId
+    ) {
       id
       providerId
       homeTeam {
@@ -303,8 +309,14 @@ export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
 `;
 
 export const MATCH_PERIODS_BOXSCORE = gql`
-  query findMatchPeriodsBoxscore($geniusMatchId: Int!, $providerMatchId: String) {
-    matchPeriods(geniusMatchId: $geniusMatchId, providerMatchId: $providerMatchId) {
+  query findMatchPeriodsBoxscore(
+    $geniusMatchId: Int!
+    $providerMatchId: String
+  ) {
+    matchPeriods(
+      geniusMatchId: $geniusMatchId
+      providerMatchId: $providerMatchId
+    ) {
       id
       providerId
       homeTeam {
@@ -439,6 +451,40 @@ export const TEAM_LIVE_MATCH = gql`
       overtimePeriods
       isFinals
       finalsDescription
+    }
+  }
+`;
+
+export const HEAD_TO_HEAD_MATCHES = gql`
+  query getHeadToHeadMatches(
+    $teamCodeA: String!
+    $teamCodeB: String!
+    $toDate: String
+    $first: Int!
+  ) {
+    headToHeadMatchesConnection(
+      teamCodeA: $teamCodeA
+      teamCodeB: $teamCodeB
+      toDate: $toDate
+      first: $first
+    ) {
+      edges {
+        node {
+          id
+          providerId
+          startAt
+          status
+          homeTeam {
+            code
+            score
+          }
+          visitorTeam {
+            code
+            score
+          }
+          status
+        }
+      }
     }
   }
 `;

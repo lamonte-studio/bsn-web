@@ -63,10 +63,7 @@ export default function CompletedMatchScoreBoard({
           <div
             className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
             style={{
-              borderColor:
-                homeTeam.color != null
-                  ? homeTeam.color
-                  : 'rgba(255, 255, 255, 0.5)',
+              borderColor: homeTeam.color || 'rgba(255, 255, 255, 0.5)',
             }}
           >
             <div className="scale-[0.6] md:scale-[1]">
@@ -133,10 +130,7 @@ export default function CompletedMatchScoreBoard({
           <div
             className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
             style={{
-              borderColor:
-                visitorTeam.color != null
-                  ? visitorTeam.color
-                  : 'rgba(255, 255, 255, 0.5)',
+              borderColor: visitorTeam.color || 'rgba(255, 255, 255, 0.5)',
             }}
           >
             <div className="scale-[0.6] md:scale-[1]">

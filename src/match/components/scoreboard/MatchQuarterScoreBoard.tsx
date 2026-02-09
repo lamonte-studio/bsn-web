@@ -52,79 +52,98 @@ export default function MatchQuarterScoreBoard({
   }, [quarters]);
 
   return (
-    <div className="flex flex-row gap-6">
-      <div className="flex flex-col items-start pt-10 gap-2">
-        <div className="flex flex-row items-center gap-2">
-          <TeamLogoAvatar teamCode={homeTeam.code} size={16} />
-          <div className="flex flex-row items-center gap-2">
-            <p className="font-special-gothic-condensed-one text-base">
-              {homeTeam.nickname}
-            </p>
-            <p className="font-barlow text-xs">
-              {homeTeam.competitionStandings?.won ?? 0}-
-              {homeTeam.competitionStandings?.lost ?? 0}
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-row items-center gap-2">
-          <TeamLogoAvatar teamCode={visitorTeam.code} size={16} />
-          <div className="flex flex-row items-center gap-2">
-            <p className="font-special-gothic-condensed-one text-base">
-              {visitorTeam.nickname}
-            </p>
-            <p className="font-barlow text-xs">
-              {visitorTeam.competitionStandings?.won ?? 0}-
-              {visitorTeam.competitionStandings?.lost ?? 0}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-row justify-end flex-1">
-        {quarters.map((quarter) => (
-          <div
-            key={`${quarter.periodType}-${quarter.periodNumber}`}
-            className="flex flex-col gap-3 items-center w-[26px]"
-          >
-            <div>
-              <p className="font-special-gothic-condensed-one text-sm">
+    <div>
+      <div className="flex flex-row gap-3 py-2 md:gap-6">
+        <div className="flex flex-1 gap-2">&nbsp;</div>
+        <div className="flex flex-row justify-end gap-1 md:gap-4">
+          {quarters.map((quarter) => (
+            <div
+              key={`${quarter.periodType}-${quarter.periodNumber}`}
+              className="w-[32px]"
+            >
+              <p className="text-sm text-[rgba(0,0,0,0.5)] text-center">
                 {quarter.periodType === 'OVERTIME'
                   ? `OT${quarter.periodNumber > 1 ? `${quarter.periodNumber}` : ''}`
                   : `Q${quarter.periodNumber}`}
               </p>
             </div>
-            <div>
-              <p className="font-barlow text-sm">{quarter.homeTeam.score}</p>
-            </div>
-            <div>
-              <p className="font-barlow text-sm">{quarter.visitorTeam.score}</p>
-            </div>
+          ))}
+          <div className="w-[32px]">
+            <p className="text-sm text-[rgba(0,0,0,0.5)] text-right">FINAL</p>
           </div>
-        ))}
-        <div className="flex flex-col gap-3 items-end w-[36px]">
-          <div>
-            <p className="font-special-gothic-condensed-one text-sm">FINAL</p>
+        </div>
+      </div>
+      <div className="flex flex-row gap-6 py-2">
+        <div className="flex flex-1 flex-row items-center gap-2">
+          <TeamLogoAvatar teamCode={homeTeam.code} size={28} />
+          <div className="flex flex-row items-center gap-2">
+            <p className="text-[19px]">{homeTeam.nickname}</p>
+            <p className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)]">
+              {homeTeam.competitionStandings?.won ?? 0}-
+              {homeTeam.competitionStandings?.lost ?? 0}
+            </p>
           </div>
-          <div>
+        </div>
+        <div className="flex flex-row justify-end gap-1 md:gap-4">
+          {quarters.map((quarter) => (
+            <div
+              key={`${quarter.periodType}-${quarter.periodNumber}-homeTeam`}
+              className="w-[32px]"
+            >
+              <p className="font-barlow text-base text-[rgba(0,0,0,0.9)] text-center">
+                {quarter.homeTeam.score}
+              </p>
+            </div>
+          ))}
+          <div className="w-[32px]">
             <p
-              className="font-barlow text-sm"
+              className="font-barlow text-base text-right"
               style={{
                 color:
                   homeTeamTotalScore > visitorTeamTotalScore
-                    ? 'inherit'
-                    : '#cecece',
+                    ? 'rgba(0,0,0,0.9)'
+                    : 'rgba(0,0,0,0.6)',
+                fontWeight:
+                  homeTeamTotalScore > visitorTeamTotalScore ? '700' : '400',
               }}
             >
               {homeTeamTotalScore}
             </p>
           </div>
-          <div>
+        </div>
+      </div>
+      <div className="border-t border-t-[rgba(0,0,0,0.1)] flex flex-row gap-6 py-2">
+        <div className="flex flex-1 flex-row items-center gap-2">
+          <TeamLogoAvatar teamCode={visitorTeam.code} size={28} />
+          <div className="flex flex-row items-center gap-2">
+            <p className="text-[19px]">{visitorTeam.nickname}</p>
+            <p className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)]">
+              {visitorTeam.competitionStandings?.won ?? 0}-
+              {visitorTeam.competitionStandings?.lost ?? 0}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-row justify-end gap-1 md:gap-4">
+          {quarters.map((quarter) => (
+            <div
+              key={`${quarter.periodType}-${quarter.periodNumber}-visitorTeam`}
+              className="w-[32px]"
+            >
+              <p className="font-barlow text-base text-[rgba(0,0,0,0.9)] text-center">
+                {quarter.visitorTeam.score}
+              </p>
+            </div>
+          ))}
+          <div className="w-[32px]">
             <p
-              className="font-barlow text-sm"
+              className="font-barlow text-base text-right"
               style={{
                 color:
                   visitorTeamTotalScore > homeTeamTotalScore
-                    ? 'inherit'
-                    : '#cecece',
+                    ? 'rgba(0,0,0,0.9)'
+                    : 'rgba(0,0,0,0.6)',
+                fontWeight:
+                  visitorTeamTotalScore > homeTeamTotalScore ? '700' : '400',
               }}
             >
               {visitorTeamTotalScore}

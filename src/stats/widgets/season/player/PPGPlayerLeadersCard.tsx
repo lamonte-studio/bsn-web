@@ -21,6 +21,7 @@ const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
     console.error('Error fetching data:', error);
     return [];
   }
+  console.log('PPG Player Leaders Data:', data);
 
   return (
     data?.seasonPlayerStatsConnection.edges.map(

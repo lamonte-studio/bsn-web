@@ -1,272 +1,379 @@
-import LiveMatchBoxScoreBasicWidget from '@/match/client/containers/LiveMatchBoxScoreBasicWidget';
-import LiveMatchPlayByPlayWidget from '@/match/client/containers/LiveMatchPlayByPlayWidget';
-import CompletedMatchCardBasic from '@/match/components/card/CompletedMatchCardBasic';
-import MatchInfoCard from '@/match/components/MatchInfoCard';
-import CompletedMatchScoreBoard from '@/match/components/scoreboard/CompletedMatchScoreBoard';
-import MatchQuarterScoreBoard from '@/match/components/scoreboard/MatchQuarterScoreBoard';
-import ScheduledMatchScoreBoard from '@/match/components/scoreboard/ScheduledMatchScoreBoard';
-import MatchTeamStatsComparison from '@/match/components/stats/MatchTeamStatsComparison';
+import { getClient } from '@/apollo-client';
+import { MATCH_STATUS } from '@/constants';
+import {
+  HEAD_TO_HEAD_MATCHES,
+  MATCH,
+  MATCH_PERIODS_BOXSCORE,
+  MATCH_TEAMS_BOXSCORE,
+} from '@/graphql/match';
+import { MATCH_LEADERS_STATS, SEASON_TEAM_LEADER_PLAYER_STATS } from '@/graphql/stats';
+import CompletedMatchPage from '@/match/client/components/page/CompletedMatchPage';
+import LiveMatchPage from '@/match/client/components/page/LiveMatchPage';
+import ScheduledMatchPage from '@/match/client/components/page/ScheduledMatchPage';
+import { MatchType } from '@/match/types';
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
-import SeasonTeamPlayerLeadersCard from '@/stats/components/season/leader/team/SeasonTeamPlayerLeadersCard';
 
-export default function PartidoPage() {
+type LeadersCategoryStatsType = {
+  player: {
+    providerId: string;
+    avatarUrl: string;
+    name: string;
+  };
+  value: number;
+};
+
+type MatchPlayerBoxScore = {
+  player: {
+    providerId: string;
+    name: string;
+    avatarUrl: string;
+    team?: {
+      code: string;
+      name: string;
+    };
+  };
+  boxscore: {
+    points: number;
+    reboundsTotal: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    threePointersMade: number;
+  };
+};
+
+type MatchResponse = {
+  match: MatchType;
+  homeTeamBoxScore: {
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+  };
+  visitorTeamBoxScore: {
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+  };
+  homeTeamPointsLeaders: LeadersCategoryStatsType[];
+  homeTeamAssistsLeaders: LeadersCategoryStatsType[];
+  homeTeamReboundsLeaders: LeadersCategoryStatsType[];
+  visitorTeamPointsLeaders: LeadersCategoryStatsType[];
+  visitorTeamAssistsLeaders: LeadersCategoryStatsType[];
+  visitorTeamReboundsLeaders: LeadersCategoryStatsType[];
+  headToHeadMatches: MatchType[];
+  homeTeamPlayersBoxScore: MatchPlayerBoxScore[];
+  visitorTeamPlayersBoxScore: MatchPlayerBoxScore[];
+  pointsLeaders: MatchPlayerBoxScore[];
+  reboundsLeaders: MatchPlayerBoxScore[];
+  assistsLeaders: MatchPlayerBoxScore[];
+  stealsLeaders: MatchPlayerBoxScore[];
+  blocksLeaders: MatchPlayerBoxScore[];
+  threePointersMadeLeaders: MatchPlayerBoxScore[];
+};
+
+type MatchTeamsBoxScoreResponse = {
+  matchTeamsBoxscore: MatchType;
+};
+
+type MatchPeriodsBoxScoreResponse = {
+  matchPeriods: MatchType;
+};
+
+type MatchLeadersStatsResponse = {
+  pointsLeaders: {
+    edges: {
+      node: MatchPlayerBoxScore;
+    }[];
+  };
+  reboundsLeaders: {
+    edges: {
+      node: MatchPlayerBoxScore;
+    }[];
+  };
+  assistsLeaders: {
+    edges: {
+      node: MatchPlayerBoxScore;
+    }[];
+  };
+  stealsLeaders: {
+    edges: {
+      node: MatchPlayerBoxScore;
+    }[];
+  };
+  blocksLeaders: {
+    edges: {
+      node: MatchPlayerBoxScore;
+    }[];
+  };
+  threePointersMadeLeaders: {
+    edges: {
+      node: MatchPlayerBoxScore;
+    }[];
+  };
+};
+
+type HeadToHeadMatchesResponse = {
+  headToHeadMatchesConnection: {
+    edges: {
+      node: MatchType;
+    }[];
+  };
+};
+
+type MatchTeamLeadersResponse = {
+  pointsLeaders: {
+    edges: {
+      node: LeadersCategoryStatsType;
+    }[];
+  };
+  reboundsLeaders: {
+    edges: {
+      node: LeadersCategoryStatsType;
+    }[];
+  };
+  assistsLeaders: {
+    edges: {
+      node: LeadersCategoryStatsType;
+    }[];
+  };
+};
+
+const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
+  const { data, error } = await getClient().query<MatchResponse>({
+    query: MATCH,
+    variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
+  });
+
+  if (error) {
+    console.error('Error fetching data:', error);
+    throw new Error('Failed to fetch match data');
+  }
+
+  const match = data?.match;
+
+  if (match == null) {
+    console.error('No match data found for provider ID:', matchProviderId);
+    throw new Error('Match not found');
+  }
+
+  const response: MatchResponse = {
+    match,
+    homeTeamBoxScore: {
+      points: 0,
+      rebounds: 0,
+      assists: 0,
+      steals: 0,
+      blocks: 0,
+      turnovers: 0,
+    },
+    visitorTeamBoxScore: {
+      points: 0,
+      rebounds: 0,
+      assists: 0,
+      steals: 0,
+      blocks: 0,
+      turnovers: 0,
+    },
+    headToHeadMatches: [],
+    homeTeamPointsLeaders: [],
+    homeTeamAssistsLeaders: [],
+    homeTeamReboundsLeaders: [],
+    visitorTeamPointsLeaders: [],
+    visitorTeamAssistsLeaders: [],
+    visitorTeamReboundsLeaders: [],
+    homeTeamPlayersBoxScore: [],
+    visitorTeamPlayersBoxScore: [],
+    pointsLeaders: [],
+    reboundsLeaders: [],
+    assistsLeaders: [],
+    stealsLeaders: [],
+    blocksLeaders: [],
+    threePointersMadeLeaders: [],
+  };
+
+  if (match.status === MATCH_STATUS.SCHEDULED) {
+    const { data: matchTeamsBoxScoreData } =
+      await getClient().query<MatchTeamsBoxScoreResponse>({
+        query: MATCH_TEAMS_BOXSCORE,
+        variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
+      });
+
+    const matchTeamsBoxScore = matchTeamsBoxScoreData?.matchTeamsBoxscore;
+
+    if (matchTeamsBoxScore == null) {
+      console.error(
+        'No match teams boxscore data found for provider ID:',
+        matchProviderId,
+      );
+      throw new Error('Match teams boxscore not found');
+    }
+
+    response.homeTeamBoxScore = {
+      points: 0,
+      rebounds: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
+      assists: matchTeamsBoxScore.homeTeamBoxscore?.assists ?? 0,
+      steals: matchTeamsBoxScore.homeTeamBoxscore?.steals ?? 0,
+      blocks: matchTeamsBoxScore.homeTeamBoxscore?.blocks ?? 0,
+      turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
+    };
+    response.visitorTeamBoxScore = {
+      points: 0,
+      rebounds: matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
+      assists: matchTeamsBoxScore.visitorTeamBoxscore?.assists ?? 0,
+      steals: matchTeamsBoxScore.visitorTeamBoxscore?.steals ?? 0,
+      blocks: matchTeamsBoxScore.visitorTeamBoxscore?.blocks ?? 0,
+      turnovers: matchTeamsBoxScore.visitorTeamBoxscore?.turnovers ?? 0,
+    };
+
+    const { data: headToHeadMatchesData } =
+      await getClient().query<HeadToHeadMatchesResponse>({
+        query: HEAD_TO_HEAD_MATCHES,
+        variables: {
+          teamCodeA: match.homeTeam.code,
+          teamCodeB: match.visitorTeam.code,
+          toDate: match.startAt,
+          first: 5,
+        },
+      });
+    response.headToHeadMatches =
+      headToHeadMatchesData?.headToHeadMatchesConnection.edges.map((edge) => edge.node) ??
+      [];
+
+    const { data: matchHomeTeamLeadersData } =
+      await getClient().query<MatchTeamLeadersResponse>({
+        query: SEASON_TEAM_LEADER_PLAYER_STATS,
+        variables: { teamCode: match.homeTeam.code, first: 3 },
+      });
+
+    response.homeTeamPointsLeaders =
+      matchHomeTeamLeadersData?.pointsLeaders.edges.map((edge) => edge.node) ??
+      [];
+    response.homeTeamAssistsLeaders =
+      matchHomeTeamLeadersData?.assistsLeaders.edges.map((edge) => edge.node) ??
+      [];
+    response.homeTeamReboundsLeaders =
+      matchHomeTeamLeadersData?.reboundsLeaders.edges.map(
+        (edge) => edge.node,
+      ) ?? [];
+
+    const { data: matchVisitorTeamLeadersData } =
+      await getClient().query<MatchTeamLeadersResponse>({
+        query: SEASON_TEAM_LEADER_PLAYER_STATS,
+        variables: { teamCode: match.visitorTeam.code, first: 3 },
+      });
+
+    response.visitorTeamPointsLeaders =
+      matchVisitorTeamLeadersData?.pointsLeaders.edges.map(
+        (edge) => edge.node,
+      ) ?? [];
+    response.visitorTeamAssistsLeaders =
+      matchVisitorTeamLeadersData?.assistsLeaders.edges.map(
+        (edge) => edge.node,
+      ) ?? [];
+    response.visitorTeamReboundsLeaders =
+      matchVisitorTeamLeadersData?.reboundsLeaders.edges.map(
+        (edge) => edge.node,
+      ) ?? [];
+  }
+
+  if (match.status === MATCH_STATUS.COMPLETE) {
+    const { data: matchPeriodsBoxScoreData } =
+      await getClient().query<MatchPeriodsBoxScoreResponse>({
+        query: MATCH_PERIODS_BOXSCORE,
+        variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
+      });
+
+    const matchPeriodsBoxScore = matchPeriodsBoxScoreData?.matchPeriods;
+
+    if (matchPeriodsBoxScore == null) {
+      console.error(
+        'No match periods boxscore data found for provider ID:',
+        matchProviderId,
+      );
+      throw new Error('Match periods boxscore not found');
+    }
+
+    response.match = {
+      ...response.match,
+      periods: matchPeriodsBoxScore.periods,
+    };
+
+    const { data: matchLeadersStatsData } =
+      await getClient().query<MatchLeadersStatsResponse>({
+        query: MATCH_LEADERS_STATS,
+        variables: { matchProviderId: matchProviderId, first: 3 },
+      });
+
+    response.pointsLeaders = matchLeadersStatsData?.pointsLeaders.edges.map(
+      (edge) => edge.node,
+    ) ?? [];
+    response.reboundsLeaders = matchLeadersStatsData?.reboundsLeaders.edges.map(
+      (edge) => edge.node,
+    ) ?? [];
+    response.assistsLeaders = matchLeadersStatsData?.assistsLeaders.edges.map(
+      (edge) => edge.node,
+    ) ?? [];
+    response.stealsLeaders = matchLeadersStatsData?.stealsLeaders.edges.map(
+      (edge) => edge.node,
+    ) ?? [];
+    response.blocksLeaders = matchLeadersStatsData?.blocksLeaders.edges.map(
+      (edge) => edge.node,
+    ) ?? [];
+    response.threePointersMadeLeaders =
+      matchLeadersStatsData?.threePointersMadeLeaders.edges.map(
+        (edge) => edge.node,
+      ) ?? [];
+  }
+
+  return response;
+};
+
+export default async function PartidoPage({
+  params,
+}: PageProps<'/partidos/[id]'>) {
+  const { id } = await params;
+  const data: MatchResponse = await fetchMatch(id);
+
   return (
     <FullWidthLayout>
-      <section className="bg-[#0F171F]">
-        <div className="container">
-          <div className="mx-auto py-[32px] md:py-[42px] xl:py-[52px] lg:w-8/12 xl:w-7/12">
-            <ScheduledMatchScoreBoard
-              startAt="2024-07-01T19:00:00Z"
-              homeTeam={{
-                code: 'SCE',
-                nickname: 'Cangrejeros',
-                color: '#FA4515',
-                city: 'Santurce',
-                competitionStandings: { won: 45, lost: 20 },
-              }}
-              visitorTeam={{
-                code: 'GBO',
-                nickname: 'Mets',
-                color: '#16A5BE',
-                city: 'Guaynabo',
-                competitionStandings: { won: 40, lost: 25 },
-              }}
-              venue={{ name: 'Coliseo Roberto Clemente' }}
-            />
-            {/* <CompletedMatchScoreBoard
-              startAt="2024-06-15T19:00:00Z"
-              homeTeam={{ code: "SCE", nickname: "Cangrejeros", score: "102", color: "#FA4515", city: "Santurce" }}
-              visitorTeam={{ code: "GBO", nickname: "Mets", score: "99", color: "#16A5BE", city: "Guaynabo" }}
-              venue={{ name: "Coliseo Roberto Clemente" }}
-              overtimePeriods={2}
-            /> */}
-            {/* <LiveMatchScoreBoard
-              startAt="2024-06-15T19:00:00Z"
-              homeTeam={{ code: "SCE", nickname: "Cangrejeros", score: "102", color: "#FA4515", city: "Santurce" }}
-              visitorTeam={{ code: "GBO", nickname: "Mets", score: "99", color: "#16A5BE", city: "Guaynabo" }}
-              venue={{ name: "Coliseo Roberto Clemente" }}
-              currentPeriod="1"
-              currentTime="00:00"
-              overtimePeriods={0}
-            /> */}
-          </div>
-        </div>
-      </section>
-      <section>
-        <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-            <div className="lg:col-span-8 lg:pr-16">
-              <div className="flex flex-row justify-between items-center mb-[30px]">
-                <div>
-                  <h3 className="text-[22px] text-black md:text-[24px]">
-                    Jugadores destacados
-                  </h3>
-                </div>
-                <div>
-                  <img src="/assets/images/sponsors/coca-cola.png" alt="" />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 gap-[20px] mb-[30px] md:grid-cols-2">
-                <SeasonTeamPlayerLeadersCard
-                  title="Puntos por juego"
-                  teamCode="SCE"
-                  data={[
-                    {
-                      position: 1,
-                      player: {
-                        id: '1',
-                        avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-                        name: 'John Doe',
-                      },
-                      statValue: 25.4,
-                    },
-                    {
-                      position: 2,
-                      player: {
-                        id: '2',
-                        avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-                        name: 'Jane Smith',
-                      },
-                      statValue: 23.1,
-                    },
-                    {
-                      position: 3,
-                      player: {
-                        id: '3',
-                        avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-                        name: 'Mike Johnson',
-                      },
-                      statValue: 22.8,
-                    },
-                  ]}
-                />
-                <SeasonTeamPlayerLeadersCard
-                  title="Puntos por juego"
-                  teamCode="GBO"
-                  data={[
-                    {
-                      position: 1,
-                      player: {
-                        id: '1',
-                        avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-                        name: 'John Doe',
-                      },
-                      statValue: 25.4,
-                    },
-                    {
-                      position: 2,
-                      player: {
-                        id: '2',
-                        avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-                        name: 'Jane Smith',
-                      },
-                      statValue: 23.1,
-                    },
-                    {
-                      position: 3,
-                      player: {
-                        id: '3',
-                        avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-                        name: 'Mike Johnson',
-                      },
-                      statValue: 22.8,
-                    },
-                  ]}
-                />
-              </div>
-
-              <div className="flex flex-row justify-between items-center mb-[30px]">
-                <div>
-                  <h3 className="text-[22px] text-black md:text-[24px]">
-                    Últimos encuentros
-                  </h3>
-                </div>
-                <div>
-                  <img src="/assets/images/sponsors/coca-cola.png" alt="" />
-                </div>
-              </div>
-              <div
-                className="flex flex-row flex-nowrap gap-3 overflow-x-auto"
-                style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
-              >
-                <CompletedMatchCardBasic
-                  startAt="2024-07-01T19:00:00Z"
-                  homeTeam={{ code: 'SCE', score: '102' }}
-                  visitorTeam={{ code: 'GBO', score: '99' }}
-                  overtimePeriods={1}
-                />
-                <CompletedMatchCardBasic
-                  startAt="2024-07-01T19:00:00Z"
-                  homeTeam={{ code: 'SCE', score: '94' }}
-                  visitorTeam={{ code: 'GBO', score: '99' }}
-                  overtimePeriods={2}
-                />
-                <CompletedMatchCardBasic
-                  startAt="2024-07-01T19:00:00Z"
-                  homeTeam={{ code: 'SCE', score: '102' }}
-                  visitorTeam={{ code: 'GBO', score: '99' }}
-                  overtimePeriods={1}
-                />
-                <CompletedMatchCardBasic
-                  startAt="2024-07-01T19:00:00Z"
-                  homeTeam={{ code: 'SCE', score: '102' }}
-                  visitorTeam={{ code: 'GBO', score: '99' }}
-                  overtimePeriods={1}
-                />
-                <CompletedMatchCardBasic
-                  startAt="2024-07-01T19:00:00Z"
-                  homeTeam={{ code: 'SCE', score: '102' }}
-                  visitorTeam={{ code: 'GBO', score: '99' }}
-                  overtimePeriods={1}
-                />
-              </div>
-            </div>
-            <div className="lg:col-span-4">
-              <div className="mb-4">
-                <MatchInfoCard
-                  startAt="2024-07-01T19:00:00Z"
-                  venue={{ name: 'Coliseo Roberto Clemente, San Juan, PR' }}
-                  channel="BSN App  •  YouTube  •  Telemundo"
-                  ticketUrl="https://www.ticketera.com"
-                />
-              </div>
-              <div>
-                <MatchTeamStatsComparison
-                  homeTeam={{ code: 'SCE' }}
-                  visitorTeam={{ code: 'GBO' }}
-                  homeTeamBoxScore={{
-                    points: 102,
-                    rebounds: 45,
-                    assists: 25,
-                    steals: 10,
-                    blocks: 8,
-                    turnovers: 12,
-                  }}
-                  visitorTeamBoxScore={{
-                    points: 99,
-                    rebounds: 40,
-                    assists: 22,
-                    steals: 8,
-                    blocks: 5,
-                    turnovers: 15,
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="container">
-        <MatchQuarterScoreBoard
-          homeTeam={{
-            code: 'SCE',
-            nickname: 'Cangrejeros',
-            competitionStandings: { won: 45, lost: 20 },
-          }}
-          visitorTeam={{
-            code: 'CAG',
-            nickname: 'Criollos',
-            competitionStandings: { won: 40, lost: 25 },
-          }}
-          quarters={[
-            {
-              periodNumber: 1,
-              periodType: 'REGULAR',
-              homeTeam: { score: 25 },
-              visitorTeam: { score: 20 },
-            },
-            {
-              periodNumber: 2,
-              periodType: 'REGULAR',
-              homeTeam: { score: 30 },
-              visitorTeam: { score: 28 },
-            },
-            {
-              periodNumber: 3,
-              periodType: 'REGULAR',
-              homeTeam: { score: 22 },
-              visitorTeam: { score: 25 },
-            },
-            {
-              periodNumber: 4,
-              periodType: 'REGULAR',
-              homeTeam: { score: 25 },
-              visitorTeam: { score: 26 },
-            },
-          ]}
+      {[MATCH_STATUS.IN_PROGRESS, MATCH_STATUS.PERIOD_BREAK].includes(
+        data.match.status,
+      ) && <LiveMatchPage match={data.match} />}
+      {[MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(
+        data.match.status,
+      ) && (
+        <CompletedMatchPage
+          match={data.match}
+          pointsLeaders={data.pointsLeaders}
+          reboundsLeaders={data.reboundsLeaders}
+          assistsLeaders={data.assistsLeaders}
+          stealsLeaders={data.stealsLeaders}
+          blocksLeaders={data.blocksLeaders}
+          threePointersMadeLeaders={data.threePointersMadeLeaders}
         />
-      </section>
-
-      <section>
-        <div className="container">
-          <div className="mb-4">
-            <LiveMatchPlayByPlayWidget />
-          </div>
-          <div>
-            <LiveMatchBoxScoreBasicWidget />
-          </div>
-        </div>
-      </section>
+      )}
+      {[MATCH_STATUS.SCHEDULED, MATCH_STATUS.RESCHEDULED].includes(
+        data.match.status,
+      ) && (
+        <ScheduledMatchPage
+          match={data.match}
+          homeTeamBoxScore={data.homeTeamBoxScore}
+          visitorTeamBoxScore={data.visitorTeamBoxScore}
+          headToHeadMatches={data.headToHeadMatches}
+          homeTeamPointsLeaders={data.homeTeamPointsLeaders}
+          homeTeamAssistsLeaders={data.homeTeamAssistsLeaders}
+          homeTeamReboundsLeaders={data.homeTeamReboundsLeaders}
+          visitorTeamPointsLeaders={data.visitorTeamPointsLeaders}
+          visitorTeamAssistsLeaders={data.visitorTeamAssistsLeaders}
+          visitorTeamReboundsLeaders={data.visitorTeamReboundsLeaders}
+        />
+      )}
     </FullWidthLayout>
   );
 }
