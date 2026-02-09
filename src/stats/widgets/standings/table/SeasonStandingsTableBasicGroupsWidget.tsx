@@ -1,4 +1,3 @@
-import SeasonStandingsTableBasic from '@/stats/components/season/standings/table/SeasonStandingsTableBasic';
 import { getClient } from '@/apollo-client';
 import { STANDINGS_TABLE_BASIC } from '@/graphql/stats';
 import SeasonStandingsTableBasicGroups from '@/stats/client/components/standings/SeasonStandingsTableBasicGroups';
@@ -62,42 +61,6 @@ export default async function SeasonStandingsTableBasicGroupsWidget() {
                 pct: team.competitionStandings.percentageWon,
               })),
             }))}
-          />
-        </div>
-      </div>
-      <div className="border border-[#EAEAEA] flex-1 rounded-[12px] bg-white shadow-[0px_1px_3px_0px_#14181F0A]">
-        <div className="p-[16px] xl:p-[24px]">
-          <SeasonStandingsTableBasicGroups
-            groups={[
-              {
-                name: 'Grupo A',
-                teams: [
-                  {
-                    team: { code: 'SCE', nickname: 'Cangrejeros' },
-                    pg: 10,
-                    pp: 5,
-                    pct: 0.667,
-                  },
-                  {
-                    team: { code: 'CAG', nickname: 'Criollos' },
-                    pg: 8,
-                    pp: 7,
-                    pct: 0.533,
-                  },
-                ],
-              },
-              {
-                name: 'Grupo B',
-                teams: [
-                  {
-                    team: { code: 'CAG', nickname: 'Criollos' },
-                    pg: 8,
-                    pp: 7,
-                    pct: 0.533,
-                  },
-                ],
-              },
-            ]}
           />
         </div>
       </div>

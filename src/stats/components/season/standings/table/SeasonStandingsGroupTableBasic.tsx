@@ -79,6 +79,11 @@ export default function SeasonStandingsGroupTableBasic({ data }: Props) {
             </div>
           </div>
         ))}
+        {data.length === 0 && (
+          <div className="flex items-center justify-center py-4">
+            <span className="text-sm text-[rgba(0,0,0,0.4)]">No hay datos disponibles</span>
+          </div>
+        )}
       </div>
     </div>
   );

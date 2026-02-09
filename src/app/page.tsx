@@ -3,8 +3,8 @@ import APGPlayerLeadersCard from '@/stats/widgets/season/player/APGPlayerLeaders
 import BPGPlayerLeadersCard from '@/stats/widgets/season/player/BPGPlayerLeadersCard';
 import PPGPlayerLeadersCard from '@/stats/widgets/season/player/PPGPlayerLeadersCard';
 import RPGPlayerLeadersCard from '@/stats/widgets/season/player/RPGPlayerLeadersCard';
-import SPGPlayerLeadersCard from '@/stats/widgets/season/player/SPGPlayerLeadersCard';
-import ThreeFGMPlayerLeadersCard from '@/stats/widgets/season/player/ThreeFGMPlayerLeadersCard';
+import ThreePTPlayerLeadersCard from '@/stats/widgets/season/player/ThreePTPlayerLeadersCard';
+import TOVPlayerLeadersCard from '@/stats/widgets/season/player/TOVPlayerLeadersCard';
 import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
 import TheRouteWidget from '@/highlights/widgets/TheRouteWidget';
 import TopPerformancesWidget from '@/highlights/widgets/TopPerformancesWidget';
@@ -86,8 +86,8 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <BPGPlayerLeadersCard />
-            <SPGPlayerLeadersCard />
-            <ThreeFGMPlayerLeadersCard />
+            <ThreePTPlayerLeadersCard />
+            <TOVPlayerLeadersCard />
           </div>
         </div>
       </section>

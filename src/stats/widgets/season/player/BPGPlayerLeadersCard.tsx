@@ -1,77 +1,54 @@
 import SeasonPlayerLeadersCard from '@/stats/components/season/leader/player/SeasonPlayerLeadersCard';
+import { getClient } from '@/apollo-client';
+import { SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY } from '@/graphql/stats';
+import { TopPlayerLeaderStatsType } from '@/stats/types';
 
-export default function BPGPlayerLeadersCard() {
+const ITEMS_PER_PAGE = 5;
+
+type PlayerLeadersResponse = {
+  seasonPlayerStatsConnection: {
+    edges: { node: TopPlayerLeaderStatsType }[];
+  };
+};
+
+const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
+  const { data, error } = await getClient().query<PlayerLeadersResponse>({
+    query: SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY,
+    variables: { statsCode: 'BLOCKS_AVG', first: ITEMS_PER_PAGE },
+  });
+
+  if (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
+
+  return (
+    data?.seasonPlayerStatsConnection.edges.map(
+      (edge: { node: TopPlayerLeaderStatsType }) => edge.node,
+    ) ?? []
+  );
+};
+
+export default async function BPGPlayerLeadersCard() {
+  const data: TopPlayerLeaderStatsType[] = await fetchTopPlayerLeaders();
+
   return (
     <SeasonPlayerLeadersCard
       title="Tapones por juego (ejemplo)"
       subtitle="BPG"
-      data={[
-        {
-          position: 1,
-          player: {
-            id: '1',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'John Doe',
-            team: {
-              name: 'Cangrejeros',
-              code: 'SCE',
-            },
+      data={data.map((item, index) => ({
+        position: index + 1,
+        player: {
+          id: item.player.providerId,
+          avatarUrl: item.player.avatarUrl,
+          name: item.player.name,
+          team: {
+            code: item.player.teamCode,
+            name: item.player.teamName,
           },
-          statValue: 25.4,
         },
-        {
-          position: 2,
-          player: {
-            id: '2',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'Jane Smith',
-            team: {
-              name: 'Cangrejeros',
-              code: 'SCE',
-            },
-          },
-          statValue: 23.1,
-        },
-        {
-          position: 3,
-          player: {
-            id: '3',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'Mike Johnson',
-            team: {
-              name: 'Cangrejeros',
-              code: 'SCE',
-            },
-          },
-          statValue: 22.8,
-        },
-        {
-          position: 4,
-          player: {
-            id: '4',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'Emily Davis',
-            team: {
-              name: 'Cangrejeros',
-              code: 'SCE',
-            },
-          },
-          statValue: 21.5,
-        },
-        {
-          position: 5,
-          player: {
-            id: '5',
-            avatarUrl: 'https://dummyimage.com/60x60/ccc/fff',
-            name: 'Chris Wilson',
-            team: {
-              name: 'Cangrejeros',
-              code: 'SCE',
-            },
-          },
-          statValue: 20.9,
-        },
-      ]}
+        statValue: item.value,
+      }))}
     />
   );
 }

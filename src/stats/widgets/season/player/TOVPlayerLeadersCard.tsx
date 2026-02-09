@@ -14,7 +14,7 @@ type PlayerLeadersResponse = {
 const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
   const { data, error } = await getClient().query<PlayerLeadersResponse>({
     query: SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY,
-    variables: { statsCode: 'POINTS_AVG', first: ITEMS_PER_PAGE },
+    variables: { statsCode: 'TURNOVERS_AVG', first: ITEMS_PER_PAGE },
   });
 
   if (error) {
@@ -29,12 +29,12 @@ const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
   );
 };
 
-export default async function PPGPlayerLeadersCard() {
+export default async function TOVPlayerLeadersCard() {
   const data: TopPlayerLeaderStatsType[] = await fetchTopPlayerLeaders();
   return (
     <SeasonPlayerLeadersCard
-      title="Puntos por juego"
-      subtitle="PPG"
+      title="Turnovers por juego"
+      subtitle="TOV"
       data={data.map((item, index) => ({
         position: index + 1,
         player: {
