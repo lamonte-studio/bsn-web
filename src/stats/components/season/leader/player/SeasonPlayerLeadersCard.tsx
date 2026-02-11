@@ -48,7 +48,7 @@ export default function SeasonPlayerLeadersCard({ title, subtitle, data }: Props
           )}
         </ul>
       </div>
-      <div className="border-t border-[rgba(0,0,0,0.13)] p-3.5">
+      <div className="border-t border-[rgba(0,0,0,0.13)] p-3.5 hidden">
         <p className="text-center">
           <a
             href="#"

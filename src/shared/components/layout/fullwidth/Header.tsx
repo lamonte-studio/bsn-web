@@ -49,11 +49,16 @@ export default function HeaderBoxLayout() {
             <div className="hidden md:block">
               <ul className="flex flex-row gap-[20px] lg:gap-[30px]">
                 <li>
+                  <Link href="/" className="text-[20px] text-white">
+                    Inicio
+                  </Link>
+                </li>
+                <li className="hidden">
                   <Link href="/playoffs" className="text-[20px] text-white">
                     Playoffs
                   </Link>
                 </li>
-                <li>
+                <li className="hidden">
                   <Link href="/calendario" className="text-[20px] text-white">
                     Calendario
                   </Link>
@@ -63,7 +68,7 @@ export default function HeaderBoxLayout() {
                     Noticias
                   </Link>
                 </li>
-                <li>
+                <li className="hidden">
                   <Popover>
                     <PopoverButton className="text-[20px] text-white focus-visible:outline-none data-open:border-b-1 data-open:border-white data-open:text-[rgba(255,255,255,0.7)]">
                       Equipos
@@ -266,12 +271,12 @@ export default function HeaderBoxLayout() {
                     </li>
                   </ul> */}
                 </li>
-                <li>
+                <li className="hidden">
                   <Link href="/jugadores" className="text-[20px] text-white">
                     Jugadores
                   </Link>
                 </li>
-                <li>
+                <li className="hidden">
                   <Link href="/estadisticas" className="text-[20px] text-white">
                     Estadísticas
                   </Link>
@@ -281,7 +286,11 @@ export default function HeaderBoxLayout() {
             <div className="hidden lg:block">
               <ul className="flex flex-row">
                 <li className="flex items-center justify-center h-[40px] w-[40px]">
-                  <a href="#">
+                  <a
+                    href="https://www.instagram.com/bsnpr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <img
                       src="/assets/images/icons/social/icon-instagram.svg"
                       alt=""
@@ -289,7 +298,11 @@ export default function HeaderBoxLayout() {
                   </a>
                 </li>
                 <li className="flex items-center justify-center h-[40px] w-[40px]">
-                  <a href="#">
+                  <a
+                    href="https://www.facebook.com/bsnpr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <img
                       src="/assets/images/icons/social/icon-facebook.svg"
                       alt=""
@@ -297,12 +310,20 @@ export default function HeaderBoxLayout() {
                   </a>
                 </li>
                 <li className="flex items-center justify-center h-[40px] w-[40px]">
-                  <a href="#">
+                  <a
+                    href="https://x.com/bsnpr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <img src="/assets/images/icons/social/icon-x.svg" alt="" />
                   </a>
                 </li>
                 <li className="flex items-center justify-center h-[40px] w-[40px]">
-                  <a href="#">
+                  <a
+                    href="https://www.tiktok.com/@bsnpr?lang=en"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <img
                       src="/assets/images/icons/social/icon-tiktok.svg"
                       alt=""
@@ -335,7 +356,7 @@ export default function HeaderBoxLayout() {
                   <span className="text-[36px] text-white">Inicio</span>
                 </Link>
               </li>
-              <li className="px-[30px]">
+              <li className="px-[30px] hidden">
                 <Link href="/calendario" className="block py-[8px]">
                   <span className="text-[36px] text-white">Calendario</span>
                 </Link>
@@ -345,12 +366,12 @@ export default function HeaderBoxLayout() {
                   <span className="text-[36px] text-white">Noticias</span>
                 </Link>
               </li>
-              <li className="px-[30px]">
+              <li className="px-[30px] hidden">
                 <Link href="/jugadores" className="block py-[8px]">
                   <span className="text-[36px] text-white">Jugadores</span>
                 </Link>
               </li>
-              <li className="px-[30px]">
+              <li className="px-[30px] hidden">
                 <Disclosure>
                   <DisclosureButton className="cursor-pointer py-[8px] text-[36px] text-left text-white w-full">
                     Equipos
@@ -505,7 +526,7 @@ export default function HeaderBoxLayout() {
                   </DisclosurePanel>
                 </Disclosure>
               </li>
-              <li className="px-[30px]">
+              <li className="px-[30px] hidden">
                 <Link href="/estadisticas" className="block py-[8px]">
                   <span className="text-[36px] text-white">Estadísticas</span>
                 </Link>

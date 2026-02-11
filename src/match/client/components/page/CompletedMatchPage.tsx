@@ -84,24 +84,6 @@ export default function CompletedMatchPage({
             <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Box Score
             </Tab>
-            <Tab
-              className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white"
-              disabled
-            >
-              Play-by-Play
-            </Tab>
-            <Tab
-              className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white"
-              disabled
-            >
-              Equipos
-            </Tab>
-            <Tab
-              className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white"
-              disabled
-            >
-              Shot Chart
-            </Tab>
           </div>
         </TabList>
         <TabPanels>
@@ -278,15 +260,6 @@ export default function CompletedMatchPage({
             <div className="container">
               <MatchBoxScoreWidget match={match} />
             </div>
-          </TabPanel>
-          <TabPanel>
-            <div className="container">Play-by-Play Content</div>
-          </TabPanel>
-          <TabPanel>
-            <div className="container">Equipos Content</div>
-          </TabPanel>
-          <TabPanel>
-            <div className="container">Shot Chart Content</div>
           </TabPanel>
         </TabPanels>
       </TabGroup>

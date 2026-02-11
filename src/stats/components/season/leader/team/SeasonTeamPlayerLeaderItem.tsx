@@ -21,7 +21,7 @@ export default function SeasonTeamPlayerLeaderItem({
   return (
     <Link
       href={`/jugadores/${player.id}`}
-      className="flex items-center py-1 gap-3"
+      className="flex items-center py-1 gap-3 pointer-events-none cursor-default"
     >
       <div className="w-4 text-right">
         <span className="font-barlow-condensed text-[15px] text-[rgba(0,0,0,0.8)]">

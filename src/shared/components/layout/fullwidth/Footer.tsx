@@ -1,3 +1,4 @@
+import TeamLinkCard from '@/team/components/card/TeamLinkCard';
 import Link from 'next/link';
 
 export default function FooterBoxLayout() {
@@ -8,7 +9,11 @@ export default function FooterBoxLayout() {
           <div className="md:col-span-6 lg:col-span-3">
             <p className="mb-4 text-center md:mb-[58px] md:text-left">
               <a href="#" className="inline-block">
-                <img src="/assets/images/logo.png" alt="" className="w-[100px] md:w-auto" />
+                <img
+                  src="/assets/images/logo.png"
+                  alt=""
+                  className="w-[100px] md:w-auto"
+                />
               </a>
             </p>
             <p className="hidden mb-4 md:block">
@@ -21,7 +26,9 @@ export default function FooterBoxLayout() {
             </p>
             <div className="flex flex-row gap-[8px] justify-center items-center mb-4 md:justify-start xl:gap-[13px]">
               <a
-                href="#"
+                href="https://www.instagram.com/bsnpr/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="border border-[rgba(125,125,125,0.24)] flex items-center justify-center h-[40px] w-[40px] rounded-full"
               >
                 <img
@@ -30,7 +37,9 @@ export default function FooterBoxLayout() {
                 />
               </a>
               <a
-                href="#"
+                href="https://www.facebook.com/bsnpr/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="border border-[rgba(125,125,125,0.24)] flex items-center justify-center h-[40px] w-[40px] rounded-full"
               >
                 <img
@@ -39,7 +48,9 @@ export default function FooterBoxLayout() {
                 />
               </a>
               <a
-                href="#"
+                href="https://www.youtube.com/@BaloncestoSuperiorNacionalPR"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="border border-[rgba(125,125,125,0.24)] flex items-center justify-center h-[40px] w-[40px] rounded-full"
               >
                 <img
@@ -48,13 +59,17 @@ export default function FooterBoxLayout() {
                 />
               </a>
               <a
-                href="#"
+                href="https://x.com/bsnpr"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="border border-[rgba(125,125,125,0.24)] flex items-center justify-center h-[40px] w-[40px] rounded-full"
               >
                 <img src="/assets/images/icons/social/icon-x.svg" alt="" />
               </a>
               <a
-                href="#"
+                href="https://www.tiktok.com/@bsnpr?lang=en"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="border border-[rgba(125,125,125,0.24)] flex items-center justify-center h-[40px] w-[40px] rounded-full"
               >
                 <img src="/assets/images/icons/social/icon-tiktok.svg" alt="" />
@@ -76,7 +91,7 @@ export default function FooterBoxLayout() {
                   Inicio
                 </a>
               </li>
-              <li className="text-center md:text-right lg:text-left">
+              <li className="text-center md:text-right lg:text-left hidden">
                 <a
                   href="#"
                   className="font-special-gothic-condensed-one text-white text-[26px]"
@@ -92,7 +107,7 @@ export default function FooterBoxLayout() {
                   Noticias
                 </a>
               </li>
-              <li className="text-center md:text-right lg:text-left">
+              <li className="text-center md:text-right lg:text-left hidden">
                 <a
                   href="#"
                   className="font-special-gothic-condensed-one text-white text-[26px]"
@@ -100,7 +115,7 @@ export default function FooterBoxLayout() {
                   Jugadores
                 </a>
               </li>
-              <li className="text-center md:text-right lg:text-left">
+              <li className="text-center md:text-right lg:text-left hidden">
                 <a
                   href="#"
                   className="font-special-gothic-condensed-one text-white text-[26px]"
@@ -117,186 +132,18 @@ export default function FooterBoxLayout() {
               </h4>
             </div>
             <div className="grid grid-cols-3 gap-[6px] mb-6 md:grid-cols-4 lg:grid-cols-6">
-              <Link href="/equipos/AGU">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Aguada.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Santeros
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/ARE">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Arecibo.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Capitanes
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/BAY">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Bayamon.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Vaqueros
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/CAG">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Caguas.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Criollos
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/CAR">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Carolina.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Gigantes
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/GUA">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Guaynabo.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Mets
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/MAN">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Manati.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Osos
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/MAY">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Mayaguez.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Indios
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/PON">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Ponce.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Leones
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/QUE">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Quebradillas.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Piratas
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/SGE">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/San-German.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Atléticos
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/equipos/SCE">
-                <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
-                  <div className="flex flex-col justify-center items-center gap-0.5">
-                    <img
-                      src="/assets/images/teams/Santurce.png"
-                      alt=""
-                      height="56"
-                      width="56"
-                    />
-                    <p className="font-special-gothic-condensed-one text-sm text-white">
-                      Cangrejeros
-                    </p>
-                  </div>
-                </div>
-              </Link>
+              <TeamLinkCard teamCode="AGU" teamName="Santeros" />
+              <TeamLinkCard teamCode="ARE" teamName="Capitanes" />
+              <TeamLinkCard teamCode="BAY" teamName="Vaqueros" />
+              <TeamLinkCard teamCode="CAG" teamName="Criollos" />
+              <TeamLinkCard teamCode="CAR" teamName="Gigantes" />
+              <TeamLinkCard teamCode="GBO" teamName="Mets" />
+              <TeamLinkCard teamCode="MAN" teamName="Osos" />
+              <TeamLinkCard teamCode="MAY" teamName="Indios" />
+              <TeamLinkCard teamCode="PON" teamName="Leones" />
+              <TeamLinkCard teamCode="QUE" teamName="Piratas" />
+              <TeamLinkCard teamCode="SGE" teamName="Atléticos" />
+              <TeamLinkCard teamCode="SCE" teamName="Cangrejeros" />
             </div>
           </div>
         </div>
