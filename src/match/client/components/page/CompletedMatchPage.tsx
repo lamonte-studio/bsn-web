@@ -1,13 +1,17 @@
 'use client';
 
-import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+import { YouTubeEmbed } from '@next/third-parties/google';
+
 import MatchInfoCard from '@/match/components/MatchInfoCard';
 import CompletedMatchScoreBoard from '@/match/components/scoreboard/CompletedMatchScoreBoard';
 import MatchQuarterScoreBoard from '@/match/components/scoreboard/MatchQuarterScoreBoard';
-import { MatchType } from '@/match/types';
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
 import MatchPlayerLeadersCard from '@/stats/components/season/leader/player/MatchPlayerLeadersCard';
+import AdSlot from '@/shared/client/components/gtm/AdSlot';
+
+import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
+import { MatchType } from '@/match/types';
 
 type MatchPlayerBoxScore = {
   player: {
@@ -89,7 +93,7 @@ export default function CompletedMatchPage({
         <TabPanels>
           <TabPanel>
             <div className="container">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-6 md:mt-[30px] lg:mt-[60px]">
                 <div className="lg:col-span-8 lg:pr-16">
                   <div className="mb-6 md:mb-10 lg:mb-15">
                     <div className="flex flex-row justify-between items-center">
@@ -236,6 +240,22 @@ export default function CompletedMatchPage({
                   </div>
                 </div>
                 <div className="lg:col-span-4">
+                  {match.youtube && (
+                    <div className="mb-5">
+                      <div className="border border-[#EAEAEA] flex-1 rounded-[12px] bg-white shadow-[0px_1px_3px_0px_#14181F0A]">
+                        <div className="px-[20px] pt-[20px] flex flex-row justify-between items-center lg:px-[30px] lg:pt-[24px]">
+                          <h3 className="text-[22px] text-black md:text-[24px]">
+                            Resumen
+                          </h3>
+                        </div>
+                        <div className="p-[20px] lg:pt-[20px] lg:p-[30px]">
+                          <div className="rounded-[8px] overflow-hidden">
+                            <YouTubeEmbed videoid={match.youtube} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   <div className="mb-5">
                     <MatchInfoCard
                       startAt={match.startAt}
@@ -245,12 +265,11 @@ export default function CompletedMatchPage({
                     />
                   </div>
                   <div className="mb-4">
-                    <div className="flex justify-center">
-                      <img
-                        src="https://dummyimage.com/300x250/ccc/fff"
-                        alt=""
-                      />
-                    </div>
+                    <AdSlot
+                      adUnit="/23296921845/300-250"
+                      size={[300, 250]}
+                      elementId="div-gpt-ad-300-250-1"
+                    />
                   </div>
                 </div>
               </div>
