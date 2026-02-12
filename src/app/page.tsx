@@ -6,59 +6,70 @@ import RPGPlayerLeadersCard from '@/stats/widgets/season/player/RPGPlayerLeaders
 import ThreePTPlayerLeadersCard from '@/stats/widgets/season/player/ThreePTPlayerLeadersCard';
 import TOVPlayerLeadersCard from '@/stats/widgets/season/player/TOVPlayerLeadersCard';
 import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
-import TheRouteWidget from '@/highlights/widgets/TheRouteWidget';
-import TopPerformancesWidget from '@/highlights/widgets/TopPerformancesWidget';
-import DailyMatchesSliderWidget from '@/match/client/containers/DailyMatchesSliderWidget';
+import RecentCalendarSliderWidget from '@/match/client/containers/RecentCalendarSliderWidget';
 import SeasonStandingsTableBasicGroupsWidget from '@/stats/widgets/standings/table/SeasonStandingsTableBasicGroupsWidget';
 import TopNewsWidget from '@/news/widgets/TopNewsWidget';
 import Link from 'next/link';
+import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
+import WSCHomeStories from '@/highlights/client/components/WSCHomeStories';
+import WSCMoments from '@/highlights/client/components/WSCMoments';
+import AdSlot from '@/shared/client/components/gtm/AdSlot';
 
 export default function Home() {
   return (
     <FullWidthLayout>
+      <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
       <section className="bg-[#0F171F] pb-[116px] lg:pb-[108px]">
         <div className="container">
-          <DailyMatchesSliderWidget />
+          <RecentCalendarSliderWidget />
         </div>
       </section>
       <section className="container mb-8 -mt-[94px] lg:mb-16 lg:-mt-[76px]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-8">
-            <div>
+            <div className="mb-4 md:mb-8 lg:mb-12">
               <TopNewsWidget />
             </div>
-            <div className="mb-8">
-              <div>
-                <h2>Mejores jugadas</h2>
+            <div className="mb-4 md:mb-8 lg:mb-14">
+              <div className="flex flex-row justify-between items-center mb-4 md:mb-[26px]">
+                <div>
+                  <h3 className="text-[22px] text-black md:text-[24px]">
+                    #LaLigaMásDura
+                  </h3>
+                </div>
               </div>
               <div>
-                <TopPerformancesWidget />
+                <WSCHomeStories />
               </div>
             </div>
-            <div className="mb-16">
-              <div>
-                <h2>La ruta</h2>
+            <div className="mb-4 md:mb-8 lg:mb-14">
+              <div className="flex flex-row justify-between items-center mb-4 md:mb-[26px]">
+                <div>
+                  <h3 className="text-[22px] text-black md:text-[24px]">
+                    Highlights
+                  </h3>
+                </div>
               </div>
               <div>
-                <TheRouteWidget />
+                <WSCMoments />
               </div>
             </div>
             <div>
               <div className="flex justify-center">
-                <img src="https://dummyimage.com/728x90/ccc/fff" alt="" />
+                <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="div-gpt-ad-728-90-1" />
               </div>
             </div>
           </div>
           <div className="lg:col-span-4">
-            {/* <div className="mb-4">
+            <div className="mb-4">
               <LatestNewsWidget />
-            </div> */}
+            </div>
             <div className="mb-4">
               <SeasonStandingsTableBasicGroupsWidget />
             </div>
             <div className="mb-4">
               <div className="flex justify-center">
-                <img src="https://dummyimage.com/300x250/ccc/fff" alt="" />
+                <AdSlot adUnit="/23296921845/300-250" size={[300, 250]} elementId="div-gpt-ad-300-250-1" />
               </div>
             </div>
           </div>

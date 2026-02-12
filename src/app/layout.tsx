@@ -4,6 +4,7 @@ import {
   Barlow_Condensed,
   Special_Gothic_Condensed_One,
 } from 'next/font/google';
+import { GoogleTagManager } from '@next/third-parties/google'
 import './globals.css';
 import { ApolloWrapper } from './ApolloWrapper';
 
@@ -39,6 +40,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
       </head>
       <body
         className={`${barlow.variable} ${barlowCondensed.variable} ${specialGothicCondensedOne.variable}  antialiased`}

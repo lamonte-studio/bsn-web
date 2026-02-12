@@ -2,17 +2,15 @@
 
 import { DEFAULT_MEDIA_PROVIDER, MATCH_STATUS } from '@/constants';
 import { MatchType } from '@/match/types';
-import DefaultSlider from '@/shared/client/components/slider/DefaultSlider';
-import moment from 'moment';
-import Link from 'next/link';
+import RecentCalendarSlider from '@/shared/client/components/slider/RecentCalendarSlider';
 import { useMemo } from 'react';
 import LiveMatchCard from '../components/card/LiveMatchCard';
 import CompletedMatchCard from '../components/card/CompletedMatchCard';
 import ScheduledMatchCard from '../components/card/ScheduledMatchCard';
-import { useTodayMatches } from '../hooks/matches';
+import { useRecentCalendar } from '../hooks/matches';
 
-export default function DailyMatchesSliderWidget() {
-  const { data, loading, error } = useTodayMatches(moment().format('YYYY-MM-DD'));
+export default function RecentCalendarSliderWidget() {
+  const { data, loading, error } = useRecentCalendar();
 
   const sortedMatches = useMemo(() => {
     return data.slice().sort((a: MatchType, b: MatchType) => {
@@ -45,7 +43,7 @@ export default function DailyMatchesSliderWidget() {
   }
 
   return (
-    <DefaultSlider
+    <RecentCalendarSlider
       data={sortedMatches}
       render={(item: MatchType) => (
         <div key={`match-${item.providerId}`} className="px-1.5">

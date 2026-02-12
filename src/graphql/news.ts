@@ -7,6 +7,7 @@ export const LATEST_NEWS = gql`
         node {
           id
           title
+          excerpt
           publishedAt
           imageUrl
           url

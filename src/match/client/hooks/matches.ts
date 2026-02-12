@@ -1,30 +1,22 @@
-import { DATE_TIME_TZ_FORMAT } from '@/constants';
-import { DAILY_MATCHES, MATCH_TEAM_PLAYERS_BOXSCORE } from '@/graphql/match';
+import { RECENT_CALENDAR, MATCH_TEAM_PLAYERS_BOXSCORE } from '@/graphql/match';
 import { MatchType } from '@/match/types';
 import { useQuery } from '@apollo/client/react';
-import moment from 'moment';
-import { useMemo } from 'react';
 
-type DailyMatchesResponse = {
-  matches: MatchType[];
+type RecentCalendarResponse = {
+  recentCalendarConnection: {
+    edges: {
+      node: MatchType;
+    }[];
+  };
 };
 
-export function useTodayMatches(date?: string) {
-  const fromDate = useMemo(() => {
-    const fromStartDate = moment(date).startOf('day');
-    return fromStartDate.format(DATE_TIME_TZ_FORMAT);
-  }, [date]);
-  const toDate = useMemo(() => {
-    const toEndDate = moment(date).endOf('day');
-    return toEndDate.format(DATE_TIME_TZ_FORMAT);
-  }, [date]);
-
-  const { data, loading, error } = useQuery<DailyMatchesResponse>(
-    DAILY_MATCHES,
+export function useRecentCalendar(usePolling = false) {
+  const { data, loading, error } = useQuery<RecentCalendarResponse>(
+    RECENT_CALENDAR,
     {
-      variables: { fromDate, toDate },
+      variables: { first: 9 },
       fetchPolicy: 'network-only',
-      pollInterval: 30 * 1000, // 30 seconds in milliseconds
+      pollInterval: usePolling ? 30 * 1000 : 0, // 30 seconds in milliseconds
     },
   );
 
@@ -32,7 +24,7 @@ export function useTodayMatches(date?: string) {
     console.error(error);
   }
 
-  return { data: data?.matches ?? [], loading, error };
+  return { data: data?.recentCalendarConnection.edges.map(edge => edge.node) ?? [], loading, error };
 }
 
 type MatchTeamPlayersBoxScoreResponse = {

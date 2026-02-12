@@ -3,7 +3,7 @@ import { NewsType } from '../types';
 import { getClient } from '@/apollo-client';
 import { LATEST_NEWS } from '@/graphql/news';
 
-const NEWS_PER_PAGE = 5;
+const NEWS_PER_PAGE = 6;
 
 type LatestNewsResponse = {
   news: {
@@ -22,7 +22,8 @@ const fetchLatestNews = async (): Promise<NewsType[]> => {
     return [];
   }
 
-  return data?.news.edges.map((edge: { node: NewsType }) => edge.node) ?? [];
+  const latestNews = data?.news.edges.map((edge: { node: NewsType }) => edge.node) ?? [];
+  return latestNews.slice(1);
 };
 
 export default async function LatestNewsWidget() {
