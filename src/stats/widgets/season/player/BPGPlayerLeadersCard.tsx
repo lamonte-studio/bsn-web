@@ -34,7 +34,7 @@ export default async function BPGPlayerLeadersCard() {
 
   return (
     <SeasonPlayerLeadersCard
-      title="Tapones por juego (ejemplo)"
+      title="Tapones por juego"
       subtitle="BPG"
       data={data.map((item, index) => ({
         position: index + 1,

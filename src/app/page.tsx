@@ -3,8 +3,6 @@ import APGPlayerLeadersCard from '@/stats/widgets/season/player/APGPlayerLeaders
 import BPGPlayerLeadersCard from '@/stats/widgets/season/player/BPGPlayerLeadersCard';
 import PPGPlayerLeadersCard from '@/stats/widgets/season/player/PPGPlayerLeadersCard';
 import RPGPlayerLeadersCard from '@/stats/widgets/season/player/RPGPlayerLeadersCard';
-import ThreePTPlayerLeadersCard from '@/stats/widgets/season/player/ThreePTPlayerLeadersCard';
-import TOVPlayerLeadersCard from '@/stats/widgets/season/player/TOVPlayerLeadersCard';
 import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
 import RecentCalendarSliderWidget from '@/match/client/containers/RecentCalendarSliderWidget';
 import SeasonStandingsTableBasicGroupsWidget from '@/stats/widgets/standings/table/SeasonStandingsTableBasicGroupsWidget';
@@ -14,6 +12,8 @@ import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import WSCHomeStories from '@/highlights/client/components/WSCHomeStories';
 import WSCMoments from '@/highlights/client/components/WSCMoments';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
+import SPGPlayerLeadersCard from '@/stats/widgets/season/player/SPGPlayerLeadersCard';
+import FGMPlayerLeadersCard from '@/stats/widgets/season/player/FGMPlayerLeadersCard';
 
 export default function Home() {
   return (
@@ -80,7 +80,7 @@ export default function Home() {
           <h2 className="text-[22px] text-[rgba(15,23,31,1)] md:text-[32px]">
             Líderes de Temporada 2026
           </h2>
-          <div className="hidden md:block">
+          <div className="hidden">
             <Link
               href="/estadisticas"
               className="bg-[#FCFCFC] border border-[#D9D3D3] inline-block min-w-[216px] p-[12px] rounded-[12px] shadow-[0px_1px_2px_0px_#14181F0D] text-center"
@@ -97,8 +97,8 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <BPGPlayerLeadersCard />
-            <ThreePTPlayerLeadersCard />
-            <TOVPlayerLeadersCard />
+            <SPGPlayerLeadersCard />
+            <FGMPlayerLeadersCard />
           </div>
         </div>
       </section>

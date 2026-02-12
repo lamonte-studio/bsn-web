@@ -244,6 +244,7 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         steals
         blocks
         foulsPersonal
+        points
       }
       visitorTeamBoxscore {
         fieldGoalsMade
@@ -262,6 +263,7 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         steals
         blocks
         foulsPersonal
+        points
       }
     }
   }

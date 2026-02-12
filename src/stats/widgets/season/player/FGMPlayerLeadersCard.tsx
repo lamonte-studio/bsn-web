@@ -14,7 +14,7 @@ type PlayerLeadersResponse = {
 const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
   const { data, error } = await getClient().query<PlayerLeadersResponse>({
     query: SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY,
-    variables: { statsCode: 'STEAL_AVG', first: ITEMS_PER_PAGE },
+    variables: { statsCode: 'FG_AVG', first: ITEMS_PER_PAGE },
   });
 
   if (error) {
@@ -29,13 +29,13 @@ const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
   );
 };
 
-export default async function SPGPlayerLeadersCard() {
+export default async function FGMPlayerLeadersCard() {
   const data: TopPlayerLeaderStatsType[] = await fetchTopPlayerLeaders();
 
   return (
     <SeasonPlayerLeadersCard
-      title="Robos por juego"
-      subtitle="SPG"
+      title="% Tiros de campo"
+      subtitle="FG%"
       data={data.map((item, index) => ({
         position: index + 1,
         player: {

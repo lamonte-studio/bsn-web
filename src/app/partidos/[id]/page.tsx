@@ -215,7 +215,7 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
     }
 
     response.homeTeamBoxScore = {
-      points: 0,
+      points: matchTeamsBoxScore.homeTeamBoxscore?.points ?? 0,
       rebounds: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
       assists: matchTeamsBoxScore.homeTeamBoxscore?.assists ?? 0,
       steals: matchTeamsBoxScore.homeTeamBoxscore?.steals ?? 0,
@@ -223,7 +223,7 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
       turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
     };
     response.visitorTeamBoxScore = {
-      points: 0,
+      points: matchTeamsBoxScore.visitorTeamBoxscore?.points ?? 0,
       rebounds: matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
       assists: matchTeamsBoxScore.visitorTeamBoxscore?.assists ?? 0,
       steals: matchTeamsBoxScore.visitorTeamBoxscore?.steals ?? 0,

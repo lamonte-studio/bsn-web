@@ -9,6 +9,7 @@ import { MatchType } from '@/match/types';
 import MatchFeaturedPlayers from '../MatchFeaturedPlayers';
 import { useMemo } from 'react';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
+import AdSlot from '@/shared/client/components/gtm/AdSlot';
 
 type LeadersCategoryStatsType = {
   player: {
@@ -187,7 +188,7 @@ export default function ScheduledMatchPage({
                 </div>
               </div>
               <div className="flex justify-center mb-6 md:mb-10 lg:mb-15">
-                <img src="https://dummyimage.com/728x90/ccc/fff" alt="" />
+                <AdSlot adUnit="/23296921845/300-250" size={[300, 250]} elementId="div-gpt-ad-300-250-1" />
               </div>
             </div>
             <div className="lg:col-span-4">
