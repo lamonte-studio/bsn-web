@@ -20,8 +20,9 @@ export default function Home() {
     <FullWidthLayout>
       <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
       <section className="bg-[#0F171F] pb-[116px] lg:pb-[108px]">
-        <div className="container">
+        <div className="container relative">
           <RecentCalendarSliderWidget />
+          <div className="absolute bg-[linear-gradient(-90deg,rgba(15,23,31,0.9)_21.8%,rgba(0,0,0,0)_96.31%)] top-0 bottom-0 right-0 w-[48px] md:w-[232px]"></div>
         </div>
       </section>
       <section className="container mb-8 -mt-[94px] lg:mb-16 lg:-mt-[76px]">

@@ -45,3 +45,37 @@ body {
   overscroll-behavior: none;
   overflow-x: none;
 }
+
+/* Recent Calendar Slider */
+.recent-calendar-slider .slick-arrow {
+  cursor: pointer;
+  color: #0000;
+  background-color: rgba(38, 38, 38, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 100px;
+  outline: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  z-index: 10;
+}
+
+.recent-calendar-slider .slick-prev {
+  background-image: url('/assets/images/icons/icon-slider-prev.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  left: -12px;
+}
+
+.recent-calendar-slider .slick-next {
+  background-image: url('/assets/images/icons/icon-slider-next.png');
+  background-position: center;
+  background-repeat: no-repeat;  
+  right: -12px;
+}

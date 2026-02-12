@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import Link from 'next/link';
 import moment from 'moment';
 import cx from 'classnames';
 import {
@@ -10,8 +11,8 @@ import {
   CardHeader,
 } from '@/shared/client/components/ui';
 import MatchCompetitor from '../competitor/MatchCompetitor';
+import { getFirstWord } from '@/utils/text';
 import { MATCH_DATE_FORMAT } from '@/constants';
-import Link from 'next/link';
 
 type Props = {
   matchProviderId?: string;
@@ -56,7 +57,7 @@ export default function CompletedMatchCard({
   );
 
   return (
-    <Card>
+    <Card className="w-[308px]">
       <CardHeader className="border-b border-b-[rgba(255,255,255,0.05)] mx-5">
         <div className="flex flex-row justify-between items-center">
           <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
@@ -74,7 +75,7 @@ export default function CompletedMatchCard({
               <div className="flex-1">
                 <MatchCompetitor
                   code={visitorTeam.code}
-                  name={visitorTeam.nickname}
+                  name={getFirstWord(visitorTeam.nickname)}
                   city={visitorTeam.city}
                   disabled={isHomeTeamWinner}
                 />
@@ -106,7 +107,7 @@ export default function CompletedMatchCard({
               <div className="flex-1">
                 <MatchCompetitor
                   code={homeTeam.code}
-                  name={homeTeam.nickname}
+                  name={getFirstWord(homeTeam.nickname)}
                   city={homeTeam.city}
                   disabled={!isHomeTeamWinner}
                 />

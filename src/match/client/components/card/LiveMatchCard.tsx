@@ -1,19 +1,20 @@
 'use client';
 
-import { MATCH_STATUS } from '@/constants';
+import { useMemo } from 'react';
+import Link from 'next/link';
+import Lottie from 'lottie-react';
+import moment from 'moment';
+
 import {
   Card,
   CardBody,
   CardFooter,
   CardHeader,
 } from '@/shared/client/components/ui';
-import moment from 'moment';
-import { useMemo } from 'react';
-import Lottie from 'lottie-react';
 import MatchCompetitor from '../competitor/MatchCompetitor';
-
 import animationLiveStreamData from './live-stream.json';
-import Link from 'next/link';
+import { getFirstWord } from '@/utils/text';
+import { MATCH_STATUS } from '@/constants';
 
 type Props = {
   matchProviderId?: string;
@@ -74,7 +75,7 @@ export default function LiveMatchCard({
   }, [overtimePeriods, currentQuarter]);
 
   return (
-    <Card>
+    <Card className="w-[308px]">
       <CardHeader className="border-b border-b-[rgba(255,255,255,0.05)] mx-5">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row justify-start items-center gap-2">
@@ -150,7 +151,7 @@ export default function LiveMatchCard({
               <div className="flex-1">
                 <MatchCompetitor
                   code={visitorTeam.code}
-                  name={visitorTeam.nickname}
+                  name={getFirstWord(visitorTeam.nickname)}
                   city={visitorTeam.city}
                   avatarSpaceHorizontal={14}
                 />
@@ -165,7 +166,7 @@ export default function LiveMatchCard({
               <div className="flex-1">
                 <MatchCompetitor
                   code={homeTeam.code}
-                  name={homeTeam.nickname}
+                  name={getFirstWord(homeTeam.nickname)}
                   city={homeTeam.city}
                   avatarSpaceHorizontal={14}
                 />

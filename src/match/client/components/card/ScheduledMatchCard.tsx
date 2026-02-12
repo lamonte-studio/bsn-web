@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import Link from 'next/link';
 import moment from 'moment';
 import {
   Card,
@@ -8,9 +9,9 @@ import {
   CardFooter,
   CardHeader,
 } from '@/shared/client/components/ui';
-import { MATCH_DATE_FORMAT, MATCH_TIME_FORMAT } from '@/constants';
 import MatchCompetitor from '../competitor/MatchCompetitor';
-import Link from 'next/link';
+import { getFirstWord } from '@/utils/text';
+import { MATCH_DATE_FORMAT, MATCH_TIME_FORMAT } from '@/constants';
 
 type Props = {
   matchProviderId?: string;
@@ -64,10 +65,10 @@ export default function ScheduledMatchCard({
   }, [visitorTeam.competitionStandings]);
 
   return (
-    <Card>
+    <Card className="w-[308px]">
       <CardHeader className="border-b border-b-[rgba(255,255,255,0.05)] mx-5">
         <div className="flex flex-row justify-between items-center">
-          <p className="font-barlow font-medium text-sm text-[rgba(255,255,255,0.8)]">
+          <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
             {moment(startAt).format(MATCH_DATE_FORMAT)}
           </p>
           <div className="flex flex-row items-center gap-2">
@@ -85,7 +86,7 @@ export default function ScheduledMatchCard({
               <div className="flex-1">
                 <MatchCompetitor
                   code={visitorTeam.code}
-                  name={visitorTeam.nickname}
+                  name={getFirstWord(visitorTeam.nickname)}
                   city={visitorTeam.city}
                   ranking={visitorTeamStandings}
                 />
@@ -98,20 +99,22 @@ export default function ScheduledMatchCard({
               <div className="flex-1">
                 <MatchCompetitor
                   code={homeTeam.code}
-                  name={homeTeam.nickname}
+                  name={getFirstWord(homeTeam.nickname)}
                   city={homeTeam.city}
                   ranking={homeTeamStandings}
                 />
               </div>
-              <a
-                href={ticketUrl}
-                className="border border-[rgba(255,255,255,0.15)] flex flex-row justify-center items-center gap-2 px-6 py-1.5 rounded-[18px]"
-              >
-                <img src="/assets/images/icons/icon-ticket.png" />
-                <span className="font-special-gothic-condensed-one text-base text-white">
-                  Boletos
-                </span>
-              </a>
+              <div className="flex h-[48px] items-center">
+                <a
+                  href={ticketUrl}
+                  className="border border-[rgba(255,255,255,0.15)] flex flex-row justify-center items-center gap-2 px-6 py-1.5 rounded-[18px]"
+                >
+                  <img src="/assets/images/icons/icon-ticket.png" />
+                  <span className="font-special-gothic-condensed-one text-base text-white">
+                    Boletos
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

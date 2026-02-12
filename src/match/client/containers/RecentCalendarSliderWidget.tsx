@@ -2,18 +2,35 @@
 
 import { DEFAULT_MEDIA_PROVIDER, MATCH_STATUS } from '@/constants';
 import { MatchType } from '@/match/types';
-import RecentCalendarSlider from '@/shared/client/components/slider/RecentCalendarSlider';
+import RecentCalendarSlider from '@/match/client/components/slider/RecentCalendarSlider';
 import { useMemo } from 'react';
+import moment from 'moment';
 import LiveMatchCard from '../components/card/LiveMatchCard';
 import CompletedMatchCard from '../components/card/CompletedMatchCard';
 import ScheduledMatchCard from '../components/card/ScheduledMatchCard';
 import { useRecentCalendar } from '../hooks/matches';
+import RecentCalendarDateItem from '../components/slider/RecentCalendarDateItem';
+
+type DateItem = {
+  type: 'date-item';
+  date: string;
+  id: string;
+};
+
+type MatchItem = {
+  type: 'match';
+  data: MatchType;
+};
+
+type SliderItem = DateItem | MatchItem;
 
 export default function RecentCalendarSliderWidget() {
   const { data, loading, error } = useRecentCalendar();
 
   const sortedMatches = useMemo(() => {
-    return data.slice().sort((a: MatchType, b: MatchType) => {
+    // Primero ordenar los partidos
+    const sorted = data.slice().sort((a: MatchType, b: MatchType) => {
+      // Los partidos en vivo van primero
       if (
         [
           MATCH_STATUS.READY,
@@ -34,8 +51,37 @@ export default function RecentCalendarSliderWidget() {
         return 1;
       }
 
-      return 0;
+      // Luego ordenar por fecha
+      const dateA = moment(a.startAt);
+      const dateB = moment(b.startAt);
+      return dateA.diff(dateB);
     });
+
+    // Agrupar por día y crear items con headers de fecha
+    const groupedItems: SliderItem[] = [];
+    let lastDate = '';
+
+    sorted.forEach((match) => {
+      const matchDate = moment(match.startAt).format('YYYY-MM-DD');
+
+      // Si es un nuevo día, agregar un header de fecha
+      if (matchDate !== lastDate) {
+        groupedItems.push({
+          type: 'date-item',
+          date: match.startAt,
+          id: `date-${matchDate}`,
+        });
+        lastDate = matchDate;
+      }
+
+      // Agregar el partido
+      groupedItems.push({
+        type: 'match',
+        data: match,
+      });
+    });
+
+    return groupedItems;
   }, [data]);
 
   if (loading) {
@@ -45,52 +91,65 @@ export default function RecentCalendarSliderWidget() {
   return (
     <RecentCalendarSlider
       data={sortedMatches}
-      render={(item: MatchType) => (
-        <div key={`match-${item.providerId}`} className="px-1.5">
-          {![
-            MATCH_STATUS.COMPLETE,
-            MATCH_STATUS.FINISHED,
-            MATCH_STATUS.SCHEDULED,
-          ].includes(item.status ?? '') && (
-            <LiveMatchCard
-              homeTeam={item.homeTeam}
-              visitorTeam={item.visitorTeam}
-              currentQuarter={item.currentPeriod}
-              currentTime={item.currentTime}
-              mediaProvider={item.channel || DEFAULT_MEDIA_PROVIDER}
-              status={item.status}
-              overtimePeriods={item.overtimePeriods}
-              isFinals={item.isFinals}
-              finalsDescription={item.finalsDescription}
-            />
-          )}
-          {[MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(
-            item.status,
-          ) && (
-            <CompletedMatchCard
-              matchProviderId={item.providerId}
-              startAt={item.startAt}
-              homeTeam={item.homeTeam}
-              visitorTeam={item.visitorTeam}
-              overtimePeriods={item.overtimePeriods}
-              isFinals={item.isFinals}
-              finalsDescription={item.finalsDescription}
-            />
-          )}
-          {[MATCH_STATUS.SCHEDULED].includes(item.status) && (
-            <ScheduledMatchCard
-              matchProviderId={item.providerId}
-              startAt={item.startAt}
-              homeTeam={item.homeTeam}
-              visitorTeam={item.visitorTeam}
-              mediaProvider={item.channel || DEFAULT_MEDIA_PROVIDER}
-              ticketUrl={item.homeTeam.ticketUrl}
-              isFinals={item.isFinals}
-              finalsDescription={item.finalsDescription}
-            />
-          )}
-        </div>
-      )}
+      render={(item: SliderItem) => {
+        // Renderizar header de fecha
+        if (item.type === 'date-item') {
+          return (
+            <div key={item.id} className="px-1.5">
+              <RecentCalendarDateItem date={item.date} />
+            </div>
+          );
+        }
+
+        // Renderizar partido
+        const match = item.data;
+        return (
+          <div key={`match-${match.providerId}`} className="px-1.5">
+            {![
+              MATCH_STATUS.COMPLETE,
+              MATCH_STATUS.FINISHED,
+              MATCH_STATUS.SCHEDULED,
+            ].includes(match.status ?? '') && (
+              <LiveMatchCard
+                homeTeam={match.homeTeam}
+                visitorTeam={match.visitorTeam}
+                currentQuarter={match.currentPeriod}
+                currentTime={match.currentTime}
+                mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
+                status={match.status}
+                overtimePeriods={match.overtimePeriods}
+                isFinals={match.isFinals}
+                finalsDescription={match.finalsDescription}
+              />
+            )}
+            {[MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(
+              match.status,
+            ) && (
+              <CompletedMatchCard
+                matchProviderId={match.providerId}
+                startAt={match.startAt}
+                homeTeam={match.homeTeam}
+                visitorTeam={match.visitorTeam}
+                overtimePeriods={match.overtimePeriods}
+                isFinals={match.isFinals}
+                finalsDescription={match.finalsDescription}
+              />
+            )}
+            {[MATCH_STATUS.SCHEDULED].includes(match.status) && (
+              <ScheduledMatchCard
+                matchProviderId={match.providerId}
+                startAt={match.startAt}
+                homeTeam={match.homeTeam}
+                visitorTeam={match.visitorTeam}
+                mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
+                ticketUrl={match.homeTeam.ticketUrl}
+                isFinals={match.isFinals}
+                finalsDescription={match.finalsDescription}
+              />
+            )}
+          </div>
+        );
+      }}
     />
   );
 }

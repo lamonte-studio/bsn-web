@@ -2,7 +2,6 @@
 
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 type Props<T> = {
   data: T[];
@@ -10,7 +9,7 @@ type Props<T> = {
   keyExtractor?: (item: T, index: number) => string;
 };
 
-export default function DefaultSlider<T>({ data, render, keyExtractor }: Props<T>) {
+export default function RecentCalendarSlider<T>({ data, render, keyExtractor }: Props<T>) {
   const settings = {
     dots: false,
     infinite: false,
@@ -18,6 +17,16 @@ export default function DefaultSlider<T>({ data, render, keyExtractor }: Props<T
     slidesToShow: 3,
     slidesToScroll: 3,
     variableWidth: true,
+    responsive: [
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+    className: 'recent-calendar-slider',
   };
   return (
     <Slider {...settings}>
