@@ -1,3 +1,342 @@
-export default function DetalleEquipoPage() {
-  return <div>Detalle del Equipo BSN</div>;
+import { getClient } from '@/apollo-client';
+import {
+  TEAM_DETAIL,
+  TEAM_RECENT_CALENDAR,
+  TEAM_UPCOMING_CALENDAR,
+} from '@/graphql/team';
+import WSCHomeStories from '@/highlights/client/components/WSCHomeStories';
+import ScheduledMatchCardInline from '@/match/components/calendar/ScheduledMatchCardInline';
+import CompletedMatchCardBasic from '@/match/components/card/CompletedMatchCardBasic';
+import { MatchType } from '@/match/types';
+import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
+import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
+import TeamCalendarWidget from '@/team/client/widgets/TeamCalendarWidget';
+import TeamLeadersWidget from '@/team/client/widgets/TeamLeadersWidget';
+import TeamPlayersStatsWidget from '@/team/client/widgets/TeamPlayersStatsWidget';
+import TeamPlayersWidget from '@/team/client/widgets/TeamPlayersWidget';
+import TeamStatsWidget from '@/team/client/widgets/TeamStatsWidget';
+import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
+import TeamExternalLinksCard from '@/team/components/card/TeamExternalLinksCard';
+import { TeamType } from '@/team/types';
+import { ordinalNumber } from '@/utils/number-formater';
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+
+type TeamPageResponse = {
+  team: TeamType;
+  teamUpcomingCalendar: MatchType[];
+  teamRecentCalendar: MatchType[];
+};
+
+type TeamRecentCalendarResponse = {
+  teamRecentCalendarConnection: {
+    edges: {
+      node: MatchType;
+    }[];
+  };
+};
+
+type TeamUpcomingCalendarResponse = {
+  teamUpcomingCalendarConnection: {
+    edges: {
+      node: MatchType;
+    }[];
+  };
+};
+
+const fetchTeam = async (code: string): Promise<TeamPageResponse> => {
+  const { data, error } = await getClient().query<TeamPageResponse>({
+    query: TEAM_DETAIL,
+    variables: { code: code.toUpperCase() },
+  });
+
+  if (error) {
+    console.error('Error fetching data:', error);
+    throw new Error('Failed to fetch match data');
+  }
+
+  const team = data?.team;
+
+  if (team == null) {
+    console.error('No team data found for code:', code);
+    throw new Error('Team not found');
+  }
+
+  const teamPageResponse: TeamPageResponse = {
+    team,
+    teamUpcomingCalendar: [],
+    teamRecentCalendar: [],
+  };
+
+  const { data: teamRecentCalendarData } =
+    await getClient().query<TeamRecentCalendarResponse>({
+      query: TEAM_RECENT_CALENDAR,
+      variables: {
+        code: team.code,
+        first: 5,
+        date: new Date().toISOString(),
+      },
+    });
+
+  teamPageResponse.teamRecentCalendar =
+    teamRecentCalendarData?.teamRecentCalendarConnection.edges.map(
+      (edge) => edge.node,
+    ) || [];
+
+  const { data: teamUpcomingCalendarData } =
+    await getClient().query<TeamUpcomingCalendarResponse>({
+      query: TEAM_UPCOMING_CALENDAR,
+      variables: {
+        code: team.code,
+        first: 5,
+        date: new Date().toISOString(),
+      },
+    });
+
+  teamPageResponse.teamUpcomingCalendar =
+    teamUpcomingCalendarData?.teamUpcomingCalendarConnection.edges.map(
+      (edge) => edge.node,
+    ) || [];
+
+  return teamPageResponse;
+};
+
+export default async function DetalleEquipoPage({
+  params,
+}: PageProps<'/equipos/[slug]'>) {
+  const { slug } = await params;
+  const data: TeamPageResponse = await fetchTeam(slug);
+
+  return (
+    <FullWidthLayout>
+      <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
+      <section className="bg-[#0F171F]">
+        <div className="container">
+          <div className="mx-auto py-[20px] md:py-[42px] xl:py-[38px] lg:w-9/12 xl:w-8/12">
+            <div className="flex items-center justify-center mb-4">
+              <div
+                className="border border-3 w-[120px] h-[120px] rounded-full flex items-center justify-center"
+                style={{ borderColor: data.team.colorPrimary || '#cccccc' }}
+              >
+                <TeamLogoAvatar teamCode={data.team.code} size={68} />
+              </div>
+            </div>
+            <div className="">
+              <h2 className="text-center text-white lg:text-[42px]">
+                {data.team.name}
+              </h2>
+              <p className="font-barlow text-center text-base text-[rgba(255,255,255,0.7)]">
+                {data.team.competitionStandings?.won}-
+                {data.team.competitionStandings?.lost} •{' '}
+                {ordinalNumber(
+                  data.team.competitionStandings?.positionInGroup || 0,
+                )}{' '}
+                lugar en Grupo {data.team.group}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <TabGroup>
+        <TabList className="bg-[#0F171F] pb-[28px]">
+          <div className="container text-center space-x-[30px]">
+            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+              Resumen
+            </Tab>
+            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+              Calendario
+            </Tab>
+            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+              Jugadores
+            </Tab>
+            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+              Estadísticas
+            </Tab>
+            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+              Líderes
+            </Tab>
+          </div>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <div className="container">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-6 md:mt-[30px] lg:mt-[60px]">
+                <div className="lg:col-span-8 lg:pr-16">
+                  <div className="mb-6 md:mb-10 lg:mb-15">
+                    <div className="flex flex-row justify-between items-center mb-[30px]">
+                      <div>
+                        <h3 className="text-[22px] text-black md:text-[24px]">
+                          Próximo juego
+                        </h3>
+                      </div>
+                    </div>
+                    <div>
+                      {data.teamUpcomingCalendar.map((match) => (
+                        <ScheduledMatchCardInline
+                          key={`upcoming-calendar-${match.providerId}`}
+                          startAt={match.startAt}
+                          homeTeam={{
+                            code: match.homeTeam.code,
+                            nickname: match.homeTeam.nickname,
+                            ticketUrl: match.homeTeam.ticketUrl || '',
+                          }}
+                          visitorTeam={{
+                            code: match.visitorTeam.code,
+                            nickname: match.visitorTeam.nickname,
+                            ticketUrl: match.visitorTeam.ticketUrl || '',
+                          }}
+                          contextTeam={{
+                            code: data.team.code,
+                          }}
+                          providerId={match.providerId}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mb-6 md:mb-10 lg:mb-15">
+                    <div className="flex flex-row justify-between items-center mb-[30px]">
+                      <div>
+                        <h3 className="text-[22px] text-black md:text-[24px]">
+                          Últimos resultados
+                        </h3>
+                      </div>
+                    </div>
+                    <div
+                      className="flex flex-row flex-nowrap gap-3 overflow-x-auto"
+                      style={{
+                        msOverflowStyle: 'none',
+                        scrollbarWidth: 'none',
+                      }}
+                    >
+                      {data.teamRecentCalendar.map((match) => (
+                        <div
+                          key={`recent-calendar-${match.providerId}`}
+                          className="max-w-[150px]"
+                        >
+                          <CompletedMatchCardBasic
+                            startAt={match.startAt}
+                            homeTeam={{
+                              code: match.homeTeam.code,
+                              score: match.homeTeam.score,
+                            }}
+                            visitorTeam={{
+                              code: match.visitorTeam.code,
+                              score: match.visitorTeam.score,
+                            }}
+                            overtimePeriods={match.overtimePeriods}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mb-6 md:mb-10 lg:mb-15">
+                    <div className="flex flex-row justify-between items-center mb-[30px]">
+                      <div>
+                        <h3 className="text-[22px] text-black md:text-[24px]">
+                          Highlights
+                        </h3>
+                      </div>
+                    </div>
+                    <div>
+                      <WSCHomeStories />
+                    </div>
+                  </div>
+                </div>
+                <div className="lg:col-span-4">
+                  <div className="mb-5">
+                    <TeamExternalLinksCard
+                      instagramLink={data.team.socialInstagramUrl}
+                      facebookLink={data.team.socialFacebookUrl}
+                      youtubeLink={data.team.socialYoutubeUrl}
+                      tiktokLink={data.team.socialTiktokUrl}
+                      xLink={data.team.socialXUrl}
+                      websiteLink={data.team.socialWebsiteUrl}
+                      ticketsLink={data.team.ticketUrl}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="mt-6 mb-6 md:mt-[30px] md:mb-10 lg:mb-15 lg:mt-[60px]">
+              <div className="container">
+                <TeamCalendarWidget teamCode={data.team.code} />
+              </div>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="mt-6 mb-6 md:mt-[30px] md:mb-10 lg:mb-15 lg:mt-[60px]">
+              <div className="container">
+                <div className="flex flex-row justify-between items-center mb-[30px]">
+                  <div>
+                    <h3 className="text-[22px] text-black md:text-[24px]">
+                      Jugadores
+                    </h3>
+                  </div>
+                  <div>
+                    <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
+                      Temporada 2026 • Regular
+                    </p>
+                  </div>
+                </div>
+                <TeamPlayersWidget teamCode={data.team.code} />
+              </div>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="mt-6 mb-6 md:mt-[30px] md:mb-10 lg:mb-15 lg:mt-[60px]">
+              <div className="container">
+                <div className="flex flex-row justify-between items-center mb-[30px]">
+                  <div>
+                    <h3 className="text-[22px] text-black md:text-[24px]">
+                      Estadísticas del equipo
+                    </h3>
+                  </div>
+                  <div>
+                    <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
+                      Temporada 2026 • Regular
+                    </p>
+                  </div>
+                </div>
+                <div className="mb-6 md:mb-10 lg:mb-15">
+                  <TeamStatsWidget teamCode={data.team.code} />
+                </div>
+                <div className="flex flex-row justify-between items-center mb-[30px]">
+                  <div>
+                    <h3 className="text-[22px] text-black md:text-[24px]">
+                      Estadísticas de jugadores
+                    </h3>
+                  </div>
+                  <div>
+                    <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
+                      Temporada 2026 • Regular
+                    </p>
+                  </div>
+                </div>
+                <div className="mb-6 md:mb-10 lg:mb-15">
+                  <TeamPlayersStatsWidget teamCode={data.team.code} />
+                </div>
+              </div>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="mt-6 mb-6 md:mt-[30px] md:mb-10 lg:mb-15 lg:mt-[60px]">
+              <div className="container">
+                <div className="flex flex-row justify-between items-center mb-[30px]">
+                  <div>
+                    <h3 className="text-[22px] text-black md:text-[24px]">
+                      Líderes del equipo
+                    </h3>
+                  </div>
+                </div>
+                <div>
+                  <TeamLeadersWidget teamCode={data.team.code} />
+                </div>
+              </div>
+            </div>
+          </TabPanel>
+        </TabPanels>
+      </TabGroup>
+    </FullWidthLayout>
+  );
 }

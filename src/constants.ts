@@ -32,6 +32,7 @@ export const DATE_TIME_TZ_FORMAT = 'YYYY-MM-DD HH:mm:ss Z';
 export const MATCH_DATE_SHORT_FORMAT = 'D MMM';
 export const MATCH_DATE_FORMAT = 'ddd, D MMMM';
 export const MATCH_DATE_FORMAT_SHORT_MONTH = 'ddd, D MMM';
+export const MATCH_DATE_FULL_FORMAT = 'dddd, D [de] MMMM [de] YYYY';
 export const MATCH_TIME_FORMAT = 'h:mm A';
 
 export const PLAYER_BIRTHDAY_FORMAT = 'D/M/YYYY';

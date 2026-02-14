@@ -9,7 +9,7 @@ type Props = {
 
 export default function TeamLinkCard({ teamCode, teamName, avatarSize = 56 }: Props) {
   return (
-    <Link href={`/equipos/${teamCode}`} className="pointer-events-none cursor-default">
+    <Link href={`/equipos/${teamCode}`}>
       <div className="bg-[rgba(56,56,56,0.14)] border border-[rgba(125,125,125,0.13)] flex flex-col rounded-[10px] justify-center items-center p-[10px]">
         <div className="flex flex-col justify-center items-center gap-0.5">
           <TeamLogoAvatar teamCode={teamCode} size={avatarSize} />

@@ -4,9 +4,10 @@ import {
   Barlow_Condensed,
   Special_Gothic_Condensed_One,
 } from 'next/font/google';
-import { GoogleTagManager } from '@next/third-parties/google'
+import { GoogleTagManager } from '@next/third-parties/google';
 import './globals.css';
 import { ApolloWrapper } from './ApolloWrapper';
+import AdManager from '@/shared/client/components/gtm/AdManager';
 
 const barlow = Barlow({
   variable: '--font-barlow',
@@ -38,14 +39,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
       </head>
       <body
         className={`${barlow.variable} ${barlowCondensed.variable} ${specialGothicCondensedOne.variable}  antialiased`}
       >
         <ApolloWrapper>{children}</ApolloWrapper>
+        <AdManager />
       </body>
     </html>
   );

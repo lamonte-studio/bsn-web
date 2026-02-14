@@ -57,7 +57,7 @@ export default function Home() {
             </div>
             <div>
               <div className="flex justify-center">
-                <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="div-gpt-ad-728-90-1" />
+                <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="home-gpt-ad-728-90-1" />
               </div>
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function Home() {
             </div>
             <div className="mb-4">
               <div className="flex justify-center">
-                <AdSlot adUnit="/23296921845/300-250" size={[300, 250]} elementId="div-gpt-ad-300-250-1" />
+                <AdSlot adUnit="/23296921845/300-250" size={[300, 250]} elementId="home-gpt-ad-300-250-1" />
               </div>
             </div>
           </div>

@@ -16,16 +16,18 @@ type Row = {
 
 type Props = {
   title: string;
+  subtitle?: string;
   data: Row[];
 };
 
-export default function MatchPlayerLeadersCard({ title, data }: Props) {
+export default function MatchPlayerLeadersCard({ title, subtitle, data }: Props) {
   return (
     <div className="border border-[#E5E5E5] flex-1 rounded-[12px] bg-[#fdfdfd]">
       <div className="flex flex-row justify-between items-center p-4">
         <h2 className="font-special-gothic-condensed-one text-[17px] text-[rgba(15,23,31,0.7)]">
           {title}
         </h2>
+        {subtitle && (<h4 className="font-barlow text-xs text-[rgba(0,0,0,0.6)]">{subtitle}</h4>)}
       </div>
       <div className="px-[20px]">
         <ul>

@@ -268,7 +268,7 @@ export default function CompletedMatchPage({
                     <AdSlot
                       adUnit="/23296921845/300-250"
                       size={[300, 250]}
-                      elementId="div-gpt-ad-300-250-1"
+                      elementId={`match-gpt-ad-300-250-${match.providerId}`}
                     />
                   </div>
                 </div>

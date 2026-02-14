@@ -14,7 +14,7 @@ type PlayerLeadersResponse = {
 const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
   const { data, error } = await getClient().query<PlayerLeadersResponse>({
     query: SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY,
-    variables: { statsCode: 'STEAL_AVG', first: ITEMS_PER_PAGE },
+    variables: { statsCode: 'STEALS_AVG', first: ITEMS_PER_PAGE },
   });
 
   if (error) {

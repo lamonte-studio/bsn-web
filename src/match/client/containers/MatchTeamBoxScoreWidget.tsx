@@ -1,3 +1,4 @@
+import ShimmerLine from '@/shared/client/components/ui/ShimmerLine';
 import { useMatchTeamPlayersBoxscore } from '../hooks/matches';
 
 type Props = {
@@ -35,12 +36,12 @@ export default function MatchTeamBoxScoreWidget({
   if (loading) {
     return (
       <div className="space-y-1">
-        <div className="bg-[#eeeeee] rounded-[8px] h-[40]"></div>
-        <div className="bg-[#eeeeee] rounded-[8px] h-[40]"></div>
-        <div className="bg-[#eeeeee] rounded-[8px] h-[40]"></div>
-        <div className="bg-[#eeeeee] rounded-[8px] h-[40]"></div>
-        <div className="bg-[#eeeeee] rounded-[8px] h-[40]"></div>
-        <div className="bg-[#eeeeee] rounded-[8px] h-[40]"></div>
+        <ShimmerLine height="40px" />
+        <ShimmerLine height="40px" />
+        <ShimmerLine height="40px" />
+        <ShimmerLine height="40px" />
+        <ShimmerLine height="40px" />
+        <ShimmerLine height="40px" />
       </div>
     );
   }

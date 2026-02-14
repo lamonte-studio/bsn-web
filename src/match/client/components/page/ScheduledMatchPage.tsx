@@ -152,14 +152,15 @@ export default function ScheduledMatchPage({
                   </div>
                   <div className="flex flex-row items-center gap-2">
                     <TeamLogoAvatar teamCode={match.homeTeam.code} size={24} />
-                    <span className="text-[23px]">
-                      {homeTeamWon}
+                    <span className="text-[23px]">{homeTeamWon}</span>
+                    <span className="text-[23px] text-[rgba(124,124,124,0.8)]">
+                      -
                     </span>
-                    <span className="text-[23px] text-[rgba(124,124,124,0.8)]">-</span>
-                    <span className="text-[23px]">
-                      {visitorTeamWon}
-                    </span>
-                    <TeamLogoAvatar teamCode={match.visitorTeam.code} size={24} />
+                    <span className="text-[23px]">{visitorTeamWon}</span>
+                    <TeamLogoAvatar
+                      teamCode={match.visitorTeam.code}
+                      size={24}
+                    />
                   </div>
                 </div>
                 <div
@@ -188,7 +189,11 @@ export default function ScheduledMatchPage({
                 </div>
               </div>
               <div className="flex justify-center mb-6 md:mb-10 lg:mb-15">
-                <AdSlot adUnit="/23296921845/300-250" size={[300, 250]} elementId="div-gpt-ad-300-250-1" />
+                <AdSlot
+                  adUnit="/23296921845/300-250"
+                  size={[300, 250]}
+                  elementId={`match-gpt-ad-300-250-${match.providerId}`}
+                />
               </div>
             </div>
             <div className="lg:col-span-4">

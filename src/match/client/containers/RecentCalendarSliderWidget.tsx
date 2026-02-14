@@ -111,6 +111,7 @@ export default function RecentCalendarSliderWidget() {
               MATCH_STATUS.SCHEDULED,
             ].includes(match.status ?? '') && (
               <LiveMatchCard
+                matchProviderId={match.providerId}
                 homeTeam={match.homeTeam}
                 visitorTeam={match.visitorTeam}
                 currentQuarter={match.currentPeriod}
