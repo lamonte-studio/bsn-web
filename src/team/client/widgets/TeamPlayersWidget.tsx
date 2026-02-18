@@ -89,14 +89,17 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
                     index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
                 }}
               >
-                <div className="flex flex-row items-center gap-3">
+                <Link
+                  href={`/jugadores/${node.providerId}`}
+                  className="flex flex-row items-center gap-3"
+                >
                   <PlayerPhotoAvatar
                     photoUrl={node.avatarUrl || ''}
                     name={node.name}
                     size={30}
                   />
                   <span className="text-base">{node.name}</span>
-                </div>
+                </Link>
               </td>
               <td
                 className="px-3 py-2 text-center"
