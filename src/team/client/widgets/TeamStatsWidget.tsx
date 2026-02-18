@@ -1,85 +1,41 @@
+'use client';
+
 import numeral from 'numeral';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
+import { useTeamStats } from '../hooks/teams';
 
 type Props = {
   teamCode: string;
 };
 
 const STATS_HEADER: Record<string, string>[] = [
-  { label: 'PTS', key: 'points' },
-  { label: 'FGM', key: 'fieldGoalsMade' },
-  { label: 'FGA', key: 'fieldGoalsAttempted' },
-  { label: 'FG%', key: 'fieldGoalPercentage' },
-  { label: '3PM', key: 'threePointersMade' },
-  { label: '3PA', key: 'threePointersAttempted' },
-  { label: '3P%', key: 'threePointPercentage' },
-  { label: 'FTM', key: 'freeThrowsMade' },
-  { label: 'FTA', key: 'freeThrowsAttempted' },
-  { label: 'FT%', key: 'freeThrowPercentage' },
-  { label: 'OREB', key: 'offensiveRebounds' },
-  { label: 'DREB', key: 'defensiveRebounds' },
-  { label: 'REB', key: 'totalRebounds' },
-  { label: 'AST', key: 'assists' },
-  { label: 'TOV', key: 'turnovers' },
-  { label: 'STL', key: 'steals' },
-  { label: 'BLK', key: 'blocks' },
-  { label: 'PF', key: 'personalFouls' },
+  { label: 'PTS', key: 'pointsAverage' },
+  { label: 'FGM', key: 'fieldGoalsMadeAverage' },
+  { label: 'FGA', key: 'fieldGoalsAttemptedAverage' },
+  { label: 'FG%', key: 'fieldGoalsPercentage' },
+  { label: '3PM', key: 'threePointersMadeAverage' },
+  { label: '3PA', key: 'threePointersAttemptedAverage' },
+  { label: '3P%', key: 'threePointersPercentage' },
+  { label: 'FTM', key: 'freeThrowsMadeAverage' },
+  { label: 'FTA', key: 'freeThrowsAttemptedAverage' },
+  { label: 'FT%', key: 'freeThrowsPercentage' },
+  { label: 'OREB', key: 'offensiveReboundsAverage' },
+  { label: 'DREB', key: 'defensiveReboundsAverage' },
+  { label: 'REB', key: 'reboundsTotalAverage' },
+  { label: 'AST', key: 'assistsAverage' },
+  { label: 'TOV', key: 'turnoversAverage' },
+  { label: 'STL', key: 'stealsAverage' },
+  { label: 'BLK', key: 'blocksAverage' },
+  { label: 'PF', key: 'foulsPersonalAverage' },
 ];
 
-type TeamStats = {
-  team: {
-    code: string;
-    name: string;
-  };
-  stats: {
-    points: number;
-    fieldGoalsMade: number;
-    fieldGoalsAttempted: number;
-    fieldGoalPercentage: number;
-    threePointersMade: number;
-    threePointersAttempted: number;
-    threePointPercentage: number;
-    freeThrowsMade: number;
-    freeThrowsAttempted: number;
-    freeThrowPercentage: number;
-    offensiveRebounds: number;
-    defensiveRebounds: number;
-    totalRebounds: number;
-    assists: number;
-    turnovers: number;
-    steals: number;
-    blocks: number;
-    personalFouls: number;
-  }
-};
-
 export default function TeamStatsWidget({ teamCode }: Props) {
-  const data: TeamStats = {
-    team: {
-      code: 'CAG',
-      name: 'Criollos de Caguas',
-    },
-    stats: {
-      points: 102.5,
-      fieldGoalsMade: 38.2,
-      fieldGoalsAttempted: 85.6,
-      fieldGoalPercentage: 44.7,
-      threePointersMade: 10.5,
-      threePointersAttempted: 28.3,
-      threePointPercentage: 37.1,
-      freeThrowsMade: 15.6,
-      freeThrowsAttempted: 20.4,
-      freeThrowPercentage: 76.5,
-      offensiveRebounds: 10.2,
-      defensiveRebounds: 35.4,
-      totalRebounds: 45.6,
-      assists: 25.3,
-      turnovers: 12.8,
-      steals: 8.5,
-      blocks: 5.2,
-      personalFouls: 18.7,
-    }
-  };
+  const { data, loading } = useTeamStats(teamCode);
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
   return (
     <div>
       <table className="w-full text-left">
@@ -104,16 +60,22 @@ export default function TeamStatsWidget({ teamCode }: Props) {
           <tr>
             <td className="px-3 py-2">
               <div className="flex flex-row items-center gap-3">
-                <TeamLogoAvatar teamCode={data.team.code} size={30} />
-                <span className="text-base">{data.team.name}</span>
+                <TeamLogoAvatar teamCode={data?.code ?? ''} size={30} />
+                <span className="text-base">{data?.name ?? ''}</span>
               </div>
             </td>
             {STATS_HEADER.map((item) => (
               <td key={`value-${item.key}`} className="px-3 py-2 text-center">
                 <span className="font-barlow text-[13px]">
-                  {['FG%', '3PT%', 'FT%'].includes(item.label)
-                    ? numeral(data.stats[item.key]).format('0.0%')
-                    : data.stats[item.key]}
+                  {['FG%', '3P%', 'FT%'].includes(item.label)
+                    ? numeral(
+                        data?.competitionStandings?.[
+                          item.key as keyof typeof data.competitionStandings
+                        ] ?? 0,
+                      ).format('0.0%')
+                    : (data?.competitionStandings?.[
+                        item.key as keyof typeof data.competitionStandings
+                      ] ?? 0)}
                 </span>
               </td>
             ))}

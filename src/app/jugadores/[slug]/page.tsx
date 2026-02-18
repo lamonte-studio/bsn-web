@@ -1,3 +1,13 @@
+import FullWidthLayout from "@/shared/components/layout/fullwidth/FullWidthLayout";
+
 export default function DetalleJugadorPage() {
-  return <div>Detalle del Jugador BSN</div>;
+  return (
+    <FullWidthLayout>
+      <section className="bg-[#0F171F]">
+        <div className="container">
+          
+        </div>
+      </section>
+    </FullWidthLayout>
+  );
 }

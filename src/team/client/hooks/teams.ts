@@ -3,10 +3,11 @@ import {
   TEAM_LEADERS_STATS_CONNECTION,
   TEAM_PLAYERS_CONNECTION,
   TEAM_PLAYERS_STATS_CONNECTION,
+  TEAM_STATS,
   TEAM_UPCOMING_CALENDAR,
 } from '@/graphql/team';
 import { MatchType } from '@/match/types';
-import { TeamPlayerType } from '@/team/types';
+import { TeamPlayerType, TeamType } from '@/team/types';
 import { useQuery } from '@apollo/client/react';
 import moment from 'moment';
 
@@ -167,4 +168,28 @@ export function useTeamLeadersConnection(code: string, first: number = 5) {
     loading,
     error,
   };
+}
+
+type TeamStatsResponse = {
+  team: TeamType;
+};
+
+export function useTeamStats(code: string) {
+  const { data, loading, error } = useQuery<TeamStatsResponse>(
+    TEAM_STATS,
+    {
+      variables: { code },
+      fetchPolicy: 'network-only',
+    },
+  );
+
+  if (error) {
+    console.error(error);
+  }
+
+  return {
+    data: data?.team,
+    loading,
+    error,
+  }; 
 }

@@ -262,3 +262,34 @@ export const TEAM_LEADERS_STATS_CONNECTION = gql`
     }
   }
 `;
+
+export const TEAM_STATS = gql`
+  query getTeamStats($code: String!) {
+    team(code: $code) {
+      providerId
+      code
+      name
+      nickname
+      competitionStandings {
+        pointsAverage
+        reboundsTotalAverage
+        assistsAverage
+        fieldGoalsPercentage
+        fieldGoalsMadeAverage
+        fieldGoalsAttemptedAverage
+        threePointersMadeAverage
+        threePointersAttemptedAverage
+        threePointersPercentage
+        freeThrowsMadeAverage
+        freeThrowsAttemptedAverage
+        freeThrowsPercentage
+        offensiveReboundsAverage
+        defensiveReboundsAverage
+        turnoversAverage
+        stealsAverage
+        blocksAverage
+        foulsPersonalAverage
+      }
+    }
+  }
+`;

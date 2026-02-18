@@ -52,6 +52,20 @@ export type TeamCompetitionStandingType = {
   reboundsTotalAverage: number;
   assistsAverage: number;
   fieldGoalsPercentage: number;
+  fieldGoalsMadeAverage: number;
+  fieldGoalsAttemptedAverage: number;
+  threePointersMadeAverage: number;
+  threePointersAttemptedAverage: number;
+  threePointersPercentage: number;
+  freeThrowsMadeAverage: number;
+  freeThrowsAttemptedAverage: number;
+  freeThrowsPercentage: number;
+  offensiveReboundsAverage: number;
+  defensiveReboundsAverage: number;
+  turnoversAverage: number;
+  stealsAverage: number;
+  blocksAverage: number;
+  foulsPersonalAverage: number;
 };
 
 export type TeamType = {
