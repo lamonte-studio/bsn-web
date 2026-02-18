@@ -29,7 +29,7 @@ const fetchTopPlayerLeaders = async (): Promise<TopPlayerLeaderStatsType[]> => {
   );
 };
 
-export default async function SPGPlayerLeadersCard() {
+export default async function SPGPlayerLeadersCardNew() {
   const data: TopPlayerLeaderStatsType[] = await fetchTopPlayerLeaders();
 
   return (

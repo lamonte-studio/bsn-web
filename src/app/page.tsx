@@ -3,6 +3,8 @@ import APGPlayerLeadersCard from '@/stats/widgets/season/player/APGPlayerLeaders
 import BPGPlayerLeadersCard from '@/stats/widgets/season/player/BPGPlayerLeadersCard';
 import PPGPlayerLeadersCard from '@/stats/widgets/season/player/PPGPlayerLeadersCard';
 import RPGPlayerLeadersCard from '@/stats/widgets/season/player/RPGPlayerLeadersCard';
+import FGMPlayerLeadersCard from '@/stats/widgets/season/player/FGMPlayerLeadersCard';
+import SPGPlayerLeadersCardNew from '@/stats/widgets/season/player/SPGPlayerLeadersCardNew';
 import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
 import RecentCalendarSliderWidget from '@/match/client/containers/RecentCalendarSliderWidget';
 import SeasonStandingsTableBasicGroupsWidget from '@/stats/widgets/standings/table/SeasonStandingsTableBasicGroupsWidget';
@@ -12,8 +14,7 @@ import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import WSCHomeStories from '@/highlights/client/components/WSCHomeStories';
 import WSCMoments from '@/highlights/client/components/WSCMoments';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
-import SPGPlayerLeadersCard from '@/stats/widgets/season/player/SPGPlayerLeadersCard';
-import FGMPlayerLeadersCard from '@/stats/widgets/season/player/FGMPlayerLeadersCard';
+
 
 export default function Home() {
   return (
@@ -98,7 +99,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <BPGPlayerLeadersCard />
-            <SPGPlayerLeadersCard />
+            <SPGPlayerLeadersCardNew />
             <FGMPlayerLeadersCard />
           </div>
         </div>
