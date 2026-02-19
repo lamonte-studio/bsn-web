@@ -3,7 +3,6 @@ import { gql } from '@apollo/client';
 export const TEAM_DETAIL = gql`
   query getTeam($code: String!) {
     team(code: $code) {
-      geniusId
       providerId
       name
       nickname
@@ -35,7 +34,7 @@ export const TEAM_DETAIL = gql`
 export const TEAM_RECENT_CALENDAR = gql`
   query getTeamRecentCalendar(
     $code: String!
-    $date: String!
+    $date: String
     $first: Int!
     $after: String
   ) {
@@ -49,7 +48,7 @@ export const TEAM_RECENT_CALENDAR = gql`
         node {
           id
           startAt
-          geniusId
+          providerId
           homeTeam {
             code
             score
@@ -69,7 +68,7 @@ export const TEAM_RECENT_CALENDAR = gql`
 export const TEAM_UPCOMING_CALENDAR = gql`
   query getTeamUpcomingCalendar(
     $code: String!
-    $date: String!
+    $date: String
     $first: Int!
     $after: String
   ) {
@@ -83,12 +82,14 @@ export const TEAM_UPCOMING_CALENDAR = gql`
         node {
           id
           startAt
-          geniusId
+          providerId
           homeTeam {
             code
+            ticketUrl
           }
           visitorTeam {
             code
+            ticketUrl
           }
           status
         }

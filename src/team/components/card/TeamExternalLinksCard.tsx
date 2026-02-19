@@ -35,6 +35,8 @@ export default function TeamExternalLinksCard({
               <a
                 href={instagramLink}
                 className="flex-1 flex flex-row items-center justify-between gap-2 py-3"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <div className="flex flex-row items-center gap-3">
                   <img
@@ -57,6 +59,8 @@ export default function TeamExternalLinksCard({
               <a
                 href={facebookLink}
                 className="flex-1 flex flex-row items-center justify-between gap-2 py-3"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <div className="flex flex-row items-center gap-3">
                   <img
@@ -79,6 +83,8 @@ export default function TeamExternalLinksCard({
               <a
                 href={youtubeLink}
                 className="flex-1 flex flex-row items-center justify-between gap-2 py-3"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <div className="flex flex-row items-center gap-3">
                   <img
@@ -101,6 +107,8 @@ export default function TeamExternalLinksCard({
               <a
                 href={tiktokLink}
                 className="flex-1 flex flex-row items-center justify-between gap-2 py-3"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <div className="flex flex-row items-center gap-3">
                   <img
@@ -123,6 +131,8 @@ export default function TeamExternalLinksCard({
               <a
                 href={xLink}
                 className="flex-1 flex flex-row items-center justify-between gap-2 py-3"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <div className="flex flex-row items-center gap-3">
                   <img src="/assets/images/icons/social/icon-x2.svg" alt="" />{' '}
@@ -142,6 +152,8 @@ export default function TeamExternalLinksCard({
               <a
                 href={websiteLink}
                 className="flex-1 flex flex-row items-center justify-between gap-2 py-3"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <div className="flex flex-row items-center gap-3">
                   <img
@@ -164,6 +176,8 @@ export default function TeamExternalLinksCard({
               <a
                 href={ticketsLink}
                 className="flex-1 flex flex-row items-center justify-between gap-2 py-3"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <div className="flex flex-row items-center gap-3">
                   <img src="/assets/images/icons/icon-ticket2.png" alt="" />{' '}

@@ -64,6 +64,8 @@ export default function ScheduledMatchCardInline({
                   : visitorTeam.ticketUrl
               }
               className="border border-[#D5D5D5] inline-block text-center text-[15px] p-[8px] rounded-[100px] min-w-[110px]"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <span className="text-[15px] text-black">Boletos</span>
             </a>

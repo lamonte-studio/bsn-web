@@ -20,6 +20,7 @@ import TeamExternalLinksCard from '@/team/components/card/TeamExternalLinksCard'
 import { TeamType } from '@/team/types';
 import { ordinalNumber } from '@/utils/number-formater';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+import Link from 'next/link';
 
 type TeamPageResponse = {
   team: TeamType;
@@ -73,7 +74,6 @@ const fetchTeam = async (code: string): Promise<TeamPageResponse> => {
       variables: {
         code: team.code,
         first: 5,
-        date: new Date().toISOString(),
       },
     });
 
@@ -88,7 +88,6 @@ const fetchTeam = async (code: string): Promise<TeamPageResponse> => {
       variables: {
         code: team.code,
         first: 5,
-        date: new Date().toISOString(),
       },
     });
 
@@ -190,6 +189,11 @@ export default async function DetalleEquipoPage({
                           providerId={match.providerId}
                         />
                       ))}
+                      {data.teamUpcomingCalendar.length === 0 && (
+                        <p className="text-[rgba(15,23,31,0.7)] text-[15px]">
+                          No hay próximos juegos programados para este equipo.
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="mb-6 md:mb-10 lg:mb-15">
@@ -208,8 +212,9 @@ export default async function DetalleEquipoPage({
                       }}
                     >
                       {data.teamRecentCalendar.map((match) => (
-                        <div
+                        <Link
                           key={`recent-calendar-${match.providerId}`}
+                          href={`/partidos/${match.providerId}`}
                           className="max-w-[150px]"
                         >
                           <CompletedMatchCardBasic
@@ -224,9 +229,14 @@ export default async function DetalleEquipoPage({
                             }}
                             overtimePeriods={match.overtimePeriods}
                           />
-                        </div>
+                        </Link>
                       ))}
                     </div>
+                    {data.teamRecentCalendar.length === 0 && (
+                      <p className="text-[rgba(15,23,31,0.7)] text-[15px]">
+                        No hay resultados recientes para este equipo.
+                      </p>
+                    )}
                   </div>
                   <div className="mb-6 md:mb-10 lg:mb-15">
                     <div className="flex flex-row justify-between items-center mb-[30px]">
