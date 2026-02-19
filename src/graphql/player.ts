@@ -17,12 +17,31 @@ export const PLAYER_PROFILE = gql`
         code
         name
         nickname
+        colorPrimary
       }
       stats {
+        games
+        minutes
+        points
         pointsAvg
+        fieldGoalsMadeAvg
+        fieldGoalsAttemptedAvg
+        fieldGoalsPercentage
+        threePointersMadeAvg
+        threePointersAttemptedAvg
+        threePointersPercentage
+        freeThrowsMadeAvg
+        freeThrowsAttemptedAvg
+        freeThrowsPercentage
+        offensiveReboundsAvg
+        defensiveReboundsAvg
         reboundsTotalAvg
         assistsAvg
-        fieldGoalsPercentage
+        turnoversAvg
+        stealsAvg
+        blocksAvg
+        foulsPersonalAvg
+        plusMinusPointsAvg
       }
     }
   }

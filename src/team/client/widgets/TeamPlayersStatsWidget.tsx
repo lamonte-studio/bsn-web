@@ -48,7 +48,7 @@ export default function TeamPlayersStatsWidget({ teamCode }: Props) {
   }
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <table className="w-full text-left">
         <thead>
           <tr>

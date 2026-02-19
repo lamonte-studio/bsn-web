@@ -33,7 +33,7 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
   }
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <table className="w-full text-left">
         <thead>
           <tr>
@@ -160,7 +160,6 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
               >
                 <Link
                   href={`/jugadores/${node.providerId}`}
-                  className="pointer-events-none cursor-default"
                 >
                   <span className="text-[15px] text-black">Ver perfil</span>
                   <img
