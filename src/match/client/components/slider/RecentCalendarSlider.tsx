@@ -15,14 +15,16 @@ export default function RecentCalendarSlider<T>({ data, render, keyExtractor }: 
     infinite: false,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 3,
+    slidesToScroll: 2,
     variableWidth: true,
+    adaptiveHeight: true,
     responsive: [
       {
-        breakpoint: 600,
+        breakpoint: 640,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
           slidesToScroll: 1,
+          variableWidth: true,
         },
       },
     ],

@@ -95,7 +95,7 @@ export default function RecentCalendarSliderWidget() {
         // Renderizar header de fecha
         if (item.type === 'date-item') {
           return (
-            <div key={item.id} className="px-1.5">
+            <div key={item.id} className="px-[5px]">
               <RecentCalendarDateItem date={item.date} />
             </div>
           );
@@ -104,7 +104,7 @@ export default function RecentCalendarSliderWidget() {
         // Renderizar partido
         const match = item.data;
         return (
-          <div key={`match-${match.providerId}`} className="px-1.5">
+          <div key={`match-${match.providerId}`} className="px-[5px]">
             {![
               MATCH_STATUS.COMPLETE,
               MATCH_STATUS.FINISHED,

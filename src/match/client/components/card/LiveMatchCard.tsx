@@ -78,7 +78,7 @@ export default function LiveMatchCard({
     <Card className="w-[308px]">
       <CardHeader className="border-b border-b-[rgba(255,255,255,0.05)] mx-5">
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row justify-start items-center gap-2">
+          <div className="flex flex-row justify-start items-center gap-[7px]">
             <Lottie
               animationData={animationLiveStreamData}
               loop
@@ -92,46 +92,46 @@ export default function LiveMatchCard({
               MATCH_STATUS.INTERRUPTED,
               MATCH_STATUS.RESCHEDULED,
             ].includes(status) && (
-              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+              <p className="text-base text-white">
                 {currentStatusLabel} - {currentPeriodTime}
               </p>
             )}
             {status === MATCH_STATUS.READY && (
-              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+              <p className="text-base text-white">
                 Por comenzar
               </p>
             )}
             {status === MATCH_STATUS.DELAYED && (
-              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+              <p className="text-base text-white">
                 Atrasado
               </p>
             )}
             {status === MATCH_STATUS.PERIOD_BREAK &&
               overtimePeriods === 0 &&
               currentQuarter === '2' && (
-                <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+                <p className="text-base text-white">
                   Mediotiempo
                 </p>
               )}
             {status === MATCH_STATUS.PERIOD_BREAK &&
               overtimePeriods === 0 &&
               currentQuarter !== '2' && (
-                <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+                <p className="text-base text-white">
                   Fin de Q{currentQuarter}
                 </p>
               )}
             {status === MATCH_STATUS.PERIOD_BREAK && overtimePeriods > 0 && (
-              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+              <p className="text-base text-white">
                 Fin de OT{overtimePeriods > 1 ? overtimePeriods : ''}
               </p>
             )}
             {status === MATCH_STATUS.INTERRUPTED && (
-              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+              <p className="text-base text-white">
                 Interrumpido
               </p>
             )}
             {status === MATCH_STATUS.RESCHEDULED && (
-              <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+              <p className="text-base text-white">
                 Reprogramado
               </p>
             )}
@@ -146,7 +146,7 @@ export default function LiveMatchCard({
       </CardHeader>
       <CardBody>
         <div className="flex flex-row justify-between items-center mb-3">
-          <div className="flex flex-col flex-1 gap-2">
+          <div className="flex flex-col flex-1 gap-1">
             <div className="flex flex-row justify-between items-center gap-3">
               <div className="flex-1">
                 <MatchCompetitor
@@ -154,10 +154,11 @@ export default function LiveMatchCard({
                   name={getFirstWord(visitorTeam.nickname)}
                   city={visitorTeam.city}
                   avatarSpaceHorizontal={14}
+                  avatarSize={33}
                 />
               </div>
               <div className="flex flex-row items-center gap-2">
-                <p className="font-special-gothic-condensed-one text-[32px] text-white">
+                <p className="text-[32px] text-white">
                   {visitorTeam.score}
                 </p>
               </div>
@@ -169,10 +170,11 @@ export default function LiveMatchCard({
                   name={getFirstWord(homeTeam.nickname)}
                   city={homeTeam.city}
                   avatarSpaceHorizontal={14}
+                  avatarSize={33}
                 />
               </div>
               <div className="flex flex-row items-center gap-2">
-                <p className="font-special-gothic-condensed-one text-[32px] text-white">
+                <p className="text-[32px] text-white">
                   {homeTeam.score}
                 </p>
               </div>
@@ -182,10 +184,10 @@ export default function LiveMatchCard({
         <div>
           <Link
             href={`/partidos/${matchProviderId}`}
-            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[8px]"
+            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[5px]"
             style={{ backdropFilter: 'blur(40px)' }}
           >
-            <span className="font-special-gothic-condensed-one text-base text-white">
+            <span className="text-[15px] text-white">
               Ver resultados
             </span>
           </Link>

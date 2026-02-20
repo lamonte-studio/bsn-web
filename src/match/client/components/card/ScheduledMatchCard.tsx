@@ -68,7 +68,7 @@ export default function ScheduledMatchCard({
     <Card className="w-[308px]">
       <CardHeader className="border-b border-b-[rgba(255,255,255,0.05)] mx-5">
         <div className="flex flex-row justify-between items-center">
-          <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+          <p className="font-barlow font-medium leading-[24px] text-sm text-[rgba(255,255,255,0.8)]">
             {moment(startAt).format(MATCH_DATE_FORMAT)}
           </p>
           <div className="flex flex-row items-center gap-2">
@@ -81,7 +81,7 @@ export default function ScheduledMatchCard({
       </CardHeader>
       <CardBody>
         <div className="flex flex-row justify-between items-center mb-3">
-          <div className="flex flex-1 flex-col gap-2">
+          <div className="flex flex-1 flex-col gap-1">
             <div className="flex flex-row justify-between items-center gap-3">
               <div className="flex-1">
                 <MatchCompetitor
@@ -89,6 +89,7 @@ export default function ScheduledMatchCard({
                   name={getFirstWord(visitorTeam.nickname)}
                   city={visitorTeam.city}
                   ranking={visitorTeamStandings}
+                  avatarSize={33}
                 />
               </div>
               <p className="font-special-gothic-condensed-one text-[32px] text-white">
@@ -102,29 +103,20 @@ export default function ScheduledMatchCard({
                   name={getFirstWord(homeTeam.nickname)}
                   city={homeTeam.city}
                   ranking={homeTeamStandings}
+                  avatarSize={33}
                 />
               </div>
-              <div className="flex h-[48px] items-center">
-                <a
-                  href={ticketUrl}
-                  className="border border-[rgba(255,255,255,0.15)] flex flex-row justify-center items-center gap-2 px-6 py-1.5 rounded-[18px]"
-                >
-                  <img src="/assets/images/icons/icon-ticket.png" />
-                  <span className="font-special-gothic-condensed-one text-base text-white">
-                    Boletos
-                  </span>
-                </a>
-              </div>
+              <div className="flex h-[48px] items-center"></div>
             </div>
           </div>
         </div>
         <div>
           <Link
             href={`/partidos/${matchProviderId}`}
-            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[8px]"
+            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[5px]"
             style={{ backdropFilter: 'blur(40px)' }}
           >
-            <span className="font-special-gothic-condensed-one text-base text-white">
+            <span className="text-[15px] text-white">
               Ver previa
             </span>
           </Link>

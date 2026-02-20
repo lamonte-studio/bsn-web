@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function FooterBoxLayout() {
   return (
-    <section className="bg-[#0F171F] py-[50px]">
+    <footer className="bg-[#0F171F] pt-[50px] pb-[34px]">
       <div className="container">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
           <div className="md:col-span-6 lg:col-span-3">
@@ -24,7 +24,7 @@ export default function FooterBoxLayout() {
                 #LaLigaMásDura
               </a>
             </p>
-            <div className="flex flex-row gap-[8px] justify-center items-center mb-4 md:justify-start xl:gap-[13px]">
+            <div className="flex flex-row gap-[8px] justify-center items-center mb-4 md:justify-start xl:gap-[12px]">
               <a
                 href="https://www.instagram.com/bsnpr/"
                 target="_blank"
@@ -132,18 +132,18 @@ export default function FooterBoxLayout() {
               </h4>
             </div>
             <div className="grid grid-cols-3 gap-[6px] mb-6 md:grid-cols-4 lg:grid-cols-6">
-              <TeamLinkCard teamCode="AGU" teamName="Santeros" />
-              <TeamLinkCard teamCode="ARE" teamName="Capitanes" />
-              <TeamLinkCard teamCode="BAY" teamName="Vaqueros" />
-              <TeamLinkCard teamCode="CAG" teamName="Criollos" />
-              <TeamLinkCard teamCode="CAR" teamName="Gigantes" />
-              <TeamLinkCard teamCode="GBO" teamName="Mets" />
-              <TeamLinkCard teamCode="MAN" teamName="Osos" />
-              <TeamLinkCard teamCode="MAY" teamName="Indios" />
-              <TeamLinkCard teamCode="PON" teamName="Leones" />
-              <TeamLinkCard teamCode="QUE" teamName="Piratas" />
-              <TeamLinkCard teamCode="SGE" teamName="Atléticos" />
-              <TeamLinkCard teamCode="SCE" teamName="Cangrejeros" />
+              <TeamLinkCard teamCode="AGU" teamName="Santeros" avatarSize={45} />
+              <TeamLinkCard teamCode="ARE" teamName="Capitanes" avatarSize={45} />
+              <TeamLinkCard teamCode="BAY" teamName="Vaqueros" avatarSize={45} />
+              <TeamLinkCard teamCode="CAG" teamName="Criollos" avatarSize={45} />
+              <TeamLinkCard teamCode="CAR" teamName="Gigantes" avatarSize={45} />
+              <TeamLinkCard teamCode="GBO" teamName="Mets" avatarSize={45} />
+              <TeamLinkCard teamCode="MAN" teamName="Osos" avatarSize={45} />
+              <TeamLinkCard teamCode="MAY" teamName="Indios" avatarSize={45} />
+              <TeamLinkCard teamCode="PON" teamName="Leones" avatarSize={45} />
+              <TeamLinkCard teamCode="QUE" teamName="Piratas" avatarSize={45} />
+              <TeamLinkCard teamCode="SGE" teamName="Atléticos" avatarSize={45} />
+              <TeamLinkCard teamCode="SCE" teamName="Cangrejeros" avatarSize={45} />
             </div>
           </div>
         </div>
@@ -175,6 +175,7 @@ export default function FooterBoxLayout() {
                 src="/assets/images/downlad-appstore.png"
                 alt=""
                 srcSet="/assets/images/downlad-appstore.png, /assets/images/downlad-appstore@2x.png 2x"
+                width={120}
               />
             </a>
             <a href="#">
@@ -182,11 +183,12 @@ export default function FooterBoxLayout() {
                 src="/assets/images/download-playstore.png"
                 alt=""
                 srcSet="/assets/images/download-playstore.png, /assets/images/download-playstore@2x.png 2x"
+                width={120}
               />
             </a>
           </div>
         </div>
       </div>
-    </section>
+    </footer>
   );
 }

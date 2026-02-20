@@ -46,8 +46,8 @@ export default async function SeasonStandingsTableBasicGroupsWidget() {
   const data: StandingsGroup[] = await fetchSeasonStandingsTableBasicGroups();
   return (
     <div className="flex flex-col gap-4">
-      <div className="border border-[#EAEAEA] flex-1 rounded-[12px] bg-white shadow-[0px_1px_3px_0px_#14181F0A]">
-        <div className="p-[16px] xl:p-[24px]">
+      <div className="flex-1 rounded-[12px] bg-white sm:border sm:border-[#EAEAEA] sm:shadow-[0px_1px_3px_0px_#14181F0A]">
+        <div className="sm:p-[16px] xl:p-[24px]">
           <SeasonStandingsTableBasicGroups
             groups={data.map((group) => ({
               name: group.name,

@@ -60,7 +60,7 @@ export default function CompletedMatchCard({
     <Card className="w-[308px]">
       <CardHeader className="border-b border-b-[rgba(255,255,255,0.05)] mx-5">
         <div className="flex flex-row justify-between items-center">
-          <p className="font-barlow-condensed font-semibold text-[15px] text-[rgba(255,255,255,0.9)]">
+          <p className="font-barlow-condensed font-semibold text-[15px] leading-[24px] text-[rgba(255,255,255,0.9)]">
             Final {overtimePeriods > 0 ? `${overtimePeriods}OT` : ''}
           </p>
           <p className="font-barlow font-medium text-sm text-[rgba(255,255,255,0.8)]">
@@ -70,7 +70,7 @@ export default function CompletedMatchCard({
       </CardHeader>
       <CardBody>
         <div className="flex flex-row justify-between items-center mb-3">
-          <div className="flex flex-1 flex-col gap-2">
+          <div className="flex flex-1 flex-col gap-1">
             <div className="flex flex-row justify-between items-center gap-3">
               <div className="flex-1">
                 <MatchCompetitor
@@ -78,15 +78,16 @@ export default function CompletedMatchCard({
                   name={getFirstWord(visitorTeam.nickname)}
                   city={visitorTeam.city}
                   disabled={isHomeTeamWinner}
+                  avatarSize={33}
                 />
               </div>
               <div
                 className={cx('flex flex-row items-center gap-2', {
-                  'pr-[12px]': isHomeTeamWinner,
+                  'pr-[15px]': isHomeTeamWinner,
                 })}
               >
                 <p
-                  className="font-special-gothic-condensed-one text-[32px]"
+                  className="text-[32px]"
                   style={{
                     color: isHomeTeamWinner
                       ? 'rgba(255, 255, 255, 0.5)'
@@ -110,15 +111,16 @@ export default function CompletedMatchCard({
                   name={getFirstWord(homeTeam.nickname)}
                   city={homeTeam.city}
                   disabled={!isHomeTeamWinner}
+                  avatarSize={33}
                 />
               </div>
               <div
                 className={cx('flex flex-row items-center gap-2', {
-                  'pr-[12px]': !isHomeTeamWinner,
+                  'pr-[15px]': !isHomeTeamWinner,
                 })}
               >
                 <p
-                  className="font-special-gothic-condensed-one text-[32px]"
+                  className="text-[32px]"
                   style={{
                     color: !isHomeTeamWinner
                       ? 'rgba(255, 255, 255, 0.5)'
@@ -140,10 +142,10 @@ export default function CompletedMatchCard({
         <div>
           <Link
             href={`/partidos/${matchProviderId}`}
-            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[8px]"
+            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[5px]"
             style={{ backdropFilter: 'blur(40px)' }}
           >
-            <span className="font-special-gothic-condensed-one text-base text-white">
+            <span className="text-[15px] text-white">
               Ver resultados
             </span>
           </Link>

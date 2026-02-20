@@ -20,22 +20,30 @@ export default function Home() {
   return (
     <FullWidthLayout>
       <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
-      <section className="bg-[#0F171F] pb-[116px] lg:pb-[108px]">
+      <section className="bg-[#0F171F] pb-[116px] lg:pt-[8px] lg:pb-[108px]">
         <div className="container relative">
           <RecentCalendarSliderWidget />
           <div className="absolute bg-[linear-gradient(-90deg,rgba(15,23,31,0.9)_21.8%,rgba(0,0,0,0)_96.31%)] top-0 bottom-0 right-0 w-[48px] md:w-[232px]"></div>
         </div>
       </section>
-      <section className="container mb-8 -mt-[94px] lg:mb-16 lg:-mt-[76px]">
+      <section className="container mb-4 -mt-[94px] lg:mb-7 lg:-mt-[76px]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-8">
-            <div className="mb-4 md:mb-8 lg:mb-12">
+            <div className="mb-4 md:mb-8 lg:mb-10">
               <TopNewsWidget />
             </div>
-            <div className="mb-4 md:mb-8 lg:mb-14">
+            <div className="mb-4 md:mb-8 lg:mb-10">
+              <div className="hidden justify-center xl:flex">
+                <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="home-gpt-ad-728-90-1" />
+              </div>
+              <div className="flex justify-center xl:hidden">
+                <AdSlot adUnit="/23296921845/320-50" size={[320, 50]} elementId="home-gpt-ad-320-50-1" />
+              </div>
+            </div>
+            <div className="mb-4 md:mb-8 lg:mb-17">
               <div className="flex flex-row justify-between items-center mb-4 md:mb-[26px]">
                 <div>
-                  <h3 className="text-[22px] text-black md:text-[24px]">
+                  <h3 className="text-[22px] text-[#0F171F] md:text-[24px]">
                     #LaLigaMásDura
                   </h3>
                 </div>
@@ -44,10 +52,10 @@ export default function Home() {
                 <WSCHomeStories />
               </div>
             </div>
-            <div className="mb-4 md:mb-8 lg:mb-14">
+            <div className="mb-4 md:mb-8 lg:mb-17">
               <div className="flex flex-row justify-between items-center mb-4 md:mb-[26px]">
                 <div>
-                  <h3 className="text-[22px] text-black md:text-[24px]">
+                  <h3 className="text-[22px] text-[#0F171F] md:text-[24px]">
                     Highlights
                   </h3>
                 </div>
@@ -56,20 +64,15 @@ export default function Home() {
                 <WSCMoments />
               </div>
             </div>
-            <div>
-              <div className="flex justify-center">
-                <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="home-gpt-ad-728-90-1" />
-              </div>
-            </div>
           </div>
           <div className="lg:col-span-4">
-            <div className="mb-4">
+            <div className="mb-15 md:mb-5">
               <LatestNewsWidget />
             </div>
-            <div className="mb-4">
+            <div className="mb-15 md:mb-10">
               <SeasonStandingsTableBasicGroupsWidget />
             </div>
-            <div className="mb-4">
+            <div className="mb-10">
               <div className="flex justify-center">
                 <AdSlot adUnit="/23296921845/300-250" size={[300, 250]} elementId="home-gpt-ad-300-250-1" />
               </div>
@@ -78,26 +81,24 @@ export default function Home() {
         </div>
       </section>
       <section className="container mb-8 lg:mb-16">
-        <div className="flex flex-row justify-between items-center mb-[20px] md:mb-[32px]">
-          <h2 className="text-[22px] text-[rgba(15,23,31,1)] md:text-[32px]">
-            Líderes de Temporada 2026
-          </h2>
-          <div className="hidden">
-            <Link
-              href="/estadisticas"
-              className="bg-[#FCFCFC] border border-[#D9D3D3] inline-block min-w-[216px] p-[12px] rounded-[12px] shadow-[0px_1px_2px_0px_#14181F0D] text-center"
-            >
-              <span className="text-base text-black">Ver más estadísticas</span>
-            </Link>
+        <div className="lg:w-11/12 mx-auto">
+          <div className="flex flex-row justify-between items-center mb-[20px] md:mb-[32px]">
+            <h2 className="text-[22px] text-[#0F171F] md:text-[32px]">
+              Líderes de Temporada 2026
+            </h2>
+            <div className="hidden">
+              <Link
+                href="/estadisticas"
+                className="bg-[#FCFCFC] border border-[#D9D3D3] inline-block min-w-[216px] p-[12px] rounded-[12px] shadow-[0px_1px_2px_0px_#14181F0D] text-center"
+              >
+                <span className="text-base text-black">Ver más estadísticas</span>
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[24px] gap-y-[23px]">
             <PPGPlayerLeadersCard />
             <RPGPlayerLeadersCard />
             <APGPlayerLeadersCard />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <BPGPlayerLeadersCard />
             <SPGPlayerLeadersCardNew />
             <FGMPlayerLeadersCard />

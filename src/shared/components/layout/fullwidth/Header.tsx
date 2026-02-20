@@ -68,9 +68,9 @@ export default function HeaderBoxLayout() {
                     Noticias
                   </Link>
                 </li>
-                <li className="hidden">
+                <li>
                   <Popover>
-                    <PopoverButton className="text-[20px] text-white focus-visible:outline-none data-open:border-b-1 data-open:border-white data-open:text-[rgba(255,255,255,0.7)]">
+                    <PopoverButton className="cursor-pointer text-[20px] text-white focus-visible:outline-none data-open:border-b-1 data-open:border-white data-open:text-[rgba(255,255,255,0.7)]">
                       Equipos
                     </PopoverButton>
                     <PopoverPanel
@@ -371,7 +371,7 @@ export default function HeaderBoxLayout() {
                   <span className="text-[36px] text-white">Jugadores</span>
                 </Link>
               </li>
-              <li className="px-[30px] hidden">
+              <li className="px-[30px]">
                 <Disclosure>
                   <DisclosureButton className="cursor-pointer py-[8px] text-[36px] text-left text-white w-full">
                     Equipos

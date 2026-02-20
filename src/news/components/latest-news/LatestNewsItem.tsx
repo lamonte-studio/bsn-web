@@ -18,12 +18,12 @@ export default function LatestNewsItem({
     <div className="flex flex-row gap-4 items-center justify-start">
       <div className="flex flex-col gap-2 flex-1">
         <Link href={`/noticias/${slug}`} className="flex-1">
-          <h4 className="font-barlow font-medium text-sm text-color-[rgba(15,23,31,0.7)]">
+          <h4 className="font-barlow font-medium text-sm/4 text-[rgba(15,23,31,0.7)]">
             {title}
           </h4>
         </Link>
         <p
-          className="font-barlow text-xs text-color-[rgba(15,23,31,0.7)]"
+          className="font-barlow text-xs text-color-[rgba(15,23,31,0.7)] hidden"
           title={moment(publishedAt).format('LL')}
         >
           {moment(publishedAt).format('D')} de{' '}
@@ -35,7 +35,7 @@ export default function LatestNewsItem({
           <img
             src={thumbnailUrl}
             alt={title}
-            className="aspect-16/9 rounded-lg w-[124px] border border-[rgba(125,125,125,0.4)] object-cover"
+            className="aspect-16/9 rounded-lg w-[105px] border border-[rgba(125,125,125,0.4)] object-cover"
           />
         </Link>
       </figure>

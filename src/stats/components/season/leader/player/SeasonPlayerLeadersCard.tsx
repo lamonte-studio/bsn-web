@@ -11,7 +11,7 @@ type Row = {
       name: string;
     };
   };
-  statValue: number;
+  statValue: string | number;
 };
 
 type Props = {
@@ -23,21 +23,22 @@ type Props = {
 export default function SeasonPlayerLeadersCard({ title, subtitle, data }: Props) {
   return (
     <div className="border border-[#E5E5E5] flex-1 rounded-[12px] bg-[#fdfdfd]">
-      <div className="flex flex-row justify-between items-center p-4">
+      <div className="flex flex-row justify-between items-center py-[18px] pl-[20px] pr-[25px]">
         <h2 className="font-special-gothic-condensed-one text-[17px] text-[rgba(15,23,31,0.7)]">
           {title}
         </h2>
         <h4 className="font-barlow text-xs text-[rgba(0,0,0,0.6)]">{subtitle}</h4>
       </div>
-      <div className="px-[20px]">
+      <div className="pl-[20px] pr-[25px]">
         <ul>
           {data.map((row, index) => (
-            <li key={index} className={index < data.length - 1 ? 'border-b border-[rgba(0,0,0,0.07)]' : ''}>
+            <li key={index} className={index < data.length - 1 ? 'border-b-[0.5px] border-[rgba(0,0,0,0.05)]' : ''}>
               <SeasonPlayerLeaderItem
                 position={row.position}
                 player={row.player}
                 statValue={row.statValue}
                 avatarSize={index == 0 ? 45 : 30}
+                size={index == 0 ? 'lg' : 'md'}
               />
             </li>
           ))}

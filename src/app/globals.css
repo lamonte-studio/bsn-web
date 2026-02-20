@@ -10,11 +10,11 @@
   }
 
   @variant xl {
-    max-width: 80rem;
+    max-width: 79rem;
   }
 
   @variant 2xl {
-    max-width: 96rem;
+    max-width: 79rem;
   }
 }
 

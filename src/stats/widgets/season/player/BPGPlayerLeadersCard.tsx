@@ -1,3 +1,4 @@
+import numeral from 'numeral';
 import SeasonPlayerLeadersCard from '@/stats/components/season/leader/player/SeasonPlayerLeadersCard';
 import { getClient } from '@/apollo-client';
 import { SEASON_TOP_PLAYER_LEADER_STATS_BY_CATEGORY } from '@/graphql/stats';
@@ -44,10 +45,10 @@ export default async function BPGPlayerLeadersCard() {
           name: item.player.name,
           team: {
             code: item.player.teamCode,
-            name: item.player.teamName,
+            name: item.player.teamCode,
           },
         },
-        statValue: item.value,
+        statValue: numeral(item.value).format('0.0'),
       }))}
     />
   );

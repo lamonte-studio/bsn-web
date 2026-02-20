@@ -1,5 +1,6 @@
-import PlayerPhotoAvatar from '@/player/components/avatar/PlayerPhotoAvatar';
+import cx from 'classnames';
 import Link from 'next/link';
+import PlayerPhotoAvatar from '@/player/components/avatar/PlayerPhotoAvatar';
 
 type Props = {
   position: number;
@@ -12,8 +13,9 @@ type Props = {
       name: string;
     };
   };
-  statValue: number;
+  statValue: string | number;
   avatarSize?: number;
+  size?: 'sm' | 'md' | 'lg';
 };
 
 export default function SeasonPlayerLeaderItem({
@@ -21,13 +23,14 @@ export default function SeasonPlayerLeaderItem({
   player,
   statValue,
   avatarSize = 30,
+  size = 'md',
 }: Props) {
   return (
     <Link
       href={`/jugadores/${player.id}`}
-      className="flex items-center p-2 gap-3"
+      className="flex items-center py-2 gap-1"
     >
-      <div className="w-4 text-right">
+      <div className="w-4 text-left">
         <span className="font-barlow-condensed text-[15px] text-[rgba(0,0,0,0.8)]">
           {position}
         </span>
@@ -39,7 +42,13 @@ export default function SeasonPlayerLeaderItem({
           name={player.name}
         />
         <div className="flex-1">
-          <p className="font-special-gothic-condensed-one text-[17px] text-[rgba(15,23,31,0.9)]">
+          <p
+            className={cx('text-[rgba(15,23,31,0.9)]', {
+              'text-[13px]/5': size === 'sm',
+              'text-[15px]/4': size === 'md',
+              'text-[17px]/5': size === 'lg',
+            })}
+          >
             {player.name}
           </p>
           <p className="font-barlow font-medium text-[13px] text-[rgba(15,23,31,0.5)]">
@@ -47,9 +56,15 @@ export default function SeasonPlayerLeaderItem({
           </p>
         </div>
       </div>
-      <div className="font-special-gothic-condensed-one text-[32px] text-[rgba(15,23,31,0.9)]">
+      <p
+        className={cx('text-[rgba(15,23,31,0.9)]', {
+          'text-base md:text-[18px]': size === 'sm',
+          'text-[20px] md:text-[24px]': size === 'md',
+          'text-[26px] md:text-[32px]': size === 'lg',
+        })}
+      >
         {statValue}
-      </div>
+      </p>
     </Link>
   );
 }
