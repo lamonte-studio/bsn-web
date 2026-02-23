@@ -5,7 +5,6 @@ import { useNewsletter } from "../hooks/news";
 
 export default function NewsletterWidget() {
   const { data, loading, hasMore, loadMore } = useNewsletter();
-  console.log('NewsletterWidget data:', data);
   return (
     <div>
       <div className="mb-5 md:mb-[38px] lg:mb-[58px]">
@@ -71,15 +70,17 @@ export default function NewsletterWidget() {
       </div>
       <div className="mb-12 md:mb-[80px] lg:mb-[114px]">
         <div className="space-y-[20px] md:space-y-[30px]">
-          {data.map((newsItem) => (
-            <NewsItem
-              key={`news-${newsItem.id}`}
-              title={newsItem.title}
-              slug={newsItem.slug}
-              excerpt={newsItem.excerpt}
-              publishedAt={newsItem.publishedAt}
-              tags={newsItem.tags ?? []}
-            />
+          {data.map((newsItem, index) => (
+            <div key={`news-${newsItem.id}`} className={index === 0 ? 'hidden' : ''}>
+              <NewsItem
+                title={newsItem.title}
+                slug={newsItem.slug}
+                thumbnailUrl={newsItem.imageUrl}
+                excerpt={newsItem.excerpt}
+                publishedAt={newsItem.publishedAt}
+                tags={newsItem.tags ?? []}
+              />
+            </div>
           ))}
         </div>
         {hasMore && (

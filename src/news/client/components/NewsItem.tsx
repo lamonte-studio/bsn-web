@@ -4,6 +4,7 @@ import Link from 'next/link';
 type Props = {
   title: string;
   slug: string;
+  thumbnailUrl?: string;
   excerpt?: string;
   publishedAt: string;
   tags?: {
@@ -15,6 +16,7 @@ type Props = {
 export default function NewsItem({
   title,
   slug,
+  thumbnailUrl = '',
   excerpt = '',
   publishedAt,
   tags = [],
@@ -24,7 +26,7 @@ export default function NewsItem({
       <figure>
         <Link href={`/noticias/${slug}`}>
           <img
-            src="https://dummyimage.com/242x152/000/fff"
+            src={thumbnailUrl || 'https://dummyimage.com/600x400/cccccc/ffffff'}
             alt=""
             className="aspect-3/2 rounded-[10px] w-[96px] border border-[rgba(125,125,125,0.4)] object-cover md:w-[242px]"
           />
