@@ -8,6 +8,7 @@ export const TOP_PERFORMANCES = gql`
         coverUrl
         playListId
         videoId
+        publishedAt
       }
     }
   }
@@ -21,6 +22,7 @@ export const THE_ROUTE = gql`
         coverUrl
         playListId
         videoId
+        publishedAt
       }
     }
   }

@@ -29,7 +29,7 @@ const fetchTopNews = async (): Promise<NewsType[]> => {
 export default async function TopNewsWidget() {
   const data: NewsType[] = await fetchTopNews();
   return (
-    <Link href={`/news/${data[0]?.slug || ''}`}>
+    <Link href={`/noticias/${data[0]?.slug || ''}`}>
       <div className="relative">
         <div
           className="border border-[rgba(125,125,125,0.4)] pt-[53.20%] bg-cover bg-no-repeat bg-center rounded-[12px]"

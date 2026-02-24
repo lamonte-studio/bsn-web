@@ -1,3 +1,4 @@
+import { truncateText } from '@/utils/text';
 import moment from 'moment';
 import Link from 'next/link';
 
@@ -18,8 +19,8 @@ export default function LatestNewsItem({
     <div className="flex flex-row gap-4 items-center justify-start">
       <div className="flex flex-col gap-2 flex-1">
         <Link href={`/noticias/${slug}`} className="flex-1">
-          <h4 className="font-barlow font-medium text-sm/4 text-[rgba(15,23,31,0.7)]">
-            {title}
+          <h4 className="font-barlow font-medium text-sm/5 text-[rgba(15,23,31,0.7)]">
+            {truncateText(title, 92)}
           </h4>
         </Link>
         <p
@@ -35,7 +36,7 @@ export default function LatestNewsItem({
           <img
             src={thumbnailUrl}
             alt={title}
-            className="aspect-16/9 rounded-lg w-[105px] border border-[rgba(125,125,125,0.4)] object-cover"
+            className="aspect-16/9 rounded-[8px] w-[105px] object-cover"
           />
         </Link>
       </figure>

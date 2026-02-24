@@ -14,6 +14,7 @@ import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import WSCHomeStories from '@/highlights/client/components/WSCHomeStories';
 import WSCMoments from '@/highlights/client/components/WSCMoments';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
+import BsnTvWidget from '@/highlights/widgets/BsnTvWidget';
 
 
 export default function Home() {
@@ -32,13 +33,16 @@ export default function Home() {
             <div className="mb-4 md:mb-8 lg:mb-10">
               <TopNewsWidget />
             </div>
-            <div className="mb-4 md:mb-8 lg:mb-10">
+            <div className="mb-8 lg:mb-10">
               <div className="hidden justify-center xl:flex">
                 <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="home-gpt-ad-728-90-1" />
               </div>
-              <div className="flex justify-center xl:hidden">
+              <div className="bg-[#F8F8F8] flex justify-center py-[15px] -mx-[1rem] md:mx-0 md:py-0 md:bg-transparent xl:hidden">
                 <AdSlot adUnit="/23296921845/320-50" size={[320, 50]} elementId="home-gpt-ad-320-50-1" />
               </div>
+            </div>
+            <div className="mb-15 lg:hidden">
+              <LatestNewsWidget />
             </div>
             <div className="mb-4 md:mb-8 lg:mb-17">
               <div className="flex flex-row justify-between items-center mb-4 md:mb-[26px]">
@@ -66,7 +70,7 @@ export default function Home() {
             </div>
           </div>
           <div className="lg:col-span-4">
-            <div className="mb-15 md:mb-5">
+            <div className="hidden mb-15 md:mb-5 lg:block">
               <LatestNewsWidget />
             </div>
             <div className="mb-15 md:mb-10">
@@ -102,6 +106,16 @@ export default function Home() {
             <BPGPlayerLeadersCard />
             <SPGPlayerLeadersCardNew />
             <FGMPlayerLeadersCard />
+          </div>
+        </div>
+      </section>
+      <section className="container mb-8 lg:mb-16">
+        <div className="mb-10">
+          <BsnTvWidget />
+        </div>
+        <div className="mb-10">
+          <div className="flex justify-center">
+            <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="home-gpt-ad-728-90-2" />
           </div>
         </div>
       </section>

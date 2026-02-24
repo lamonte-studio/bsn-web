@@ -1,10 +1,13 @@
 import { getClient } from '@/apollo-client';
+import { DOMAIN_URL, SITE_NAME } from '@/constants';
 import { SINGLE_NEWS } from '@/graphql/news';
 import { NewsType } from '@/news/types';
 import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
+import { stripHtmlTags } from '@/utils/html';
 import moment from 'moment';
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 const NEWS_PER_PAGE = 1;
@@ -28,6 +31,36 @@ const fetchSingleNews = async (slug: string): Promise<NewsType[]> => {
 
   return data?.news.edges.map((edge: { node: NewsType }) => edge.node) ?? [];
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const data = await fetchSingleNews(slug);
+  const news = data[0];
+
+  return {
+    title: `BSN - ${news?.title}`,
+    description: stripHtmlTags(news?.excerpt ?? ''),
+    openGraph: {
+      title: `BSN - ${news?.title}`,
+      description: stripHtmlTags(news?.excerpt ?? ''),
+      url: `${DOMAIN_URL}/noticias/${slug}`,
+      type: 'article',
+      publishedTime: news?.publishedAt,
+      images: news?.imageUrl ? [{ url: news.imageUrl }] : [],
+      siteName: SITE_NAME,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `BSN - ${news?.title}`,
+      description: stripHtmlTags(news?.excerpt ?? ''),
+      images: news?.imageUrl ? [news.imageUrl] : [],
+    },
+  };
+}
 
 export default async function DetalleNoticiaPage({
   params,

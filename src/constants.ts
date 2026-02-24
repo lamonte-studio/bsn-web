@@ -1,3 +1,5 @@
+export const SITE_NAME = 'BSN';
+export const DOMAIN_URL = 'https://www.bsnpr.com';
 export const DEFAULT_MEDIA_PROVIDER = 'BSN App • YouTube';
 
 export const MATCH_STATUS = {
@@ -36,3 +38,4 @@ export const MATCH_DATE_FULL_FORMAT = 'dddd, D [de] MMMM [de] YYYY';
 export const MATCH_TIME_FORMAT = 'h:mm A';
 
 export const PLAYER_BIRTHDAY_FORMAT = 'D/M/YYYY';
+export const BSN_TV_DATE_FORMAT = 'MMMM D, YYYY';

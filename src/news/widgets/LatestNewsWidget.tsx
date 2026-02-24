@@ -37,9 +37,6 @@ export default async function LatestNewsWidget() {
             Lo último en el BSN
           </h3>
         </div>
-        <div>
-          <img src="/assets/images/sponsors/coca-cola.png" alt="" />
-        </div>
       </div>
       <div className="py-[20px] space-y-5 sm:px-[30px]">
         {data.map((item) => (
@@ -55,7 +52,7 @@ export default async function LatestNewsWidget() {
       <div className="sm:pb-[20px] sm:px-[30px]">
         <Link
           href="/noticias"
-          className="bg-[#FCFCFC] block border border-[#D9D3D3] rounded-[12px] px-[12px] py-[9px] text-center"
+          className="bg-[#FCFCFC] block border border-[#D9D3D3] rounded-[12px] px-[12px] py-[9px] text-center shadow-[0px_1px_2px_0px_#14181F0D]"
         >
           <span className="font-special-gothic-condensed-one text-base text-black">
             Ver más noticias

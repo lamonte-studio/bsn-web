@@ -3,6 +3,7 @@ export type TopPerformancesType = {
   coverUrl: string;
   playListId: string;
   videoId: string;
+  publishedAt: string;
 }
 
 export type TheRouteType = {
@@ -10,4 +11,5 @@ export type TheRouteType = {
   coverUrl: string;
   playListId: string;
   videoId: string;
+  publishedAt: string;
 };
