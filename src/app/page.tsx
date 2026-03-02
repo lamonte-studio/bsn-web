@@ -16,17 +16,19 @@ import WSCMoments from '@/highlights/client/components/WSCMoments';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import BsnTvWidget from '@/highlights/widgets/BsnTvWidget';
 
-
 export default function Home() {
   return (
-    <FullWidthLayout>
+    <FullWidthLayout
+      subheader={
+        <section className="pb-[116px] lg:pt-[8px] lg:pb-[108px]">
+          <div className="container relative">
+            <RecentCalendarSliderWidget />
+            <div className="absolute bg-[linear-gradient(-90deg,rgba(15,23,31,0.9)_21.8%,rgba(0,0,0,0)_96.31%)] top-0 bottom-0 right-0 w-[48px] md:w-[232px]"></div>
+          </div>
+        </section>
+      }
+    >
       <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
-      <section className="bg-[#0F171F] pb-[116px] lg:pt-[8px] lg:pb-[108px]">
-        <div className="container relative">
-          <RecentCalendarSliderWidget />
-          <div className="absolute bg-[linear-gradient(-90deg,rgba(15,23,31,0.9)_21.8%,rgba(0,0,0,0)_96.31%)] top-0 bottom-0 right-0 w-[48px] md:w-[232px]"></div>
-        </div>
-      </section>
       <section className="container mb-4 -mt-[94px] lg:mb-7 lg:-mt-[76px]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-8">
@@ -35,10 +37,18 @@ export default function Home() {
             </div>
             <div className="mb-8 lg:mb-10">
               <div className="hidden justify-center xl:flex">
-                <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="home-gpt-ad-728-90-1" />
+                <AdSlot
+                  adUnit="/23296921845/728-90"
+                  size={[728, 90]}
+                  elementId="home-gpt-ad-728-90-1"
+                />
               </div>
               <div className="bg-[#F8F8F8] flex justify-center py-[15px] -mx-[1rem] md:mx-0 md:py-0 md:bg-transparent xl:hidden">
-                <AdSlot adUnit="/23296921845/320-50" size={[320, 50]} elementId="home-gpt-ad-320-50-1" />
+                <AdSlot
+                  adUnit="/23296921845/320-50"
+                  size={[320, 50]}
+                  elementId="home-gpt-ad-320-50-1"
+                />
               </div>
             </div>
             <div className="mb-15 lg:hidden">
@@ -78,7 +88,11 @@ export default function Home() {
             </div>
             <div className="mb-10">
               <div className="flex justify-center">
-                <AdSlot adUnit="/23296921845/300-250" size={[300, 250]} elementId="home-gpt-ad-300-250-1" />
+                <AdSlot
+                  adUnit="/23296921845/300-250"
+                  size={[300, 250]}
+                  elementId="home-gpt-ad-300-250-1"
+                />
               </div>
             </div>
           </div>
@@ -95,7 +109,9 @@ export default function Home() {
                 href="/estadisticas"
                 className="bg-[#FCFCFC] border border-[#D9D3D3] inline-block min-w-[216px] p-[12px] rounded-[12px] shadow-[0px_1px_2px_0px_#14181F0D] text-center"
               >
-                <span className="text-base text-black">Ver más estadísticas</span>
+                <span className="text-base text-black">
+                  Ver más estadísticas
+                </span>
               </Link>
             </div>
           </div>
@@ -115,7 +131,11 @@ export default function Home() {
         </div>
         <div className="mb-10">
           <div className="flex justify-center">
-            <AdSlot adUnit="/23296921845/728-90" size={[728, 90]} elementId="home-gpt-ad-728-90-2" />
+            <AdSlot
+              adUnit="/23296921845/728-90"
+              size={[728, 90]}
+              elementId="home-gpt-ad-728-90-2"
+            />
           </div>
         </div>
       </section>

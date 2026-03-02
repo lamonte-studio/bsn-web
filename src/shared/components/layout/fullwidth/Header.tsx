@@ -19,7 +19,7 @@ export default function HeaderBoxLayout() {
 
   return (
     <>
-      <div className="bg-[#0F171F] py-[16px]">
+      <div className="py-[16px]">
         <div className="container">
           <div className="flex flex-row justify-between items-center">
             <div>

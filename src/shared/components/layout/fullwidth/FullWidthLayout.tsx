@@ -3,12 +3,16 @@ import Header from "./Header";
 
 type Props = {
   children: React.ReactNode;
+  subheader?: React.ReactNode;
 };
 
-export default function FullWidthLayout({ children }: Props) {
+export default function FullWidthLayout({ children, subheader }: Props) {
   return (
     <div>
-      <Header />
+      <header className="bg-bsn">
+        <Header />
+        {subheader}
+      </header>
       <main>
         {children}
       </main>

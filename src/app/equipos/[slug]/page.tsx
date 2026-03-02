@@ -106,9 +106,8 @@ export default async function DetalleEquipoPage({
   const data: TeamPageResponse = await fetchTeam(slug);
 
   return (
-    <FullWidthLayout>
-      <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
-      <section className="bg-[#0F171F]">
+    <FullWidthLayout
+      subheader={
         <div className="container">
           <div className="mx-auto py-[20px] md:py-[42px] xl:py-[38px] lg:w-9/12 xl:w-8/12">
             <div className="flex items-center justify-center mb-4">
@@ -134,23 +133,25 @@ export default async function DetalleEquipoPage({
             </div>
           </div>
         </div>
-      </section>
+      }
+    >
+      <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
       <TabGroup>
-        <TabList className="bg-[#0F171F] pb-[28px]">
+        <TabList className="bg-bsn pb-[28px]">
           <div className="container text-center space-x-[30px]">
-            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Resumen
             </Tab>
-            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Calendario
             </Tab>
-            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Jugadores
             </Tab>
-            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Estadísticas
             </Tab>
-            <Tab className="outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Líderes
             </Tab>
           </div>

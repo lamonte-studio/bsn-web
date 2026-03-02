@@ -42,14 +42,14 @@ export default function TeamStatsWidget({ teamCode }: Props) {
         <thead>
           <tr>
             <th className="border-b border-b-[rgba(0,0,0,0.07)] px-3 py-2">
-              <span className="text-[13px] text-[rgba(0,0,0,0.6)]">EQUIPO</span>
+              <span className="font-normal text-[13px] text-[rgba(0,0,0,0.6)]">EQUIPO</span>
             </th>
             {STATS_HEADER.map((item) => (
               <th
                 key={`header-${item.key}`}
                 className="border-b border-b-[rgba(0,0,0,0.07)] px-3 py-2 text-center whitespace-nowrap w-[1%]"
               >
-                <span className="text-[13px] text-[rgba(0,0,0,0.6)]">
+                <span className="font-normal text-[13px] text-[rgba(0,0,0,0.6)]">
                   {item.label}
                 </span>
               </th>

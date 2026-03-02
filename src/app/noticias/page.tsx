@@ -32,16 +32,19 @@ const fetchTopNews = async (): Promise<NewsType[]> => {
 export default async function NoticiasPage() {
   const data: NewsType[] = await fetchTopNews();
   return (
-    <FullWidthLayout>
-      <section className="bg-[#0F171F] pb-[116px] lg:pt-[8px] lg:pb-[128px]">
-        <div className="container">
-          <div>
-            <h2 className="text-center text-white lg:text-[42px]">
-              Lo último en el BSN
-            </h2>
+    <FullWidthLayout
+      subheader={
+        <section className="pb-[116px] lg:pt-[8px] lg:pb-[128px]">
+          <div className="container">
+            <div>
+              <h2 className="text-center text-white md:text-[36px] lg:text-[42px]">
+                Lo último en el BSN
+              </h2>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      }
+    >
       <section>
         <div className="container">
           <div className="mb-11 -mt-[94px] lg:mb-18 lg:-mt-[84px]">

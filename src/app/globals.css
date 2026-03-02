@@ -19,7 +19,7 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #fcfcfc;
   --foreground: #171717;
 }
 
@@ -44,6 +44,10 @@ body {
   font-family: var(--font-special-gothic-condensed-one), Arial, Helvetica, sans-serif;
   overscroll-behavior: none;
   overflow-x: none;
+}
+
+.bg-bsn {
+  background: radial-gradient(37% 80% at 45% 49%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(90deg, rgba(17, 22, 29, 0.2) 0%, rgba(10, 14, 20, 0) 100%),#0F171F;
 }
 
 /* Recent Calendar Slider */
