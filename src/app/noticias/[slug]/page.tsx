@@ -107,7 +107,7 @@ export default async function DetalleNoticiaPage({
               </figure>
               <div className="mb-8 md:mb-15">
                 <div
-                  className="font-barlow"
+                  className="font-barlow [&_p]:mb-5 [&_p:last-child]:mb-0 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-3 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-5 [&_li]:mb-1 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:mb-5"
                   dangerouslySetInnerHTML={{ __html: data[0]?.content ?? '' }}
                 />
               </div>

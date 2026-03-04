@@ -137,7 +137,7 @@ export default function LiveMatchCard({
             )}
           </div>
           <div className="flex flex-row items-center gap-2">
-            <img src="/assets/images/icons/icon-tv.png" />
+            <img src="/assets/images/icons/icon-tv.svg" />
             <p className="font-barlow font-medium text-sm text-[rgba(255,255,255,0.8)] hidden md:block">
               {mediaProvider}
             </p>

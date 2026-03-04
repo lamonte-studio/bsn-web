@@ -56,7 +56,7 @@ export default function SeasonPlayerLeadersCard({ title, subtitle, data }: Props
             className="font-barlow font-medium text-[13px] text-[rgba(15,23,31,0.9)]"
           >
             <span className="underline">Ver más estadísticas</span>&nbsp;
-            <img src="/assets/images/icons/icon-arrow-right.png" alt="" className="align-middle inline" />
+            <img src="/assets/images/icons/icon-arrow-right.svg" alt="" className="align-middle inline" />
           </a>
         </p>
       </div>

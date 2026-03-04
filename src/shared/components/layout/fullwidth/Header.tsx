@@ -39,7 +39,7 @@ export default function HeaderBoxLayout() {
                 onClick={() => setIsOpen(!isOpen)}
               >
                 <img
-                  src="/assets/images/icons/icon-bars.png"
+                  src="/assets/images/icons/icon-bars.svg"
                   alt="Menu"
                   width="18"
                   height="14"
@@ -347,7 +347,7 @@ export default function HeaderBoxLayout() {
                 onClick={() => setIsOpen(false)}
                 className="bg-[#252933] cursor-pointer rounded-full w-[42px] h-[42px] flex justify-center items-center"
               >
-                <img src="/assets/images/icons/icon-close.png" alt="Close" />
+                <img src="/assets/images/icons/icon-close.svg" alt="Close" />
               </CloseButton>
             </div>
             <ul className="divide-y divide-[rgba(255,255,255,0.05)]">

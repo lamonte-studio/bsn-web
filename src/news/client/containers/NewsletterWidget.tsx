@@ -1,10 +1,37 @@
 'use client';
+import { useState } from 'react';
 import Tag from "@/shared/client/components/ui/Tag";
 import NewsItem from "../components/NewsItem";
 import { useNewsletter } from "../hooks/news";
 
+const FILTER_PILLS = [
+  { label: 'Todas', slug: null },
+  { label: 'Oficial', slug: 'oficial' },
+  { label: 'Cambios', slug: 'cambios' },
+  { label: 'Fichajes', slug: 'fichajes' },
+  { label: 'Recaps', slug: 'recaps' },
+  { label: 'Playoffs', slug: 'playoffs' },
+];
+
 export default function NewsletterWidget() {
   const { data, loading, hasMore, loadMore } = useNewsletter();
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+
+  const filteredData = activeTag
+    ? data.filter((newsItem) =>
+        newsItem.tags?.some(
+          (tag) =>
+            tag.slug === activeTag ||
+            tag.name.toLowerCase() === activeTag.toLowerCase(),
+        ),
+      )
+    : data;
+
+  // The first item (index 0) is already shown as the hero on the page.
+  const displayedData = filteredData.filter((_, index) =>
+    activeTag !== null ? true : index !== 0,
+  );
+
   return (
     <div>
       <div className="mb-5 md:mb-[38px] lg:mb-[58px]">
@@ -19,59 +46,29 @@ export default function NewsletterWidget() {
             style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
           >
             <ul className="flex flex-row gap-[6px] md:gap-[8px]">
-              <li>
-                <a href="#">
-                  <Tag active={true} className="min-w-[75px]">
-                    <span className="text-[15px]">Todas</span>
-                  </Tag>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <Tag className="min-w-[75px]">
-                    <span className="text-[15px]">Oficial</span>
-                  </Tag>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <Tag className="min-w-[75px]">
-                    <span className="text-[15px]">Cambios</span>
-                  </Tag>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <Tag className="min-w-[75px]">
-                    <span className="text-[15px]">Fichajes</span>
-                  </Tag>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <Tag className="min-w-[75px]">
-                    <span className="text-[15px]">Recaps</span>
-                  </Tag>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <Tag className="min-w-[75px]">
-                    <span className="text-[15px]">Playoffs</span>
-                  </Tag>
-                </a>
-              </li>
+              {FILTER_PILLS.map((pill) => (
+                <li key={pill.label}>
+                  <button onClick={() => setActiveTag(pill.slug)}>
+                    <Tag
+                      active={activeTag === pill.slug}
+                      className="min-w-[75px]"
+                    >
+                      <span className="text-[15px]">{pill.label}</span>
+                    </Tag>
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
         <p className="font-barlow font-medium text-[13px] text-[rgba(15,23,31,0.6)]">
-          Mostrando {data.length} noticias
+          Mostrando {displayedData.length} noticias
         </p>
       </div>
       <div className="mb-12 md:mb-[80px] lg:mb-[114px]">
         <div className="space-y-[20px] md:space-y-[30px]">
-          {data.map((newsItem, index) => (
-            <div key={`news-${newsItem.id}`} className={index === 0 ? 'hidden' : ''}>
+          {displayedData.map((newsItem) => (
+            <div key={`news-${newsItem.id}`}>
               <NewsItem
                 title={newsItem.title}
                 slug={newsItem.slug}
@@ -83,7 +80,7 @@ export default function NewsletterWidget() {
             </div>
           ))}
         </div>
-        {hasMore && (
+        {hasMore && !activeTag && (
           <div className="mt-[40px] flex justify-center">
             <button
               onClick={loadMore}

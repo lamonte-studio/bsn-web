@@ -1,19 +1,32 @@
 'use client';
 
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function AdManager() {
   const pathname = usePathname();
+  const servicesEnabled = useRef(false);
 
+  // Enable GPT services once on initial mount
   useEffect(() => {
-    // Destroy slots when route changes
+    window.googletag = window.googletag || { cmd: [] };
+    window.googletag.cmd.push(() => {
+      if (!servicesEnabled.current) {
+        window.googletag.pubads().enableSingleRequest();
+        window.googletag.enableServices();
+        servicesEnabled.current = true;
+      }
+    });
+  }, []);
+
+  // Destroy and refresh slots on route changes
+  useEffect(() => {
     window.googletag = window.googletag || { cmd: [] };
     window.googletag.cmd.push(() => {
       window.googletag.destroySlots();
-      window.googletag.pubads().refresh(); // Refresh ads to load new ones for the new route
+      window.googletag.pubads().refresh();
     });
-  }, [pathname]); // Triggers on navigation
+  }, [pathname]);
 
   return null;
 }

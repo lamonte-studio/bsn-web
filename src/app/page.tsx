@@ -1,15 +1,9 @@
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
-import APGPlayerLeadersCard from '@/stats/widgets/season/player/APGPlayerLeadersCard';
-import BPGPlayerLeadersCard from '@/stats/widgets/season/player/BPGPlayerLeadersCard';
-import PPGPlayerLeadersCard from '@/stats/widgets/season/player/PPGPlayerLeadersCard';
-import RPGPlayerLeadersCard from '@/stats/widgets/season/player/RPGPlayerLeadersCard';
-import FGMPlayerLeadersCard from '@/stats/widgets/season/player/FGMPlayerLeadersCard';
-import SPGPlayerLeadersCardNew from '@/stats/widgets/season/player/SPGPlayerLeadersCardNew';
+import SeasonLeadersSection from '@/stats/widgets/season/SeasonLeadersSection';
 import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
 import RecentCalendarSliderWidget from '@/match/client/containers/RecentCalendarSliderWidget';
 import SeasonStandingsTableBasicGroupsWidget from '@/stats/widgets/standings/table/SeasonStandingsTableBasicGroupsWidget';
 import TopNewsWidget from '@/news/widgets/TopNewsWidget';
-import Link from 'next/link';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import WSCHomeStories from '@/highlights/client/components/WSCHomeStories';
 import WSCMoments from '@/highlights/client/components/WSCMoments';
@@ -63,7 +57,7 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <WSCHomeStories />
+                <WSCHomeStories label="featured-weekly" />
               </div>
             </div>
             <div className="mb-4 md:mb-8 lg:mb-17">
@@ -98,33 +92,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="container mb-8 lg:mb-16">
-        <div className="lg:w-11/12 mx-auto">
-          <div className="flex flex-row justify-between items-center mb-[20px] md:mb-[32px]">
-            <h2 className="text-[22px] text-[#0F171F] md:text-[32px]">
-              Líderes de Temporada 2026
-            </h2>
-            <div className="hidden">
-              <Link
-                href="/estadisticas"
-                className="bg-[#FCFCFC] border border-[#D9D3D3] inline-block min-w-[216px] p-[12px] rounded-[12px] shadow-[0px_1px_2px_0px_#14181F0D] text-center"
-              >
-                <span className="text-base text-black">
-                  Ver más estadísticas
-                </span>
-              </Link>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[24px] gap-y-[23px]">
-            <PPGPlayerLeadersCard />
-            <RPGPlayerLeadersCard />
-            <APGPlayerLeadersCard />
-            <BPGPlayerLeadersCard />
-            <SPGPlayerLeadersCardNew />
-            <FGMPlayerLeadersCard />
-          </div>
-        </div>
-      </section>
+      <SeasonLeadersSection />
       <section className="container mb-8 lg:mb-16">
         <div className="mb-10">
           <BsnTvWidget />
@@ -132,7 +100,7 @@ export default function Home() {
         <div className="mb-10">
           <div className="flex justify-center">
             <AdSlot
-              adUnit="/23296921845/728-90"
+              adUnit="/23296921845/728-90-2"
               size={[728, 90]}
               elementId="home-gpt-ad-728-90-2"
             />
