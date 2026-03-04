@@ -85,13 +85,26 @@ export const TEAM_UPCOMING_CALENDAR = gql`
           providerId
           homeTeam {
             code
+            nickname
+            city
             ticketUrl
+            competitionStandings {
+              won
+              lost
+            }
           }
           visitorTeam {
             code
+            nickname
+            city
             ticketUrl
+            competitionStandings {
+              won
+              lost
+            }
           }
           status
+          channel
         }
       }
     }
@@ -151,6 +164,62 @@ export const TEAM_PLAYERS_STATS_CONNECTION = gql`
             foulsPersonalAvg
             plusMinusPointsAvg
           }
+        }
+      }
+    }
+  }
+`;
+
+export const TEAM_LEADERS_BASIC_STATS_CONNECTION = gql`
+  query getSeasonTeamLeaderPlayerStats($teamCode: String!, $first: Int!) {
+    pointsLeaders: seasonPlayerStatsConnection(
+      statsCode: "POINTS_AVG"
+      teamCode: $teamCode
+      first: $first
+    ) {
+      edges {
+        node {
+          player {
+            providerId
+            avatarUrl
+            name
+            playingPosition
+          }
+          value
+        }
+      }
+    }
+    reboundsLeaders: seasonPlayerStatsConnection(
+      statsCode: "REBOUNDS_AVG"
+      teamCode: $teamCode
+      first: $first
+    ) {
+      edges {
+        node {
+          player {
+            providerId
+            avatarUrl
+            name
+            playingPosition
+          }
+          value
+        }
+      }
+    }
+    assistsLeaders: seasonPlayerStatsConnection(
+      statsCode: "ASSISTS_AVG"
+      teamCode: $teamCode
+      first: $first
+    ) {
+      edges {
+        node {
+          player {
+            providerId
+            avatarUrl
+            name
+            playingPosition
+          }
+          value
         }
       }
     }

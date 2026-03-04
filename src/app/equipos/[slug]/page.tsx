@@ -1,4 +1,5 @@
 import { getClient } from '@/apollo-client';
+import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import {
   TEAM_DETAIL,
   TEAM_RECENT_CALENDAR,
@@ -17,8 +18,10 @@ import TeamPlayersWidget from '@/team/client/widgets/TeamPlayersWidget';
 import TeamStatsWidget from '@/team/client/widgets/TeamStatsWidget';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
 import TeamExternalLinksCard from '@/team/components/card/TeamExternalLinksCard';
+import TeamLeadersCard from '@/team/components/card/TeamLeadersCard';
 import { TeamType } from '@/team/types';
 import { ordinalNumber } from '@/utils/number-formater';
+import { getFirstWord } from '@/utils/text';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import Link from 'next/link';
 
@@ -87,7 +90,7 @@ const fetchTeam = async (code: string): Promise<TeamPageResponse> => {
       query: TEAM_UPCOMING_CALENDAR,
       variables: {
         code: team.code,
-        first: 5,
+        first: 3,
       },
     });
 
@@ -107,24 +110,32 @@ export default async function DetalleEquipoPage({
 
   return (
     <FullWidthLayout
+      divider
       subheader={
         <div className="container">
-          <div className="mx-auto py-[20px] md:py-[42px] xl:py-[38px] lg:w-9/12 xl:w-8/12">
-            <div className="flex items-center justify-center mb-4">
+          <div className="mx-auto pb-[20px] pt-[25px] md:py-[42px] xl:py-[38px] lg:w-9/12 xl:w-8/12">
+            <div className="flex items-center justify-center mb-[18px]">
               <div
-                className="border border-3 w-[120px] h-[120px] rounded-full flex items-center justify-center"
+                className="border border-3 w-[90px] h-[90px] rounded-full flex items-center justify-center md:w-[120px] md:h-[120px]"
                 style={{ borderColor: data.team.colorPrimary || '#cccccc' }}
               >
-                <TeamLogoAvatar teamCode={data.team.code} size={68} />
+                <figure className="hidden md:block">
+                  <TeamLogoAvatar teamCode={data.team.code} size={68} />
+                </figure>
+                <figure className="md:hidden">
+                  <TeamLogoAvatar teamCode={data.team.code} size={50} />
+                </figure>
               </div>
             </div>
-            <div className="">
-              <h2 className="text-center text-white lg:text-[42px]">
-                {data.team.name}
-              </h2>
-              <p className="font-barlow text-center text-base text-[rgba(255,255,255,0.7)]">
+            <div>
+              <div className="mb-[3px]">
+                <h2 className="text-center text-white text-[24px]/8 lg:text-[42px]/14">
+                  {data.team.name}
+                </h2>
+              </div>
+              <p className="font-barlow text-center text-[13px] text-[rgba(255,255,255,0.7)] md:text-base">
                 {data.team.competitionStandings?.won}-
-                {data.team.competitionStandings?.lost} •{' '}
+                {data.team.competitionStandings?.lost}&nbsp;&nbsp;•&nbsp;&nbsp;
                 {ordinalNumber(
                   data.team.competitionStandings?.positionInGroup || 0,
                 )}{' '}
@@ -138,20 +149,20 @@ export default async function DetalleEquipoPage({
       <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
       <TabGroup>
         <TabList className="bg-bsn pb-[28px]">
-          <div className="container text-center space-x-[30px]">
-            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+          <div className="container text-center space-x-[20px] md:space-x-[30px]">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-base tracking-[1%] md:text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Resumen
             </Tab>
-            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-base tracking-[1%] md:text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Calendario
             </Tab>
-            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-base tracking-[1%] md:text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Jugadores
             </Tab>
-            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-base tracking-[1%] md:text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Estadísticas
             </Tab>
-            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(255,255,255,0.5)] text-base tracking-[1%] md:text-[22px] data-selected:text-white data-selected:border-b data-selected:border-b-white">
               Líderes
             </Tab>
           </div>
@@ -160,7 +171,7 @@ export default async function DetalleEquipoPage({
           <TabPanel>
             <div className="container">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-6 md:mt-[30px] lg:mt-[60px]">
-                <div className="lg:col-span-8 lg:pr-16">
+                <div className="lg:col-span-8 lg:pr-13">
                   <div className="mb-6 md:mb-10 lg:mb-15">
                     <div className="flex flex-row justify-between items-center mb-[30px]">
                       <div>
@@ -169,25 +180,36 @@ export default async function DetalleEquipoPage({
                         </h3>
                       </div>
                     </div>
-                    <div>
+                    <div className="space-y-[20px] md:space-y-[30px] lg:space-y-[50px]">
                       {data.teamUpcomingCalendar.map((match) => (
                         <ScheduledMatchCardInline
                           key={`upcoming-calendar-${match.providerId}`}
                           startAt={match.startAt}
                           homeTeam={{
                             code: match.homeTeam.code,
-                            nickname: match.homeTeam.nickname,
-                            ticketUrl: match.homeTeam.ticketUrl || '',
+                            nickname: getFirstWord(match.homeTeam.nickname),
+                            ticketUrl: match.homeTeam.ticketUrl || '#',
+                            city: match.homeTeam.city,
+                            competitionStandings: {
+                              won: match.homeTeam.competitionStandings?.won ?? 0,
+                              lost: match.homeTeam.competitionStandings?.lost ?? 0,
+                            },
                           }}
                           visitorTeam={{
                             code: match.visitorTeam.code,
-                            nickname: match.visitorTeam.nickname,
-                            ticketUrl: match.visitorTeam.ticketUrl || '',
+                            nickname: getFirstWord(match.visitorTeam.nickname),
+                            ticketUrl: match.visitorTeam.ticketUrl || '#',
+                            city: match.visitorTeam.city,
+                            competitionStandings: {
+                              won: match.visitorTeam.competitionStandings?.won ?? 0,
+                              lost: match.visitorTeam.competitionStandings?.lost ?? 0,
+                            },
                           }}
                           contextTeam={{
                             code: data.team.code,
                           }}
                           providerId={match.providerId}
+                          mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
                         />
                       ))}
                       {data.teamUpcomingCalendar.length === 0 && (
@@ -198,7 +220,7 @@ export default async function DetalleEquipoPage({
                     </div>
                   </div>
                   <div className="mb-6 md:mb-10 lg:mb-15">
-                    <div className="flex flex-row justify-between items-center mb-[30px]">
+                    <div className="flex flex-row justify-between items-center mb-[20px]">
                       <div>
                         <h3 className="text-[22px] text-black md:text-[24px]">
                           Últimos resultados
@@ -206,7 +228,7 @@ export default async function DetalleEquipoPage({
                       </div>
                     </div>
                     <div
-                      className="flex flex-row flex-nowrap gap-3 overflow-x-auto"
+                      className="flex flex-row flex-nowrap gap-[13px] overflow-x-auto"
                       style={{
                         msOverflowStyle: 'none',
                         scrollbarWidth: 'none',
@@ -253,6 +275,9 @@ export default async function DetalleEquipoPage({
                   </div>
                 </div>
                 <div className="lg:col-span-4">
+                  <div className="mb-5">
+                    <TeamLeadersCard teamCode={data.team.code} />
+                  </div>
                   <div className="mb-5">
                     <TeamExternalLinksCard
                       instagramLink={data.team.socialInstagramUrl}

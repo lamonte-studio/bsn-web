@@ -39,7 +39,7 @@ export default function CompletedMatchCardBasic({
 
   return (
     <div className="border border-[#EAEAEA] flex-1 rounded-[12px] bg-white shadow-[0px_1px_3px_0px_#14181F0A] min-w-[142px]">
-      <div className="border-b border-b-[rgba(125,125,125,0.15)] flex flex-row justify-between items-center mx-[12px] py-[10px]">
+      <div className="border-b border-b-[rgba(125,125,125,0.15)] flex flex-row justify-between items-center mx-[12px] py-[8px]">
         <p className="font-barlow font-medium text-xs text-[rgba(0,0,0,0.7)]">
           {formatDate(startAt, MATCH_DATE_FORMAT)}
         </p>
@@ -47,10 +47,10 @@ export default function CompletedMatchCardBasic({
           Final {overtimePeriodLabel}
         </p>
       </div>
-      <div className="p-[12px] space-y-2">
+      <div className="px-[12px] py-[10px] space-y-[1px]">
         <div className="flex flex-row items-center gap-2">
-          <TeamLogoAvatar teamCode={homeTeam.code} size={28} />
-          <p className="grow text-[21px] text-black">{homeTeam.code}</p>
+          <TeamLogoAvatar teamCode={homeTeam.code} size={26} />
+          <p className="grow text-[21px]/7 text-black">{homeTeam.code}</p>
           <figure>
             <img
               src="/assets/images/icons/icon-caret-winner.png"
@@ -61,7 +61,7 @@ export default function CompletedMatchCardBasic({
             />
           </figure>
           <p
-            className="text-[21px]"
+            className="text-[21px]/7"
             style={{
               color: isHomeTeamWinner ? '#000000' : 'rgba(0, 0, 0, 0.5)',
             }}
@@ -70,8 +70,8 @@ export default function CompletedMatchCardBasic({
           </p>
         </div>
         <div className="flex flex-row items-center gap-2">
-          <TeamLogoAvatar teamCode={visitorTeam.code} size={28} />
-          <p className="grow text-[21px] text-black">{visitorTeam.code}</p>
+          <TeamLogoAvatar teamCode={visitorTeam.code} size={26} />
+          <p className="grow text-[21px]/7 text-black">{visitorTeam.code}</p>
           <figure>
             <img
               src="/assets/images/icons/icon-caret-winner.png"
@@ -82,7 +82,7 @@ export default function CompletedMatchCardBasic({
             />
           </figure>
           <p
-            className="text-[21px]"
+            className="text-[21px]/7"
             style={{
               color: !isHomeTeamWinner ? '#000000' : 'rgba(0, 0, 0, 0.5)',
             }}
