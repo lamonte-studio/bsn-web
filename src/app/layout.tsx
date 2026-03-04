@@ -5,6 +5,7 @@ import {
   Special_Gothic_Condensed_One,
 } from 'next/font/google';
 import { GoogleTagManager } from '@next/third-parties/google';
+import Script from 'next/script';
 import './globals.css';
 import { ApolloWrapper } from './ApolloWrapper';
 import AdManager from '@/shared/client/components/gtm/AdManager';
@@ -25,6 +26,7 @@ const specialGothicCondensedOne = Special_Gothic_Condensed_One({
   variable: '--font-special-gothic-condensed-one',
   subsets: ['latin'],
   weight: ['400'],
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -40,6 +42,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
+      <Script
+        async
+        src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+        strategy="afterInteractive"
+      />
       <head>
         <meta
           name="viewport"
