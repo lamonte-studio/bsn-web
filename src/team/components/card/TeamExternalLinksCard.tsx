@@ -48,7 +48,7 @@ export default function TeamExternalLinksCard({
                   </p>
                 </div>
                 <img
-                  src="/assets/images/icons/icon-external-link2.png"
+                  src="/assets/images/icons/icon-external-link2.svg"
                   alt=""
                 />
               </a>
@@ -72,7 +72,7 @@ export default function TeamExternalLinksCard({
                   </p>
                 </div>
                 <img
-                  src="/assets/images/icons/icon-external-link2.png"
+                  src="/assets/images/icons/icon-external-link2.svg"
                   alt=""
                 />
               </a>
@@ -96,7 +96,7 @@ export default function TeamExternalLinksCard({
                   </p>
                 </div>
                 <img
-                  src="/assets/images/icons/icon-external-link2.png"
+                  src="/assets/images/icons/icon-external-link2.svg"
                   alt=""
                 />
               </a>
@@ -120,7 +120,7 @@ export default function TeamExternalLinksCard({
                   </p>
                 </div>
                 <img
-                  src="/assets/images/icons/icon-external-link2.png"
+                  src="/assets/images/icons/icon-external-link2.svg"
                   alt=""
                 />
               </a>
@@ -141,7 +141,7 @@ export default function TeamExternalLinksCard({
                   </p>
                 </div>
                 <img
-                  src="/assets/images/icons/icon-external-link2.png"
+                  src="/assets/images/icons/icon-external-link2.svg"
                   alt=""
                 />
               </a>
@@ -165,7 +165,7 @@ export default function TeamExternalLinksCard({
                   </p>
                 </div>
                 <img
-                  src="/assets/images/icons/icon-external-link2.png"
+                  src="/assets/images/icons/icon-external-link2.svg"
                   alt=""
                 />
               </a>
@@ -180,13 +180,13 @@ export default function TeamExternalLinksCard({
                 rel="noopener noreferrer"
               >
                 <div className="flex flex-row items-center gap-3">
-                  <img src="/assets/images/icons/icon-ticket2.png" alt="" />{' '}
+                  <img src="/assets/images/icons/icon-ticket2.svg" alt="" />{' '}
                   <p className="font-barlow font-medium text-[15px] text-[rgba(15,23,31,0.9)]">
                     Boletos
                   </p>
                 </div>
                 <img
-                  src="/assets/images/icons/icon-external-link2.png"
+                  src="/assets/images/icons/icon-external-link2.svg"
                   alt=""
                 />
               </a>

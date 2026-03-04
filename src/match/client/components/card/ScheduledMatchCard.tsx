@@ -72,7 +72,7 @@ export default function ScheduledMatchCard({
             {formatDate(startAt, MATCH_DATE_FORMAT)}
           </p>
           <div className="flex flex-row items-center gap-2">
-            <img src="/assets/images/icons/icon-tv.png" />
+            <img src="/assets/images/icons/icon-tv.svg" />
             <p className="font-barlow font-medium text-[13px] text-[rgba(255,255,255,0.8)] hidden md:block md:text-sm">
               {mediaProvider}
             </p>
