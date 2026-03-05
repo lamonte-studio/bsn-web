@@ -63,7 +63,7 @@ export default function ScheduledMatchCardInline({
                   ? homeTeam.ticketUrl
                   : visitorTeam.ticketUrl
               }
-              className="border border-[#D5D5D5] inline-block text-center text-[15px] p-[8px] rounded-[100px] min-w-[110px]"
+              className="bg-[#FDFDFD] border border-[#D5D5D5] inline-block text-center text-[15px] p-[8px] rounded-[100px] min-w-[110px]"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -71,7 +71,7 @@ export default function ScheduledMatchCardInline({
             </a>
             <Link
               href={`/partidos/${providerId}`}
-              className="border border-[#D5D5D5] inline-block text-center text-[15px] p-[8px] rounded-[100px] min-w-[110px]"
+              className="bg-[#FDFDFD] border border-[#D5D5D5] inline-block text-center text-[15px] p-[8px] rounded-[100px] min-w-[110px]"
             >
               <span className="text-[15px] text-black">Ver previa</span>
             </Link>

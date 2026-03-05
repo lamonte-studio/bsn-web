@@ -71,10 +71,9 @@ export default async function DetalleJugadorPage({
   const { slug } = await params;
   const data: PlayerPageResponse = await fetchPlayer(slug);
 
-  return (
-    <FullWidthLayout>
-      <section className="bg-[#0F171F]">
-        <div className="container">
+  const playerHero = (
+    <section className="pt-6 md:pt-8 lg:pt-10">
+      <div className="container">
           <div className="grid grid-cols-1 gap-4 items-center md:grid-cols-12">
             <div className="col-span-1 md:col-span-12 lg:col-span-5">
               <div className="flex flex-row items-center gap-4">
@@ -214,7 +213,11 @@ export default async function DetalleJugadorPage({
             </div>
           </div>
         </div>
-      </section>
+    </section>
+  );
+
+  return (
+    <FullWidthLayout subheader={playerHero}>
       <section>
         <div className="mt-6 mb-6 md:mt-[30px] md:mb-10 lg:mb-15 lg:mt-[60px]">
           <div className="container">
