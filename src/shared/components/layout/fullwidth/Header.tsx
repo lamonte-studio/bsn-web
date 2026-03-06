@@ -14,20 +14,14 @@ import {
 } from '@headlessui/react';
 import { useState, useRef } from 'react';
 
-type HeaderProps = {
-  hideNavBorder?: boolean;
-};
-
-export default function HeaderBoxLayout({
-  hideNavBorder = false,
-}: HeaderProps) {
+export default function HeaderBoxLayout() {
   const [isOpen, setIsOpen] = useState(false);
   const equiposButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
       <div
-        className={`py-[20px] ${hideNavBorder ? '' : 'border-b-[1px] border-[rgba(255,255,255,0.12)]'}`}
+        className="py-[20px]"
       >
         <div className="container">
           <div className="flex flex-row justify-between items-center">

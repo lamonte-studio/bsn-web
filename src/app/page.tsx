@@ -13,7 +13,6 @@ import BsnTvWidget from '@/highlights/widgets/BsnTvWidget';
 export default function Home() {
   return (
     <FullWidthLayout
-      hideNavBorder
       subheader={
         <section className="pb-[116px] lg:pt-[8px] lg:pb-[108px]">
           <div className="container relative">
