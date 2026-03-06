@@ -1,6 +1,7 @@
 import { MATCH_DATE_FORMAT, MATCH_TIME_FORMAT } from '@/constants';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
 import { formatDate } from '@/utils/date-formatter';
+import { getFirstWord } from '@/utils/text';
 
 type Props = {
   startAt: string;
@@ -40,13 +41,13 @@ export default function ScheduledMatchScoreBoard({
       <div className="flex flex-row justify-between items-start gap-3 md:gap-4 md:items-center">
         <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row md:items-end">
           <div className="hidden text-right md:block">
-            <h4 className="text-white lg:text-[26px]/8">{homeTeam.nickname}</h4>
+            <h4 className="text-white lg:text-[26px]/8">{getFirstWord(homeTeam.nickname)}</h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
               {homeTeam.city}
             </p>
             <p className="font-barlow text-xs text-[rgba(255,255,255,0.5)]">
-              {homeTeam.competitionStandings?.won}-
-              {homeTeam.competitionStandings?.lost}
+              {homeTeam.competitionStandings?.won ?? 0}-
+              {homeTeam.competitionStandings?.lost ?? 0}
             </p>
           </div>
           <div
@@ -64,8 +65,8 @@ export default function ScheduledMatchScoreBoard({
           </div>
           <div className="md:hidden">
             <p className="font-barlow text-xs text-[rgba(255,255,255,0.5)]">
-              {homeTeam.competitionStandings?.won}-
-              {homeTeam.competitionStandings?.lost}
+              {homeTeam.competitionStandings?.won ?? 0}-
+              {homeTeam.competitionStandings?.lost ?? 0}
             </p>
           </div>
         </div>
@@ -106,20 +107,20 @@ export default function ScheduledMatchScoreBoard({
           </div>
           <div className="hidden text-left md:block">
             <h4 className="text-white lg:text-[26px]/8">
-              {visitorTeam.nickname}
+              {getFirstWord(visitorTeam.nickname)}
             </h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
               {visitorTeam.city}
             </p>
             <p className="font-barlow text-xs text-[rgba(255,255,255,0.5)]">
-              {visitorTeam.competitionStandings?.won}-
-              {visitorTeam.competitionStandings?.lost}
+              {visitorTeam.competitionStandings?.won ?? 0}-
+              {visitorTeam.competitionStandings?.lost ?? 0}
             </p>
           </div>
           <div className="md:hidden">
             <p className="font-barlow text-xs text-[rgba(255,255,255,0.5)]">
-              {visitorTeam.competitionStandings?.won}-
-              {visitorTeam.competitionStandings?.lost}
+              {visitorTeam.competitionStandings?.won ?? 0}-
+              {visitorTeam.competitionStandings?.lost ?? 0}
             </p>
           </div>
         </div>

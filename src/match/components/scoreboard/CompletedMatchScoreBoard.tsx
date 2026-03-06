@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { MATCH_DATE_FORMAT } from '@/constants';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
 import { formatDate } from '@/utils/date-formatter';
+import { getFirstWord } from '@/utils/text';
 
 type Props = {
   startAt: string;
@@ -55,7 +56,7 @@ export default function CompletedMatchScoreBoard({
       <div className="flex flex-row justify-between items-start gap-3 md:gap-4">
         <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
           <div className="hidden text-right md:block">
-            <h4 className="text-white lg:text-[26px]/8">{homeTeam.nickname}</h4>
+            <h4 className="text-white lg:text-[26px]/8">{getFirstWord(homeTeam.nickname)}</h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
               {homeTeam.city}
             </p>
@@ -139,7 +140,7 @@ export default function CompletedMatchScoreBoard({
           </div>
           <div className="hidden text-left md:block">
             <h4 className="text-white lg:text-[26px]/8">
-              {visitorTeam.nickname}
+              {getFirstWord(visitorTeam.nickname)}
             </h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
               {visitorTeam.city}

@@ -69,43 +69,43 @@ export default function PlayerStatsWidget({
           <tr>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.games ?? 0).format('0.0')}
+                {numeral(data.player.seasonStats?.games ?? 0).format('0.0')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.minutes ?? 0).format('0.0')}
+                {numeral(data.player.seasonStats?.minutes ?? 0).format('0.0')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.points ?? 0).format('0.0')}
+                {numeral(data.player.seasonStats?.points ?? 0).format('0.0')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.fieldGoalsMadeAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.fieldGoalsMadeAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.fieldGoalsAttemptedAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.fieldGoalsAttemptedAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.fieldGoalsPercentage ?? 0).format(
+                {numeral(data.player.seasonStats?.fieldGoalsPercentage ?? 0).format(
                   '0.0%',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.threePointersMadeAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.threePointersMadeAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
@@ -113,89 +113,89 @@ export default function PlayerStatsWidget({
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
                 {numeral(
-                  data.player.stats?.threePointersAttemptedAvg ?? 0,
+                  data.player.seasonStats?.threePointersAttemptedAvg ?? 0,
                 ).format('0.0')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
                 {numeral(
-                  data.player.stats?.threePointersPercentage ?? 0,
+                  data.player.seasonStats?.threePointersPercentage ?? 0,
                 ).format('0.0%')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.freeThrowsMadeAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.freeThrowsMadeAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.freeThrowsAttemptedAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.freeThrowsAttemptedAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.freeThrowsPercentage ?? 0).format(
+                {numeral(data.player.seasonStats?.freeThrowsPercentage ?? 0).format(
                   '0.0%',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.offensiveReboundsAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.offensiveReboundsAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.defensiveReboundsAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.defensiveReboundsAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.reboundsTotalAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.reboundsTotalAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.assistsAvg ?? 0).format('0.0')}
+                {numeral(data.player.seasonStats?.assistsAvg ?? 0).format('0.0')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.turnoversAvg ?? 0).format('0.0')}
+                {numeral(data.player.seasonStats?.turnoversAvg ?? 0).format('0.0')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.stealsAvg ?? 0).format('0.0')}
+                {numeral(data.player.seasonStats?.stealsAvg ?? 0).format('0.0')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.blocksAvg ?? 0).format('0.0')}
+                {numeral(data.player.seasonStats?.blocksAvg ?? 0).format('0.0')}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.foulsPersonalAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.foulsPersonalAvg ?? 0).format(
                   '0.0',
                 )}
               </span>
             </td>
             <td className="px-2 py-2 text-center">
               <span className="font-barlow text-[13px]">
-                {numeral(data.player.stats?.plusMinusPointsAvg ?? 0).format(
+                {numeral(data.player.seasonStats?.plusMinusPointsAvg ?? 0).format(
                   '0.0',
                 )}
               </span>

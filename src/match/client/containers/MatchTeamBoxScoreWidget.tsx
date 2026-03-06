@@ -1,5 +1,7 @@
 import ShimmerLine from '@/shared/client/components/ui/ShimmerLine';
 import { useMatchTeamPlayersBoxscore } from '../hooks/matches';
+import numeral from 'numeral';
+import Link from 'next/link';
 
 type Props = {
   matchProviderId: string;
@@ -84,7 +86,7 @@ export default function MatchTeamBoxScoreWidget({
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {item.player.shirtNumber}
+                  {item.player.shirtNumber || '-'}
                 </span>
               </td>
               <td
@@ -94,10 +96,12 @@ export default function MatchTeamBoxScoreWidget({
                     index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
                 }}
               >
-                <span className="text-base">{item.player.name}</span>
-                <span className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)] ml-2">
-                  {item.player.playingPosition}
-                </span>
+                <Link href={`/jugadores/${item.player.providerId}`}>
+                  <span className="text-base">{item.player.name}</span>
+                  <span className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)] ml-2">
+                    {item.player.playingPosition}
+                  </span>
+                </Link>
               </td>
               <td
                 className="px-3 py-2 text-center"
@@ -106,7 +110,7 @@ export default function MatchTeamBoxScoreWidget({
                     index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
                 }}
               >
-                <span className="font-barlow text-[13px]">{item.boxscore.minutes}</span>
+                <span className="font-barlow text-[13px]">{numeral(item.boxscore.minutes).format('0.0')}</span>
               </td>
               <td
                 className="px-3 py-2 text-center"
@@ -115,7 +119,7 @@ export default function MatchTeamBoxScoreWidget({
                     index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
                 }}
               >
-                <span className="font-barlow text-[13px]">{item.boxscore.points}</span>
+                <span className="font-barlow text-[13px]">{numeral(item.boxscore.points).format('0')}</span>
               </td>
               <td
                 className="px-3 py-2 text-center"
@@ -124,7 +128,7 @@ export default function MatchTeamBoxScoreWidget({
                     index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
                 }}
               >
-                <span className="font-barlow text-[13px]">{item.boxscore.reboundsTotal}</span>
+                <span className="font-barlow text-[13px]">{numeral(item.boxscore.reboundsTotal).format('0')}</span>
               </td>
               <td
                 className="px-3 py-2 text-center"
@@ -133,18 +137,7 @@ export default function MatchTeamBoxScoreWidget({
                     index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
                 }}
               >
-                <span className="font-barlow text-[13px]">{item.boxscore.assists}</span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {item.boxscore.fieldGoalsMade}/{item.boxscore.fieldGoalsAttempted}
-                </span>
+                <span className="font-barlow text-[13px]">{numeral(item.boxscore.assists).format('0')}</span>
               </td>
               <td
                 className="px-3 py-2 text-center"
@@ -154,18 +147,7 @@ export default function MatchTeamBoxScoreWidget({
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {item.boxscore.threePointersMade}/{item.boxscore.threePointersAttempted}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {item.boxscore.freeThrowsMade}/{item.boxscore.freeThrowsAttempted}
+                  {numeral(item.boxscore.fieldGoalsMade).format('0')}/{numeral(item.boxscore.fieldGoalsAttempted).format('0')}
                 </span>
               </td>
               <td
@@ -176,7 +158,7 @@ export default function MatchTeamBoxScoreWidget({
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {item.boxscore.foulsPersonal}
+                  {numeral(item.boxscore.threePointersMade).format('0')}/{numeral(item.boxscore.threePointersAttempted).format('0')}
                 </span>
               </td>
               <td
@@ -186,16 +168,9 @@ export default function MatchTeamBoxScoreWidget({
                     index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
                 }}
               >
-                <span className="font-barlow text-[13px]">{item.boxscore.steals}</span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">{item.boxscore.blocks}</span>
+                <span className="font-barlow text-[13px]">
+                  {numeral(item.boxscore.freeThrowsMade).format('0')}/{numeral(item.boxscore.freeThrowsAttempted).format('0')}
+                </span>
               </td>
               <td
                 className="px-3 py-2 text-center"
@@ -205,7 +180,36 @@ export default function MatchTeamBoxScoreWidget({
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {item.boxscore.turnovers}
+                  {numeral(item.boxscore.foulsPersonal).format('0')}
+                </span>
+              </td>
+              <td
+                className="px-3 py-2 text-center"
+                style={{
+                  backgroundColor:
+                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
+                }}
+              >
+                <span className="font-barlow text-[13px]">{numeral(item.boxscore.steals).format('0')}</span>
+              </td>
+              <td
+                className="px-3 py-2 text-center"
+                style={{
+                  backgroundColor:
+                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
+                }}
+              >
+                <span className="font-barlow text-[13px]">{numeral(item.boxscore.blocks).format('0')}</span>
+              </td>
+              <td
+                className="px-3 py-2 text-center"
+                style={{
+                  backgroundColor:
+                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
+                }}
+              >
+                <span className="font-barlow text-[13px]">
+                  {numeral(item.boxscore.turnovers).format('0')}
                 </span>
               </td>
               <td
@@ -218,7 +222,7 @@ export default function MatchTeamBoxScoreWidget({
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {item.boxscore.plusMinusPoints}
+                  {numeral(item.boxscore.plusMinusPoints).format('0')}
                 </span>
               </td>
             </tr>

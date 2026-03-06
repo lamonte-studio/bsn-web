@@ -1,4 +1,5 @@
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
+import { getFirstWord } from '@/utils/text';
 import { useMemo } from 'react';
 
 export type PeriodScoreProps = {
@@ -77,7 +78,7 @@ export default function MatchQuarterScoreBoard({
         <div className="flex flex-1 flex-row items-center gap-2">
           <TeamLogoAvatar teamCode={homeTeam.code} size={28} />
           <div className="flex flex-row items-center gap-2">
-            <p className="text-[19px]">{homeTeam.nickname}</p>
+            <p className="text-[19px]">{getFirstWord(homeTeam.nickname)}</p>
             <p className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)]">
               {homeTeam.competitionStandings?.won ?? 0}-
               {homeTeam.competitionStandings?.lost ?? 0}
@@ -116,7 +117,7 @@ export default function MatchQuarterScoreBoard({
         <div className="flex flex-1 flex-row items-center gap-2">
           <TeamLogoAvatar teamCode={visitorTeam.code} size={28} />
           <div className="flex flex-row items-center gap-2">
-            <p className="text-[19px]">{visitorTeam.nickname}</p>
+            <p className="text-[19px]">{getFirstWord(visitorTeam.nickname)}</p>
             <p className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)]">
               {visitorTeam.competitionStandings?.won ?? 0}-
               {visitorTeam.competitionStandings?.lost ?? 0}

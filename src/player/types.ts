@@ -79,7 +79,7 @@ export type PlayerType = {
   dob: string;
   nationality: string;
   shirtNumber: number;
-  team: {
+  team?: {
     code: string;
     name: string;
     nickname: string;

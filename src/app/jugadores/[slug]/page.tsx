@@ -64,7 +64,7 @@ export default async function DetalleJugadorPage({
                     <figure
                       className="hidden w-[125px] h-[125px] rounded-full border border-2 overflow-hidden md:block"
                       style={{
-                        borderColor: data.player.team.colorPrimary || '#ccc',
+                        borderColor: data.player.team?.colorPrimary || '#ccc',
                       }}
                     >
                       <PlayerPhotoAvatar
@@ -76,7 +76,7 @@ export default async function DetalleJugadorPage({
                     <figure
                       className="w-[75px] h-[75px] rounded-full border border-2 overflow-hidden md:hidden"
                       style={{
-                        borderColor: data.player.team.colorPrimary || '#ccc',
+                        borderColor: data.player.team?.colorPrimary || '#ccc',
                       }}
                     >
                       <PlayerPhotoAvatar
@@ -104,18 +104,18 @@ export default async function DetalleJugadorPage({
                     <div className="flex flex-row items-center gap-2">
                       <div className="hidden md:block">
                         <TeamLogoAvatar
-                          teamCode={data.player.team.code}
+                          teamCode={data.player.team?.code ?? ''}
                           size={24}
                         />
                       </div>
                       <div className="md:hidden">
                         <TeamLogoAvatar
-                          teamCode={data.player.team.code}
+                          teamCode={data.player.team?.code ?? ''}
                           size={20}
                         />
                       </div>
                       <span className="font-barlow font-medium text-[13px] text-[rgba(255,255,255,0.7)] md:text-[15px]">
-                        {getFirstWord(data.player.team.nickname)}
+                        {getFirstWord(data.player.team?.nickname || '')}
                       </span>
                     </div>
                   </div>
