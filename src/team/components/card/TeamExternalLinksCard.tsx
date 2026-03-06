@@ -20,15 +20,15 @@ export default function TeamExternalLinksCard({
   ticketsLink,
 }: Props) {
   return (
-    <div className="border border-[#EAEAEA] flex-1 rounded-[12px] bg-white shadow-[0px_1px_3px_0px_#14181F0A]">
-      <div className="px-[30px] pt-[24px] flex flex-row justify-between items-center">
+    <div className="flex-1 rounded-[12px] md:border md:border-[#EAEAEA] md:bg-white md:shadow-[0px_1px_3px_0px_#14181F0A]">
+      <div className="pt-[24px] flex flex-row justify-between items-center md:px-[30px]">
         <div>
           <h3 className="text-[22px] text-black md:text-[24px]">
             {titleCard}
           </h3>
         </div>
       </div>
-      <div className="px-[30px] pt-[12px] pb-[24px]">
+      <div className="pt-[12px] pb-[24px] md:px-[30px]">
         <ul className="divide-y divide-[rgba(0,0,0,0.07)]">
           {instagramLink && (
             <li className="flex flex-row items-center gap-[12px]">

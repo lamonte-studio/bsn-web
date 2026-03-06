@@ -4,18 +4,16 @@ import Header from "./Header";
 type Props = {
   children: React.ReactNode;
   subheader?: React.ReactNode;
-  hideNavBorder?: boolean;
+  divider?: boolean;
 };
 
-export default function FullWidthLayout({
-  children,
-  subheader,
-  hideNavBorder = false,
-}: Props) {
+export default function FullWidthLayout({ children, subheader, divider = false }: Props) {
   return (
     <div>
       <header className="bg-bsn">
-        <Header hideNavBorder={hideNavBorder} />
+        <div className="border-b" style={{ borderColor: divider ? 'rgba(55, 55, 55, 0.5)' : 'transparent' }}>
+          <Header />
+        </div>
         {subheader}
       </header>
       <main>

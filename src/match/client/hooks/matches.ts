@@ -8,8 +8,8 @@ type RecentCalendarResponse = {
 };
 
 export function useRecentCalendar(usePolling = false) {
-  const fromDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-  const toDate = moment().add(30, 'days').format('YYYY-MM-DD');
+  const fromDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
+  const toDate = moment().add(90, 'days').format('YYYY-MM-DD');
 
   const { data, loading, error } = useQuery<RecentCalendarResponse>(
     RECENT_CALENDAR,
