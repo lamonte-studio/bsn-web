@@ -80,6 +80,7 @@ export type TeamType = {
   welcomeMessage?: string;
   warCryMessage?: string;
   competitionStandings?: TeamCompetitionStandingType;
+  color?: string;
   colorPrimary?: string;
   colorSecondary?: string;
   advSmallImageUrl?: string;

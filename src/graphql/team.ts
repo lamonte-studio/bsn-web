@@ -9,6 +9,7 @@ export const TEAM_DETAIL = gql`
       code
       city
       group
+      color
       colorPrimary
       streamUrl
       ticketUrl
