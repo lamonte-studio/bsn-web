@@ -23,7 +23,7 @@ const STATS_HEADER: Record<string, string>[] = [
   { label: 'DREB', key: 'defensiveReboundsAverage' },
   { label: 'REB', key: 'reboundsTotalAverage' },
   { label: 'AST', key: 'assistsAverage' },
-  { label: 'TOV', key: 'turnoversAverage' },
+  { label: 'TO', key: 'turnoversAverage' },
   { label: 'STL', key: 'stealsAverage' },
   { label: 'BLK', key: 'blocksAverage' },
   { label: 'PF', key: 'foulsPersonalAverage' },
@@ -36,52 +36,68 @@ export default function TeamStatsWidget({ teamCode }: Props) {
     return <div>Cargando...</div>;
   }
 
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left">
-        <thead>
-          <tr>
-            <th className="border-b border-b-[rgba(0,0,0,0.07)] px-3 py-2">
-              <span className="font-normal text-[13px] text-[rgba(0,0,0,0.6)]">EQUIPO</span>
+  const standings = data?.competitionStandings;
+
+  const renderTable = (values: Record<string, number> | 'zeros') => (
+    <table className="w-full text-left">
+      <thead>
+        <tr>
+          <th className="border-b border-b-[rgba(0,0,0,0.1)] py-3 pr-3">
+            <span className="font-special-gothic-condensed-one text-[13px] tracking-[0.52px] text-[rgba(0,0,0,0.6)] uppercase">
+              EQUIPO
+            </span>
+          </th>
+          {STATS_HEADER.map((item) => (
+            <th
+              key={`header-${item.key}`}
+              className="border-b border-b-[rgba(0,0,0,0.1)] py-3 px-2 text-center whitespace-nowrap w-[1%]"
+            >
+              <span className="font-special-gothic-condensed-one text-[13px] tracking-[1.17px] text-[rgba(0,0,0,0.6)] uppercase">
+                {item.label}
+              </span>
             </th>
-            {STATS_HEADER.map((item) => (
-              <th
-                key={`header-${item.key}`}
-                className="border-b border-b-[rgba(0,0,0,0.07)] px-3 py-2 text-center whitespace-nowrap w-[1%]"
-              >
-                <span className="font-normal text-[13px] text-[rgba(0,0,0,0.6)]">
-                  {item.label}
-                </span>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="px-3 py-2">
-              <div className="flex flex-row items-center gap-3">
-                <TeamLogoAvatar teamCode={data?.code ?? ''} size={30} />
-                <span className="text-base">{data?.name ?? ''}</span>
-              </div>
-            </td>
-            {STATS_HEADER.map((item) => (
-              <td key={`value-${item.key}`} className="px-3 py-2 text-center">
-                <span className="font-barlow text-[13px]">
-                  {['FG%', '3P%', 'FT%'].includes(item.label)
-                    ? numeral(
-                        data?.competitionStandings?.[
-                          item.key as keyof typeof data.competitionStandings
-                        ] ?? 0,
-                      ).format('0.0%')
-                    : (data?.competitionStandings?.[
-                        item.key as keyof typeof data.competitionStandings
-                      ] ?? 0)}
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="py-3 pr-3">
+            <div className="flex flex-row items-center gap-2">
+              <TeamLogoAvatar teamCode={data?.code ?? ''} size={20} />
+              <span className="font-special-gothic-condensed-one text-[16px] leading-[1.4] tracking-[0.32px] text-black">
+                {data?.name ?? ''}
+              </span>
+            </div>
+          </td>
+          {STATS_HEADER.map((item) => {
+            const value =
+              values === 'zeros'
+                ? 0
+                : (values[item.key] ?? standings?.[item.key as keyof typeof standings] ?? 0);
+            const isPct = ['FG%', '3P%', 'FT%'].includes(item.label);
+            return (
+              <td key={`value-${item.key}`} className="py-3 px-2 text-center">
+                <span className="font-barlow text-[13px] text-black">
+                  {isPct ? numeral(Number(value)).format('0%') : value}
                 </span>
               </td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
+            );
+          })}
+        </tr>
+      </tbody>
+    </table>
+  );
+
+  return (
+    <div className="space-y-10 md:space-y-12 lg:space-y-15">
+      <div className="overflow-x-auto">{renderTable(standings ?? {})}</div>
+
+      <div>
+        <h2 className="font-special-gothic-condensed-one text-[24px] leading-none text-black tracking-[0.24px] mb-6 md:mb-8">
+          Totales - Temporada 2026
+        </h2>
+        <div className="overflow-x-auto">{renderTable('zeros')}</div>
+      </div>
     </div>
   );
 }

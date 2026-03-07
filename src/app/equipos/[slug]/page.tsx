@@ -323,36 +323,45 @@ export default async function DetalleEquipoPage({
           <TabPanel>
             <div className="mt-6 mb-6 md:mt-[30px] md:mb-10 lg:mb-15 lg:mt-[60px]">
               <div className="container">
-                <div className="flex flex-row justify-between items-center mb-[30px]">
-                  <div>
-                    <h3 className="text-[22px] text-black md:text-[24px]">
+                <TabGroup defaultIndex={0}>
+                  <TabList className="flex flex-wrap justify-center gap-[10px] mb-6 md:mb-8" aria-label="Estadísticas por vista">
+                    <Tab className="flex h-[35px] min-w-[170px] items-center justify-center rounded-[100px] border border-[#d5d5d5] bg-white font-special-gothic-condensed-one text-[15px] leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.65)] outline-none transition-colors data-selected:border-[#0f171f] data-selected:bg-[#0f171f] data-selected:text-white">
                       Equipo
-                    </h3>
-                  </div>
-                  <div>
-                    <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
-                      Temporada 2026 • Regular
-                    </p>
-                  </div>
-                </div>
-                <div className="mb-6 md:mb-10 lg:mb-15">
-                  <TeamStatsWidget teamCode={data.team.code} />
-                </div>
-                <div className="flex flex-row justify-between items-center mb-[30px]">
-                  <div>
-                    <h3 className="text-[22px] text-black md:text-[24px]">
+                    </Tab>
+                    <Tab className="flex h-[35px] min-w-[170px] items-center justify-center rounded-[100px] border border-[#d5d5d5] bg-white font-special-gothic-condensed-one text-[15px] leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.65)] outline-none transition-colors data-selected:border-[#0f171f] data-selected:bg-[#0f171f] data-selected:text-white">
                       Jugadores
-                    </h3>
-                  </div>
-                  <div>
-                    <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
-                      Temporada 2026 • Regular
-                    </p>
-                  </div>
-                </div>
-                <div className="mb-6 md:mb-10 lg:mb-15">
-                  <TeamPlayersStatsWidget teamCode={data.team.code} />
-                </div>
+                    </Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <div className="mb-6 md:mb-8">
+                        <h2 className="font-special-gothic-condensed-one text-[24px] leading-none text-black tracking-[0.24px]">
+                          Promedios - Temporada 2026
+                        </h2>
+                      </div>
+                      <div className="mb-6 md:mb-10 lg:mb-15">
+                        <TeamStatsWidget teamCode={data.team.code} />
+                      </div>
+                    </TabPanel>
+                    <TabPanel>
+                      <div className="flex flex-row justify-between items-center mb-[30px]">
+                        <div>
+                          <h3 className="text-[22px] text-black md:text-[24px]">
+                            Jugadores - Temporada 2026
+                          </h3>
+                        </div>
+                        <div>
+                          <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
+                            Temporada 2026 • Regular
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mb-6 md:mb-10 lg:mb-15">
+                        <TeamPlayersStatsWidget teamCode={data.team.code} />
+                      </div>
+                    </TabPanel>
+                  </TabPanels>
+                </TabGroup>
               </div>
             </div>
           </TabPanel>
