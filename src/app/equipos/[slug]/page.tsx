@@ -17,7 +17,7 @@ import TeamCalendarWidget from '@/team/client/widgets/TeamCalendarWidget';
 import TeamLeadersWidget from '@/team/client/widgets/TeamLeadersWidget';
 import TeamPlayersStatsWidget from '@/team/client/widgets/TeamPlayersStatsWidget';
 import TeamPlayersWidget from '@/team/client/widgets/TeamPlayersWidget';
-import TeamStatsWidget from '@/team/client/widgets/TeamStatsWidget';
+import TeamSeasonStatsWidget from '@/team/client/widgets/TeamSeasonStatsWidget';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
 import TeamExternalLinksCard from '@/team/components/card/TeamExternalLinksCard';
 import TeamLeadersCard from '@/team/components/card/TeamLeadersCard';
@@ -323,36 +323,33 @@ export default async function DetalleEquipoPage({
           <TabPanel>
             <div className="mt-6 mb-6 md:mt-[30px] md:mb-10 lg:mb-15 lg:mt-[60px]">
               <div className="container">
-                <div className="flex flex-row justify-between items-center mb-[30px]">
-                  <div>
-                    <h3 className="text-[22px] text-black md:text-[24px]">
+                <TabGroup defaultIndex={0}>
+                  <TabList className="flex flex-wrap justify-center gap-[10px] mb-6 md:mb-8" aria-label="Estadísticas por vista">
+                    <Tab className="flex h-[35px] min-w-[170px] items-center justify-center rounded-[100px] border border-[#d5d5d5] bg-white font-special-gothic-condensed-one text-[15px] leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.65)] outline-none transition-colors data-selected:border-[#0f171f] data-selected:bg-[#0f171f] data-selected:text-white">
                       Equipo
-                    </h3>
-                  </div>
-                  <div>
-                    <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
-                      Temporada 2026 • Regular
-                    </p>
-                  </div>
-                </div>
-                <div className="mb-6 md:mb-10 lg:mb-15">
-                  <TeamStatsWidget teamCode={data.team.code} />
-                </div>
-                <div className="flex flex-row justify-between items-center mb-[30px]">
-                  <div>
-                    <h3 className="text-[22px] text-black md:text-[24px]">
+                    </Tab>
+                    <Tab className="flex h-[35px] min-w-[170px] items-center justify-center rounded-[100px] border border-[#d5d5d5] bg-white font-special-gothic-condensed-one text-[15px] leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.65)] outline-none transition-colors data-selected:border-[#0f171f] data-selected:bg-[#0f171f] data-selected:text-white">
                       Jugadores
-                    </h3>
-                  </div>
-                  <div>
-                    <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
-                      Temporada 2026 • Regular
-                    </p>
-                  </div>
-                </div>
-                <div className="mb-6 md:mb-10 lg:mb-15">
-                  <TeamPlayersStatsWidget teamCode={data.team.code} />
-                </div>
+                    </Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <TeamSeasonStatsWidget teamCode={data.team.code} />
+                    </TabPanel>
+                    <TabPanel>
+                      <div className="flex flex-row justify-between items-center mb-[30px]">
+                        <div>
+                          <h3 className="text-[22px] text-black md:text-[24px]">
+                            Jugadores - Temporada 2026
+                          </h3>
+                        </div>
+                      </div>
+                      <div className="mb-6 md:mb-10 lg:mb-15">
+                        <TeamPlayersStatsWidget teamCode={data.team.code} />
+                      </div>
+                    </TabPanel>
+                  </TabPanels>
+                </TabGroup>
               </div>
             </div>
           </TabPanel>
