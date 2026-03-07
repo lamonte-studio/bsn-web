@@ -94,11 +94,18 @@ export default function Home() {
       </section>
       <SeasonLeadersSection />
       <section className="container mb-[100px]">
-        <div className="flex justify-center py-[70px]">
+        <div className="hidden justify-center py-[70px] xl:flex">
           <AdSlot
             adUnit="/23296921845/728-90-2"
             size={[728, 90]}
             elementId="home-gpt-ad-728-90-2"
+          />
+        </div>
+        <div className="flex justify-center py-[40px] xl:hidden">
+          <AdSlot
+            adUnit="/23296921845/320-50-2"
+            size={[320, 50]}
+            elementId="home-gpt-ad-320-50-2"
           />
         </div>
         <BsnTvWidget />
