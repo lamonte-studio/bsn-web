@@ -53,7 +53,7 @@ export default function TeamPlayersStatsWidget({ teamCode }: Props) {
         <thead>
           <tr>
             <th className="border-b border-b-[rgba(0,0,0,0.07)] px-4 py-3">
-              <span className="font-semibold text-[13px] text-[rgba(0,0,0,0.6)] tracking-[0.05em]">
+              <span className="font-normal text-[13px] text-[rgba(0,0,0,0.6)] tracking-[0.05em]">
                 JUGADOR
               </span>
             </th>
@@ -62,7 +62,7 @@ export default function TeamPlayersStatsWidget({ teamCode }: Props) {
                 key={`header-${item.key}`}
                 className="border-b border-b-[rgba(0,0,0,0.07)] px-4 py-3 text-center whitespace-nowrap w-[1%]"
               >
-                <span className="font-semibold text-[13px] text-[rgba(0,0,0,0.6)] tracking-[0.05em]">
+                <span className="font-normal text-[13px] text-[rgba(0,0,0,0.6)] tracking-[0.05em]">
                   {item.label}
                 </span>
               </th>
@@ -78,7 +78,7 @@ export default function TeamPlayersStatsWidget({ teamCode }: Props) {
               }}
             >
               <td className="px-4 py-3">
-                <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-row items-center gap-2 w-[140px]">
                   <span className="text-base">{node.name}</span>
                   <span className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)]">
                     {node.playingPosition}
@@ -93,8 +93,8 @@ export default function TeamPlayersStatsWidget({ teamCode }: Props) {
                           node.stats?.[item.key as keyof typeof node.stats] ??
                             0,
                         ).format('0.0%')
-                      : (node.stats?.[item.key as keyof typeof node.stats] ??
-                        0)}
+                      : numeral(node.stats?.[item.key as keyof typeof node.stats] ??
+                        0).format('0')}
                   </span>
                 </td>
               ))}

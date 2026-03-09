@@ -1,5 +1,6 @@
 'use client';
 
+import { useCurrentSeason } from '@/season/client/hooks/season';
 import ShimmerLine from '@/shared/client/components/ui/ShimmerLine';
 import { useTeamStats } from '@/team/client/hooks/teams';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
@@ -51,11 +52,13 @@ const TOTAL_STATS_HEADER: Record<string, string>[] = [
 
 export default function TeamSeasonStatsWidget({ teamCode }: Props) {
   const { data, loading } = useTeamStats(teamCode);
+  const { data: currentSeason } = useCurrentSeason();
+
   return (
     <div>
       <div className="mb-6 md:mb-8">
         <h2 className="font-special-gothic-condensed-one text-[24px] leading-none text-black tracking-[0.24px]">
-          Promedios - Temporada 2026
+          Promedios{currentSeason ? ` - ${currentSeason.name}` : ''}
         </h2>
       </div>
       <div className="mb-6 md:mb-10 lg:mb-15">
@@ -107,7 +110,7 @@ export default function TeamSeasonStatsWidget({ teamCode }: Props) {
                               data?.seasonStats?.[
                                 item.key as keyof typeof data.seasonStats
                               ] ?? 0,
-                            ).format('0%')
+                            ).format('0.0%')
                           : numeral(
                               data?.seasonStats?.[
                                 item.key as keyof typeof data.seasonStats
@@ -124,7 +127,7 @@ export default function TeamSeasonStatsWidget({ teamCode }: Props) {
       </div>
       <div className="mb-6 md:mb-8">
         <h2 className="font-special-gothic-condensed-one text-[24px] leading-none text-black tracking-[0.24px]">
-          Totales - Temporada 2026
+          Totales{currentSeason ? ` - ${currentSeason.name}` : ''}
         </h2>
       </div>
       <div className="mb-6 md:mb-10 lg:mb-15">

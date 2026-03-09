@@ -3,6 +3,8 @@ import { getClient } from '@/apollo-client';
 import { TEAM_LEADERS_BASIC_STATS_CONNECTION } from '@/graphql/team';
 import MatchPlayerLeadersCard from '@/stats/components/season/leader/player/MatchPlayerLeadersCard';
 import { TopPlayerLeaderStatsType } from '@/stats/types';
+import { CURRENT_SEASON } from '@/graphql/season';
+import { SeasonType } from '@/season/types';
 
 type Props = {
   teamCode: string;
@@ -59,9 +61,27 @@ const fetchTeamLeaders = async (
   };
 };
 
+type CurrentSeasonResponse = {
+  currentSeason?: SeasonType;
+};
+
+const fetchCurrentSeason = async (): Promise<SeasonType | null> => {
+  const { data, error } = await getClient().query<CurrentSeasonResponse>({
+    query: CURRENT_SEASON,
+  });
+
+  if (error) {
+    console.error('Error fetching current season:', error);
+    return null;
+  }
+  return data?.currentSeason ?? null;
+};
+
 export default async function TeamLeadersCard({ teamCode }: Props) {
   const { pointsLeaders, reboundsLeaders, assistsLeaders } =
     await fetchTeamLeaders(teamCode);
+  const currentSeason = await fetchCurrentSeason();
+
   return (
     <div className="flex-1 rounded-[12px] md:border md:border-[#EAEAEA] md:bg-white md:shadow-[0px_1px_3px_0px_#14181F0A]">
       <div className="mb-[18px] pt-[24px] flex flex-row justify-between items-center md:px-[30px] md:mb-0">
@@ -69,6 +89,11 @@ export default async function TeamLeadersCard({ teamCode }: Props) {
           <h3 className="text-[22px] text-black md:text-[24px]">
             Líderes del equipo
           </h3>
+        </div>
+        <div>
+          <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
+            Temporada {currentSeason ? `- ${currentSeason.name}` : ''}
+          </p>
         </div>
       </div>
       <div className="md:pb-[30px] md:pt-[20px] md:px-[30px]">

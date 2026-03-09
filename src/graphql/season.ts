@@ -16,3 +16,16 @@ export const SEASON_CONNECTION = gql`
     }
   }
 `;
+
+export const CURRENT_SEASON = gql`
+  query getCurrentSeason {
+    currentSeason {
+      providerId
+      name
+      year
+      startDate
+      endDate
+      current
+    }
+  }
+`;

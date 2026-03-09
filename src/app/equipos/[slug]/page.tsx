@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { getClient } from '@/apollo-client';
@@ -25,6 +24,8 @@ import { TeamType } from '@/team/types';
 import { ordinalNumber } from '@/utils/number-formater';
 import { getFirstWord } from '@/utils/text';
 import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
+import { SeasonType } from '@/season/types';
+import { CURRENT_SEASON } from '@/graphql/season';
 
 type TeamPageResponse = {
   team: TeamType;
@@ -103,11 +104,28 @@ const fetchTeam = async (code: string): Promise<TeamPageResponse> => {
   return teamPageResponse;
 };
 
+type CurrentSeasonResponse = {
+  currentSeason?: SeasonType;
+};
+
+const fetchCurrentSeason = async (): Promise<SeasonType | null> => {
+  const { data, error } = await getClient().query<CurrentSeasonResponse>({
+    query: CURRENT_SEASON,
+  });
+
+  if (error) {
+    console.error('Error fetching current season:', error);
+    return null;
+  }
+  return data?.currentSeason ?? null;
+};
+
 export default async function DetalleEquipoPage({
   params,
 }: PageProps<'/equipos/[slug]'>) {
   const { slug } = await params;
   const data: TeamPageResponse = await fetchTeam(slug);
+  const currentSeason: SeasonType = await fetchCurrentSeason();
 
   return (
     <FullWidthLayout
@@ -192,8 +210,10 @@ export default async function DetalleEquipoPage({
                             ticketUrl: match.homeTeam.ticketUrl || '#',
                             city: match.homeTeam.city,
                             competitionStandings: {
-                              won: match.homeTeam.competitionStandings?.won ?? 0,
-                              lost: match.homeTeam.competitionStandings?.lost ?? 0,
+                              won:
+                                match.homeTeam.competitionStandings?.won ?? 0,
+                              lost:
+                                match.homeTeam.competitionStandings?.lost ?? 0,
                             },
                           }}
                           visitorTeam={{
@@ -202,15 +222,21 @@ export default async function DetalleEquipoPage({
                             ticketUrl: match.visitorTeam.ticketUrl || '#',
                             city: match.visitorTeam.city,
                             competitionStandings: {
-                              won: match.visitorTeam.competitionStandings?.won ?? 0,
-                              lost: match.visitorTeam.competitionStandings?.lost ?? 0,
+                              won:
+                                match.visitorTeam.competitionStandings?.won ??
+                                0,
+                              lost:
+                                match.visitorTeam.competitionStandings?.lost ??
+                                0,
                             },
                           }}
                           contextTeam={{
                             code: data.team.code,
                           }}
                           providerId={match.providerId}
-                          mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
+                          mediaProvider={
+                            match.channel || DEFAULT_MEDIA_PROVIDER
+                          }
                         />
                       ))}
                       {data.teamUpcomingCalendar.length === 0 && (
@@ -324,7 +350,10 @@ export default async function DetalleEquipoPage({
             <div className="mt-6 mb-6 md:mt-[30px] md:mb-10 lg:mb-15 lg:mt-[60px]">
               <div className="container">
                 <TabGroup defaultIndex={0}>
-                  <TabList className="flex flex-wrap justify-center gap-[10px] mb-6 md:mb-8" aria-label="Estadísticas por vista">
+                  <TabList
+                    className="flex flex-wrap justify-center gap-[10px] mb-6 md:mb-8"
+                    aria-label="Estadísticas por vista"
+                  >
                     <Tab className="flex h-[35px] min-w-[170px] items-center justify-center rounded-[100px] border border-[#d5d5d5] bg-white font-special-gothic-condensed-one text-[15px] leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.65)] outline-none transition-colors data-selected:border-[#0f171f] data-selected:bg-[#0f171f] data-selected:text-white">
                       Equipo
                     </Tab>
@@ -340,7 +369,7 @@ export default async function DetalleEquipoPage({
                       <div className="flex flex-row justify-between items-center mb-[30px]">
                         <div>
                           <h3 className="text-[22px] text-black md:text-[24px]">
-                            Jugadores - Temporada 2026
+                            Jugadores {currentSeason ? `- ${currentSeason.name}` : ''}
                           </h3>
                         </div>
                       </div>
@@ -361,6 +390,11 @@ export default async function DetalleEquipoPage({
                     <h3 className="text-[22px] text-black md:text-[24px]">
                       Líderes del equipo
                     </h3>
+                  </div>
+                  <div>
+                    <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
+                      Temporada {currentSeason ? `- ${currentSeason.name}` : ''}
+                    </p>
                   </div>
                 </div>
                 <div>
