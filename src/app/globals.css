@@ -47,7 +47,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-special-gothic-condensed-one), Arial, Helvetica, sans-serif;
-  overscroll-behavior: none;
   overflow-x: hidden;
 }
 

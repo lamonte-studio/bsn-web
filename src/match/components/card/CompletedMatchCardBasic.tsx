@@ -49,27 +49,6 @@ export default function CompletedMatchCardBasic({
       </div>
       <div className="px-[12px] py-[10px] space-y-[1px]">
         <div className="flex flex-row items-center gap-2">
-          <TeamLogoAvatar teamCode={homeTeam.code} size={26} />
-          <p className="grow text-[21px]/7 text-black">{homeTeam.code}</p>
-          <figure>
-            <img
-              src="/assets/images/icons/icon-caret-winner.png"
-              alt=""
-              width="6"
-              className="rotate-180"
-              style={{ opacity: isHomeTeamWinner ? 1 : 0 }}
-            />
-          </figure>
-          <p
-            className="text-[21px]/7"
-            style={{
-              color: isHomeTeamWinner ? '#000000' : 'rgba(0, 0, 0, 0.5)',
-            }}
-          >
-            {homeTeam.score}
-          </p>
-        </div>
-        <div className="flex flex-row items-center gap-2">
           <TeamLogoAvatar teamCode={visitorTeam.code} size={26} />
           <p className="grow text-[21px]/7 text-black">{visitorTeam.code}</p>
           <figure>
@@ -88,6 +67,27 @@ export default function CompletedMatchCardBasic({
             }}
           >
             {visitorTeam.score}
+          </p>
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <TeamLogoAvatar teamCode={homeTeam.code} size={26} />
+          <p className="grow text-[21px]/7 text-black">{homeTeam.code}</p>
+          <figure>
+            <img
+              src="/assets/images/icons/icon-caret-winner.png"
+              alt=""
+              width="6"
+              className="rotate-180"
+              style={{ opacity: isHomeTeamWinner ? 1 : 0 }}
+            />
+          </figure>
+          <p
+            className="text-[21px]/7"
+            style={{
+              color: isHomeTeamWinner ? '#000000' : 'rgba(0, 0, 0, 0.5)',
+            }}
+          >
+            {homeTeam.score}
           </p>
         </div>
       </div>

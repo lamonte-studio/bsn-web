@@ -67,17 +67,17 @@ export default function ScheduledMatchCardInline({
               <div className="flex-1">
                 <div className="flex flex-row items-center justify-center gap-[12px]">
                   <div>
-                    <TeamLogoAvatar teamCode={homeTeam.code} size={30} />
+                    <TeamLogoAvatar teamCode={visitorTeam.code} size={30} />
                   </div>
                   <div className="flex-1">
                     <p className="text-base/6 tracking-[2%]">
-                      {getFirstWord(homeTeam.nickname)}&nbsp;&nbsp;
+                      {getFirstWord(visitorTeam.nickname)}&nbsp;&nbsp;
                       <span className="font-barlow text-xs text-[#717171]">
-                        {homeTeam.competitionStandings?.won ?? 0}-{homeTeam.competitionStandings?.lost ?? 0}
+                        {visitorTeam.competitionStandings?.won ?? 0}-{visitorTeam.competitionStandings?.lost ?? 0}
                       </span>
                     </p>
                     <p className="font-barlow text-xs text-[#717171]">
-                      {homeTeam.city}
+                      {visitorTeam.city}
                     </p>
                   </div>
                 </div>
@@ -90,17 +90,17 @@ export default function ScheduledMatchCardInline({
               <div className="flex-1">
                 <div className="flex flex-row items-center justify-center gap-[12px]">
                   <div>
-                    <TeamLogoAvatar teamCode={visitorTeam.code} size={30} />
+                    <TeamLogoAvatar teamCode={homeTeam.code} size={30} />
                   </div>
                   <div className="flex-1">
                     <p className="text-base/6 tracking-[2%]">
-                      {getFirstWord(visitorTeam.nickname)}&nbsp;&nbsp;
+                      {getFirstWord(homeTeam.nickname)}&nbsp;&nbsp;
                       <span className="font-barlow text-xs text-[#717171]">
-                        {visitorTeam.competitionStandings?.won ?? 0}-{visitorTeam.competitionStandings?.lost ?? 0}
+                        {homeTeam.competitionStandings?.won ?? 0}-{homeTeam.competitionStandings?.lost ?? 0}
                       </span>
                     </p>
                     <p className="font-barlow text-xs text-[#717171]">
-                      {visitorTeam.city}
+                      {homeTeam.city}
                     </p>
                   </div>
                 </div>
@@ -139,17 +139,17 @@ export default function ScheduledMatchCardInline({
             </div>
             <div className="border-l border-l-[rgba(125,125,125,0.15)] flex-1 flex flex-row gap-[20px] pl-[28px] py-[12px]">
               <h4 className="text-[20px] text-[#0F171F] hidden xl:block">
-                {getFirstWord(homeTeam.nickname)}
+                {getFirstWord(visitorTeam.nickname)}
               </h4>
-              <TeamLogoAvatar teamCode={homeTeam.code} size={30} />
+              <TeamLogoAvatar teamCode={visitorTeam.code} size={30} />
               <div className="border border-[#E1E1E1] flex items-center justify-center rounded-full h-[30px] w-[30px]">
                 <span className="font-barlow-condensed text-base text-[rgba(15,23,31,0.8)] -mt-[3px]">
                   {contextTeam.code === homeTeam.code ? 'vs' : 'en'}
                 </span>
               </div>
-              <TeamLogoAvatar teamCode={visitorTeam.code} size={30} />
+              <TeamLogoAvatar teamCode={homeTeam.code} size={30} />
               <h4 className="text-[20px] text-[#0F171F] hidden xl:block">
-                {getFirstWord(visitorTeam.nickname)}
+                {getFirstWord(homeTeam.nickname)}
               </h4>
             </div>
             <div className="space-x-[8px]">

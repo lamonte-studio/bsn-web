@@ -69,8 +69,8 @@ export default function MatchFeaturedPlayers({
         <div className="grid grid-cols-1 gap-[20px] mb-[30px] md:grid-cols-2">
           <SeasonTeamPlayerLeadersCard
             title="Puntos por juego"
-            teamCode={homeTeam.code}
-            data={homeTeamPointsLeaders.map((leader, index) => ({
+            teamCode={visitorTeam.code}
+            data={visitorTeamPointsLeaders.map((leader, index) => ({
               position: index + 1,
               player: {
                 id: leader.player.providerId,
@@ -82,8 +82,8 @@ export default function MatchFeaturedPlayers({
           />
           <SeasonTeamPlayerLeadersCard
             title="Puntos por juego"
-            teamCode={visitorTeam.code}
-            data={visitorTeamPointsLeaders.map((leader, index) => ({
+            teamCode={homeTeam.code}
+            data={homeTeamPointsLeaders.map((leader, index) => ({
               position: index + 1,
               player: {
                 id: leader.player.providerId,
@@ -99,8 +99,8 @@ export default function MatchFeaturedPlayers({
         <div className="grid grid-cols-1 gap-[20px] mb-[30px] md:grid-cols-2">
           <SeasonTeamPlayerLeadersCard
             title="Rebotes por juego"
-            teamCode={homeTeam.code}
-            data={homeTeamReboundsLeaders.map((leader, index) => ({
+            teamCode={visitorTeam.code}
+            data={visitorTeamReboundsLeaders.map((leader, index) => ({
               position: index + 1,
               player: {
                 id: leader.player.providerId,
@@ -112,8 +112,8 @@ export default function MatchFeaturedPlayers({
           />
           <SeasonTeamPlayerLeadersCard
             title="Rebotes por juego"
-            teamCode={visitorTeam.code}
-            data={visitorTeamReboundsLeaders.map((leader, index) => ({
+            teamCode={homeTeam.code}
+            data={homeTeamReboundsLeaders.map((leader, index) => ({
               position: index + 1,
               player: {
                 id: leader.player.providerId,
@@ -129,8 +129,8 @@ export default function MatchFeaturedPlayers({
         <div className="grid grid-cols-1 gap-[20px] mb-[30px] md:grid-cols-2">
           <SeasonTeamPlayerLeadersCard
             title="Asistencias por juego"
-            teamCode={homeTeam.code}
-            data={homeTeamAssistsLeaders.map((leader, index) => ({
+            teamCode={visitorTeam.code}
+            data={visitorTeamAssistsLeaders.map((leader, index) => ({
               position: index + 1,
               player: {
                 id: leader.player.providerId,
@@ -142,8 +142,8 @@ export default function MatchFeaturedPlayers({
           />
           <SeasonTeamPlayerLeadersCard
             title="Asistencias por juego"
-            teamCode={visitorTeam.code}
-            data={visitorTeamAssistsLeaders.map((leader, index) => ({
+            teamCode={homeTeam.code}
+            data={homeTeamAssistsLeaders.map((leader, index) => ({
               position: index + 1,
               player: {
                 id: leader.player.providerId,

@@ -38,11 +38,11 @@ export default function MatchTeamStatsComparison({
       <div className="px-[30px] py-[24px]">
         <div className="flex flex-row justify-between items-center gap-2 py-3">
           <div className="w-[80px]">
-            <TeamLogoAvatar teamCode={homeTeam.code} size={40} />
+            <TeamLogoAvatar teamCode={visitorTeam.code} size={40} />
           </div>
           <div className="grow"></div>
           <div className="w-[80px]">
-            <TeamLogoAvatar teamCode={visitorTeam.code} size={40} />
+            <TeamLogoAvatar teamCode={homeTeam.code} size={40} />
           </div>
         </div>
         <div className="divide-y divide-[rgba(0,0,0,0.07)]">
@@ -56,12 +56,12 @@ export default function MatchTeamStatsComparison({
                   className="text-center text-[19px]"
                   style={{
                     color:
-                      homeTeamBoxScore[key] > visitorTeamBoxScore[key]
+                      homeTeamBoxScore[key] < visitorTeamBoxScore[key]
                         ? '#000000'
                         : 'rgba(0, 0, 0, 0.5)',
                   }}
                 >
-                  {homeTeamBoxScore[key]}
+                  {visitorTeamBoxScore[key]}
                 </p>
               </div>
               <div className="grow">
@@ -74,12 +74,12 @@ export default function MatchTeamStatsComparison({
                   className="text-center text-[19px]"
                   style={{
                     color:
-                      homeTeamBoxScore[key] < visitorTeamBoxScore[key]
+                      homeTeamBoxScore[key] > visitorTeamBoxScore[key]
                         ? '#000000'
                         : 'rgba(0, 0, 0, 0.5)',
                   }}
                 >
-                  {visitorTeamBoxScore[key]}
+                  {homeTeamBoxScore[key]}
                 </p>
               </div>
             </div>

@@ -56,23 +56,23 @@ export default function CompletedMatchScoreBoard({
       <div className="flex flex-row justify-between items-start gap-3 md:gap-4">
         <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
           <div className="hidden text-right md:block">
-            <h4 className="text-white lg:text-[26px]/8">{getFirstWord(homeTeam.nickname)}</h4>
+            <h4 className="text-white lg:text-[26px]/8">{getFirstWord(visitorTeam.nickname)}</h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
-              {homeTeam.city}
+              {visitorTeam.city}
             </p>
           </div>
           <div
             className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
             style={{
-              borderColor: homeTeam.color || 'rgba(255, 255, 255, 0.5)',
+              borderColor: visitorTeam.color || 'rgba(255, 255, 255, 0.5)',
             }}
           >
             <div className="scale-[0.6] md:scale-[1]">
-              <TeamLogoAvatar teamCode={homeTeam.code} size={60} />
+              <TeamLogoAvatar teamCode={visitorTeam.code} size={60} />
             </div>
           </div>
           <div className="md:hidden">
-            <p className="text-[21px] text-white">{homeTeam.code}</p>
+            <p className="text-[21px] text-white">{visitorTeam.code}</p>
           </div>
         </div>
         <div className="grow">
@@ -81,18 +81,18 @@ export default function CompletedMatchScoreBoard({
               <h4
                 className="text-[42px] md:text-[64px]"
                 style={{
-                  color: isHomeTeamWinner
+                  color: isVisitorTeamWinner
                     ? '#ffffff'
                     : 'rgba(255, 255, 255, 0.5)',
                 }}
               >
-                {homeTeam.score}
+                {visitorTeam.score}
               </h4>
               <img
                 src="/assets/images/icons/icon-caret-winner.png"
                 alt=""
                 width="10"
-                style={{ opacity: isHomeTeamWinner ? 1 : 0 }}
+                style={{ opacity: isVisitorTeamWinner ? 1 : 0 }}
               />
             </div>
             <p className="barlow-condensed font-semibold text-base text-white text-center md:text-[25px]">
@@ -104,17 +104,17 @@ export default function CompletedMatchScoreBoard({
                 alt=""
                 width="10"
                 className="rotate-180"
-                style={{ opacity: isVisitorTeamWinner ? 1 : 0 }}
+                style={{ opacity: isHomeTeamWinner ? 1 : 0 }}
               />
               <h4
                 className="text-[42px] md:text-[64px]"
                 style={{
-                  color: isVisitorTeamWinner
+                  color: isHomeTeamWinner
                     ? '#ffffff'
                     : 'rgba(255, 255, 255, 0.5)',
                 }}
               >
-                {visitorTeam.score}
+                {homeTeam.score}
               </h4>
             </div>
           </div>
@@ -131,23 +131,23 @@ export default function CompletedMatchScoreBoard({
           <div
             className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
             style={{
-              borderColor: visitorTeam.color || 'rgba(255, 255, 255, 0.5)',
+              borderColor: homeTeam.color || 'rgba(255, 255, 255, 0.5)',
             }}
           >
             <div className="scale-[0.6] md:scale-[1]">
-              <TeamLogoAvatar teamCode={visitorTeam.code} size={60} />
+              <TeamLogoAvatar teamCode={homeTeam.code} size={60} />
             </div>
           </div>
           <div className="hidden text-left md:block">
             <h4 className="text-white lg:text-[26px]/8">
-              {getFirstWord(visitorTeam.nickname)}
+              {getFirstWord(homeTeam.nickname)}
             </h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
-              {visitorTeam.city}
+              {homeTeam.city}
             </p>
           </div>
           <div className="md:hidden">
-            <p className="text-[21px] text-white">{visitorTeam.code}</p>
+            <p className="text-[21px] text-white">{homeTeam.code}</p>
           </div>
         </div>
       </div>

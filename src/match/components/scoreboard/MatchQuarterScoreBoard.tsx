@@ -74,45 +74,6 @@ export default function MatchQuarterScoreBoard({
           </div>
         </div>
       </div>
-      <div className="flex flex-row gap-6 py-2">
-        <div className="flex flex-1 flex-row items-center gap-2">
-          <TeamLogoAvatar teamCode={homeTeam.code} size={28} />
-          <div className="flex flex-row items-center gap-2">
-            <p className="text-[19px]">{getFirstWord(homeTeam.nickname)}</p>
-            <p className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)]">
-              {homeTeam.competitionStandings?.won ?? 0}-
-              {homeTeam.competitionStandings?.lost ?? 0}
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-row justify-end gap-1 md:gap-4">
-          {quarters.map((quarter) => (
-            <div
-              key={`${quarter.periodType}-${quarter.periodNumber}-homeTeam`}
-              className="w-[32px]"
-            >
-              <p className="font-barlow text-base text-[rgba(0,0,0,0.9)] text-center">
-                {quarter.homeTeam.score}
-              </p>
-            </div>
-          ))}
-          <div className="w-[32px]">
-            <p
-              className="font-barlow text-base text-right"
-              style={{
-                color:
-                  homeTeamTotalScore > visitorTeamTotalScore
-                    ? 'rgba(0,0,0,0.9)'
-                    : 'rgba(0,0,0,0.6)',
-                fontWeight:
-                  homeTeamTotalScore > visitorTeamTotalScore ? '700' : '400',
-              }}
-            >
-              {homeTeamTotalScore}
-            </p>
-          </div>
-        </div>
-      </div>
       <div className="border-t border-t-[rgba(0,0,0,0.1)] flex flex-row gap-6 py-2">
         <div className="flex flex-1 flex-row items-center gap-2">
           <TeamLogoAvatar teamCode={visitorTeam.code} size={28} />
@@ -148,6 +109,45 @@ export default function MatchQuarterScoreBoard({
               }}
             >
               {visitorTeamTotalScore}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row gap-6 py-2">
+        <div className="flex flex-1 flex-row items-center gap-2">
+          <TeamLogoAvatar teamCode={homeTeam.code} size={28} />
+          <div className="flex flex-row items-center gap-2">
+            <p className="text-[19px]">{getFirstWord(homeTeam.nickname)}</p>
+            <p className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)]">
+              {homeTeam.competitionStandings?.won ?? 0}-
+              {homeTeam.competitionStandings?.lost ?? 0}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-row justify-end gap-1 md:gap-4">
+          {quarters.map((quarter) => (
+            <div
+              key={`${quarter.periodType}-${quarter.periodNumber}-homeTeam`}
+              className="w-[32px]"
+            >
+              <p className="font-barlow text-base text-[rgba(0,0,0,0.9)] text-center">
+                {quarter.homeTeam.score}
+              </p>
+            </div>
+          ))}
+          <div className="w-[32px]">
+            <p
+              className="font-barlow text-base text-right"
+              style={{
+                color:
+                  homeTeamTotalScore > visitorTeamTotalScore
+                    ? 'rgba(0,0,0,0.9)'
+                    : 'rgba(0,0,0,0.6)',
+                fontWeight:
+                  homeTeamTotalScore > visitorTeamTotalScore ? '700' : '400',
+              }}
+            >
+              {homeTeamTotalScore}
             </p>
           </div>
         </div>

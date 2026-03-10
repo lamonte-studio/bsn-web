@@ -20,19 +20,19 @@ export default function MatchBoxScoreWidget({ match }: Props) {
       </div>
       <TabGroup defaultIndex={0} className="md:-mt-[38px]">
         <TabList className="text-center space-x-[8px] mb-[36px]">
-          <Tab className="border border-[#D5D5D5] text-[15px] data-[selected]:border-[#0F171F] p-[8px] rounded-[100px] min-w-[150px] data-[selected]:bg-[#0F171F] data-[selected]:text-white">
-            {match.homeTeam.nickname}
-          </Tab>
-          <Tab className="border border-[#D5D5D5] text-[15px] data-[selected]:border-[#0F171F] p-[8px] rounded-[100px] min-w-[150px] data-[selected]:bg-[#0F171F] data-[selected]:text-white">
+          <Tab className="border border-[#D5D5D5] cursor-pointer text-[15px] data-[selected]:border-[#0F171F] p-[8px] rounded-[100px] min-w-[150px] data-[selected]:bg-[#0F171F] data-[selected]:text-white">
             {match.visitorTeam.nickname}
+          </Tab>
+          <Tab className="border border-[#D5D5D5] cursor-pointer text-[15px] data-[selected]:border-[#0F171F] p-[8px] rounded-[100px] min-w-[150px] data-[selected]:bg-[#0F171F] data-[selected]:text-white">
+            {match.homeTeam.nickname}
           </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
-            <MatchTeamBoxScoreWidget matchProviderId={match.providerId} teamProviderId={match.homeTeam.providerId} />
+            <MatchTeamBoxScoreWidget matchProviderId={match.providerId} teamProviderId={match.visitorTeam.providerId} />
           </TabPanel>
           <TabPanel>
-            <MatchTeamBoxScoreWidget matchProviderId={match.providerId} teamProviderId={match.visitorTeam.providerId} />
+            <MatchTeamBoxScoreWidget matchProviderId={match.providerId} teamProviderId={match.homeTeam.providerId} />
           </TabPanel>
         </TabPanels>
       </TabGroup>

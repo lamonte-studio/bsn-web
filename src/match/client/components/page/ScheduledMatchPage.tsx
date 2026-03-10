@@ -151,14 +151,14 @@ export default function ScheduledMatchPage({
                     </h3>
                   </div>
                   <div className="flex flex-row items-center gap-2">
-                    <TeamLogoAvatar teamCode={match.homeTeam.code} size={24} />
-                    <span className="text-[23px]">{homeTeamWon}</span>
+                    <TeamLogoAvatar teamCode={match.visitorTeam.code} size={24} />
+                    <span className="text-[23px]">{visitorTeamWon}</span>
                     <span className="text-[23px] text-[rgba(124,124,124,0.8)]">
                       -
                     </span>
-                    <span className="text-[23px]">{visitorTeamWon}</span>
+                    <span className="text-[23px]">{homeTeamWon}</span>
                     <TeamLogoAvatar
-                      teamCode={match.visitorTeam.code}
+                      teamCode={match.homeTeam.code}
                       size={24}
                     />
                   </div>
