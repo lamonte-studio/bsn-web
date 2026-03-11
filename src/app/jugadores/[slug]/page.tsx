@@ -78,7 +78,7 @@ export default async function DetalleJugadorPage({
         <section className="pt-[25px] md:pt-[30px] lg:pt-[50px]">
           <div className="container">
             <div className="grid grid-cols-1 gap-4 items-center md:grid-cols-12">
-              <div className="col-span-1 md:col-span-12 lg:col-span-5">
+              <div className="col-span-1 mb-[20px] md:mb-0 md:col-span-12 lg:col-span-5">
                 <div className="flex flex-row items-center gap-4">
                   <div className="relative">
                     <figure
@@ -107,8 +107,8 @@ export default async function DetalleJugadorPage({
                     </figure>
                     {data.player.seasonRoster?.jerseyNumber && (
                       <div className="absolute -bottom-2 left-0 right-0 text-center">
-                        <p className="bg-[#232323] border border-[rgba(125,125,125,0.23)] inline px-2 py-0.5 rounded-[100px]">
-                          <span className="font-barlow font-semibold text-[15px] text-white">
+                        <p className="bg-[#232323] border border-[rgba(125,125,125,0.23)] inline min-w-[32px] px-2 rounded-[100px] md:py-0.5 md:min-w-auto">
+                          <span className="font-barlow font-semibold text-xs text-white md:text-[15px]">
                             #{data.player.seasonRoster.jerseyNumber}
                           </span>
                         </p>
@@ -143,7 +143,7 @@ export default async function DetalleJugadorPage({
               </div>
               <div className="col-span-1 md:col-span-12 lg:col-span-7">
                 <div className="mb-3">
-                  <h4 className="text-[13px] text-[rgba(255,255,255,0.5)] uppercase">{currentSeason?.name}</h4>
+                  <h4 className="text-xs md:text-[13px] text-[rgba(255,255,255,0.5)] uppercase">{currentSeason?.name}</h4>
                 </div>
                 <div className="grid grid-cols-2 gap-[10px] sm:grid-cols-2 md:grid-cols-4">
                   <div className="border border-[rgba(255,255,255,0.2)] rounded-[12px] px-[14px] py-[12px]">
@@ -187,7 +187,7 @@ export default async function DetalleJugadorPage({
                 </div>
               </div>
             </div>
-            <div className="py-[12px] md:py-[24px]">
+            <div className="py-[12px] md:py-[40px]">
               <div className="border-b border-transparent md:border-[rgba(255,255,255,0.07)]"></div>
             </div>
             <div className="pb-[24px] lg:w-7/12">
