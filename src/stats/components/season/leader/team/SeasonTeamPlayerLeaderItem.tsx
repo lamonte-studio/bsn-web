@@ -40,7 +40,7 @@ export default function SeasonTeamPlayerLeaderItem({
           </p>
         </div>
       </div>
-      <div className="font-special-gothic-condensed-one text-[32px] text-[rgba(15,23,31,0.9)]">
+      <div className="font-special-gothic-condensed-one text-[24px] text-[rgba(15,23,31,0.9)] md:text-[32px]">
         {statValue}
       </div>
     </Link>

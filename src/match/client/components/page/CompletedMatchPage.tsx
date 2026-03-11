@@ -18,6 +18,7 @@ type MatchPlayerBoxScore = {
     providerId: string;
     name: string;
     avatarUrl: string;
+    teamCode: string;
     team?: {
       code: string;
       name: string;
@@ -149,8 +150,8 @@ export default function CompletedMatchPage({
                             avatarUrl: leader.player.avatarUrl,
                             name: leader.player.name,
                             team: {
-                              code: leader.player.team?.code ?? '',
-                              name: leader.player.team?.name ?? '',
+                              code: leader.player.teamCode ?? '',
+                              name: leader.player.teamCode ?? '',
                             },
                           },
                           statValue: leader.boxscore.points,
@@ -165,8 +166,8 @@ export default function CompletedMatchPage({
                             avatarUrl: leader.player.avatarUrl,
                             name: leader.player.name,
                             team: {
-                              code: leader.player.team?.code ?? '',
-                              name: leader.player.team?.name ?? '',
+                              code: leader.player.teamCode ?? '',
+                              name: leader.player.teamCode ?? '',
                             },
                           },
                           statValue: leader.boxscore.reboundsTotal,
@@ -181,8 +182,8 @@ export default function CompletedMatchPage({
                             avatarUrl: leader.player.avatarUrl,
                             name: leader.player.name,
                             team: {
-                              code: leader.player.team?.code ?? '',
-                              name: leader.player.team?.name ?? '',
+                              code: leader.player.teamCode ?? '',
+                              name: leader.player.teamCode ?? '',
                             },
                           },
                           statValue: leader.boxscore.assists,
@@ -197,8 +198,8 @@ export default function CompletedMatchPage({
                             avatarUrl: leader.player.avatarUrl,
                             name: leader.player.name,
                             team: {
-                              code: leader.player.team?.code ?? '',
-                              name: leader.player.team?.name ?? '',
+                              code: leader.player.teamCode ?? '',
+                              name: leader.player.teamCode ?? '',
                             },
                           },
                           statValue: leader.boxscore.steals,
@@ -213,8 +214,8 @@ export default function CompletedMatchPage({
                             avatarUrl: leader.player.avatarUrl,
                             name: leader.player.name,
                             team: {
-                              code: leader.player.team?.code ?? '',
-                              name: leader.player.team?.name ?? '',
+                              code: leader.player.teamCode ?? '',
+                              name: leader.player.teamCode ?? '',
                             },
                           },
                           statValue: leader.boxscore.blocks,
@@ -229,8 +230,8 @@ export default function CompletedMatchPage({
                             avatarUrl: leader.player.avatarUrl,
                             name: leader.player.name,
                             team: {
-                              code: leader.player.team?.code ?? '',
-                              name: leader.player.team?.name ?? '',
+                              code: leader.player.teamCode ?? '',
+                              name: leader.player.teamCode ?? '',
                             },
                           },
                           statValue: leader.boxscore.threePointersMade,
@@ -265,11 +266,13 @@ export default function CompletedMatchPage({
                     />
                   </div>
                   <div className="mb-4">
-                    <AdSlot
-                      adUnit="/23296921845/300-250"
-                      size={[300, 250]}
-                      elementId={`match-gpt-ad-300-250-${match.providerId}`}
-                    />
+                    <div className="flex justify-center">
+                      <AdSlot
+                        adUnit="/23296921845/300-250"
+                        size={[300, 250]}
+                        elementId={`match-gpt-ad-300-250-${match.providerId}`}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
