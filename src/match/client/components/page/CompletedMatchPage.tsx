@@ -18,7 +18,7 @@ type MatchPlayerBoxScore = {
     providerId: string;
     name: string;
     avatarUrl: string;
-    teamCode: string;
+    teamCode?: string;
     team?: {
       code: string;
       name: string;
