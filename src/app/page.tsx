@@ -57,7 +57,7 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <WSCHomeStories label="featured-weekly" />
+                <WSCHomeStories />
               </div>
             </div>
             <div className="mb-4 md:mb-8 lg:mb-17">
