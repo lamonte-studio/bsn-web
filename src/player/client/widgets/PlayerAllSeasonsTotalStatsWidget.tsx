@@ -3,7 +3,7 @@
 import numeral from "numeral";
 import ShimmerLine from "@/shared/client/components/ui/ShimmerLine";
 import TeamLogoAvatar from "@/team/components/avatar/TeamLogoAvatar";
-import { usePlayerAllSeasonsAvgStats } from "../hooks/player";
+import { usePlayerAllSeasonsTotalStats } from "../hooks/player";
 import { getFirstWord } from "@/utils/text";
 
 const STATS_HEADER: Record<string, string>[] = [
@@ -36,7 +36,7 @@ type Props = {
 export default function PlayerAllSeasonsTotalStatsWidget({
   playerProviderId,
 }: Props) {
-  const { data, loading } = usePlayerAllSeasonsAvgStats(playerProviderId);
+  const { data, loading } = usePlayerAllSeasonsTotalStats(playerProviderId);
 
   if (loading) {
     return (
