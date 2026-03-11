@@ -80,7 +80,7 @@ export default function PlayerAllSeasonsTotalStatsWidget({
         <tbody>
           {data.map((item) => (
             <tr
-              key={`${item.season?.providerId}-${item.team?.code}-${item.player.providerId}`}
+              key={`${item.season?.year}-${item.team?.code}-${item.player.providerId}`}
             >
               <td className="px-2 py-2 text-center">
                 <span className="font-barlow text-[13px]">
