@@ -11,6 +11,8 @@ import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import { MatchType } from '@/match/types';
 import MatchYoutubeVideoCard from '../card/MatchYoutubeVideoCard';
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
+import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
+import WSCBsnWidget from '@/highlights/client/components/WSCBsnWidget';
 
 type MatchPlayerBoxScore = {
   player: {
@@ -83,6 +85,7 @@ export default function CompletedMatchPage({
         </section>
       }
     >
+      <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
       <TabGroup>
         <TabList className="bg-bsn pb-[28px]">
           <div className="container text-center space-x-[30px]">
@@ -134,6 +137,23 @@ export default function CompletedMatchPage({
                         })) ?? []
                       }
                     />
+                  </div>
+                  <div className="mb-6 md:mb-10 lg:mb-15">
+                    <div className="flex flex-row justify-between items-center mb-[30px]">
+                      <div>
+                        <h3 className="text-[22px] text-black md:text-[24px]">
+                          Mejores jugadas
+                        </h3>
+                      </div>
+                    </div>
+                    <div>
+                      <WSCBsnWidget
+                        id={`match-highlights-widget-${match.providerId}`}
+                        labels={[`g-${match.providerId}`]}
+                        orderType="RecentlyUpdatedFirst"
+                        contentType="moment"
+                      />
+                    </div>
                   </div>
                   <div className="mb-6 md:mb-10 lg:mb-15">
                     <div className="flex flex-row justify-between items-center mb-6 md:mb-[28px]">

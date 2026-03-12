@@ -8,9 +8,9 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import MatchInfoCard from '@/match/components/MatchInfoCard';
 import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
-import WSCMoments from '@/highlights/client/components/WSCMoments';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import { MatchLiveStreamVideo } from '../media/MatchLiveStreamVideo';
+import WSCBsnWidget from '@/highlights/client/components/WSCBsnWidget';
 
 type Props = {
   match: MatchType;
@@ -83,7 +83,12 @@ export default function LiveMatchPage({ match }: Props) {
                       </div>
                     </div>
                     <div>
-                      <WSCMoments />
+                      <WSCBsnWidget
+                        id={`match-highlights-widget-${match.providerId}`}
+                        labels={[`g-${match.providerId}`]}
+                        orderType="RecentlyUpdatedFirst"
+                        contentType="moment"
+                      />
                     </div>
                   </div>
                   {/* <div className="mb-6 md:mb-10 lg:mb-15">
