@@ -8,20 +8,15 @@ import WSCBlazeWidget, {
 import { useWscBlazeSDK } from '@/shared/client/components/wsc/hooks/useWscBlazeSDK';
 import { useScreenDetector } from '@/shared/client/components/wsc/hooks/useScreenDetector';
 
-type WSCHomeStoriesProps = {
-  labels?: string[];
-};
-
-export default function WSCHomeStories({
-  labels = ['featured-weekly', 'home-stories'],
-}: WSCHomeStoriesProps) {
+export default function WSCHomeStories() {
   const widgetRowRectangleRef = useRef<IWSCWidgetActions>(null);
   const { isMobile, isTablet, isDesktop } = useScreenDetector();
   const { isBlazeSDKReady } = useWscBlazeSDK();
 
   const widgetRowRectangleProps: WSCBlazeWidgetProps = {
     id: 'home-stories-container-row-rectangle',
-    labels,
+    // Multiple labels – WSCBlazeWidget will call LabelBuilder.atLeastOneOf
+    labels: ['featured-weekly', 'home-stories'],
     orderType: 'RecentlyUpdatedFirst',
     contentType: 'story',
     theme: 'row-rectangle',

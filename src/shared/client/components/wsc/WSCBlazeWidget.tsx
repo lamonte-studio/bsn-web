@@ -115,14 +115,17 @@ const WSCBlazeWidget = forwardRef<
       if (isBlazeSDKReady && onBlazeSDKConnect) {
         if (!widgetProps.labels) return;
 
-        // preferd way to create a data source
-        // use labels or ids to create a data source
-        const labelList = Array.isArray(widgetProps.labels)
-          ? widgetProps.labels
-          : [widgetProps.labels];
+        // If multiple labels are provided, use OR semantics via LabelBuilder.atLeastOneOf.
+        // Single-label and non-array cases are passed through unchanged.
+        let labelsParam = widgetProps.labels as unknown;
+
+        if (Array.isArray(widgetProps.labels) && widgetProps.labels.length > 1) {
+          const builder = blazeSDK.LabelBuilder();
+          labelsParam = builder.atLeastOneOf(...widgetProps.labels);
+        }
 
         const dataSource = blazeSDK.DataSourceBuilder().labels({
-          labels: labelList,
+          labels: labelsParam as any,
           orderType: widgetProps.orderType,
           maxItems: widgetProps.maxItemsCount,
         });
