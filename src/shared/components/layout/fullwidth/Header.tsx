@@ -60,18 +60,13 @@ export default function HeaderBoxLayout() {
             <div className="hidden md:block">
               <ul className="flex flex-row gap-[20px] lg:gap-[30px]">
                 <li>
-                  <Link href="/" className="text-[20px] text-white">
-                    Inicio
+                  <Link href="/calendario" className="text-[20px] text-white">
+                    Calendario
                   </Link>
                 </li>
                 <li className="hidden">
                   <Link href="/playoffs" className="text-[20px] text-white">
                     Playoffs
-                  </Link>
-                </li>
-                <li className="hidden">
-                  <Link href="/calendario" className="text-[20px] text-white">
-                    Calendario
                   </Link>
                 </li>
                 <li>
@@ -389,11 +384,6 @@ export default function HeaderBoxLayout() {
             </div>
             <ul className="divide-y divide-[rgba(255,255,255,0.05)]">
               <li className="px-[30px]">
-                <Link href="/" className="block py-[8px]">
-                  <span className="text-[36px] text-white">Inicio</span>
-                </Link>
-              </li>
-              <li className="px-[30px] hidden">
                 <Link href="/calendario" className="block py-[8px]">
                   <span className="text-[36px] text-white">Calendario</span>
                 </Link>
