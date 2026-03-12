@@ -376,14 +376,16 @@ export default function HeaderBoxLayout() {
         className="relative z-50"
       >
         <div className="fixed inset-0 flex h-screen w-screen">
-          <DialogPanel className="bg-[#171819] w-full py-[30px]">
-            <div className="flex justify-end px-[30px]">
-              <CloseButton
-                onClick={() => setIsOpen(false)}
-                className="bg-[#252933] cursor-pointer rounded-full w-[42px] h-[42px] flex justify-center items-center"
-              >
-                <img src="/assets/images/icons/icon-close.svg" alt="Close" />
-              </CloseButton>
+          <DialogPanel className="bg-[#171819] w-full py-[10px]">
+            <div className="container">
+              <div className="flex justify-end">
+                <CloseButton
+                  onClick={() => setIsOpen(false)}
+                  className="bg-[#252933] cursor-pointer rounded-full w-[42px] h-[42px] flex justify-center items-center"
+                >
+                  <img src="/assets/images/icons/icon-close.svg" alt="Close" />
+                </CloseButton>
+              </div>
             </div>
             <ul className="divide-y divide-[rgba(255,255,255,0.05)]">
               <li className="px-[30px]">
