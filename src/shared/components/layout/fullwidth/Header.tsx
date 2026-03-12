@@ -41,11 +41,12 @@ export default function HeaderBoxLayout() {
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
-                  background: 'rgba(51, 51, 51, 0.2)',
-                  backgroundBlendMode: 'saturation',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   boxShadow:
-                    '0 0 1.5px rgba(0, 0, 0, 0.1), 0 0.7px 5.5px rgba(0, 0, 0, 0.12), inset 2px 2px 1px -2.5px rgba(255, 255, 255, 0.05), inset -2px -2px 0.35px -2.5px rgba(255, 255, 255, 0.8), inset 0.7px 0.7px 0.7px -0.35px rgba(255, 255, 255, 0.75), inset -0.7px -0.7px 0.7px -0.35px rgba(255, 255, 255, 0.75), inset 0 0 0.7px 0.7px rgba(153, 153, 153, 0.15), inset 0 0 0.7px 0.7px #999, inset 0 0 11px #F2F2F2',
+                    '0 0 1.5px rgba(0, 0, 0, 0.1), 0 1px 6px rgba(0, 0, 0, 0.15), inset 0 0.5px 0.5px rgba(255, 255, 255, 0.06)',
                   backdropFilter: 'blur(4px)',
+                  borderRadius: '100px',
                 }}
               >
                 <img
