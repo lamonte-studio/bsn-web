@@ -1,4 +1,4 @@
-import { MATCH_DATE_FORMAT, MATCH_TIME_FORMAT } from '@/constants';
+import { MATCH_DATE_FULL_FORMAT, MATCH_TIME_FORMAT } from '@/constants';
 import { formatDate } from '@/utils/date-formatter';
 
 type Props = {
@@ -34,7 +34,7 @@ export default function MatchInfoCard({
               />
             </span>
             <p className="font-barlow font-medium text-sm">
-              {formatDate(startAt, MATCH_DATE_FORMAT)}
+              {formatDate(startAt, MATCH_DATE_FULL_FORMAT)}
             </p>
           </li>
           <li className="flex flex-row items-center gap-[12px]">

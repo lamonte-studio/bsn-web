@@ -81,10 +81,10 @@ export default function LeagueCalendarWidget() {
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
       <div className="lg:col-span-8 lg:pr-16">
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <h3 className="text-2xl font-normal leading-none text-black">
+          <h3 className="hidden text-2xl font-normal leading-none text-black md:block">
             Calendario de juegos
           </h3>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 self-center md:self-auto">
             <button
               type="button"
               onClick={handlePrevWeek}
@@ -111,8 +111,8 @@ export default function LeagueCalendarWidget() {
             </button>
           </div>
         </div>
-        <hr className="mb-6 border-0 border-t border-[#E4E4E4]" />
-        <div className="flex flex-col gap-6">
+        <hr className="border-0 border-t border-[#E4E4E4]" />
+        <div className="flex flex-col gap-[15px]">
           {loading && allScheduled.length === 0 && (
             <div className="space-y-4">
               <ShimmerLine height="76px" />
@@ -133,7 +133,7 @@ export default function LeagueCalendarWidget() {
               return (
                 <div key={`league-calendar-${match.providerId}`}>
                   {showHeader && (
-                    <div className="mb-2 hidden sm:block">
+                    <div className="mb-2 mt-[40px] hidden sm:block md:mt-[50px]">
                       <p className="text-[20px] leading-normal text-black">
                         {formatDate(match.startAt, MATCH_DATE_FULL_FORMAT).toLowerCase()}
                       </p>
@@ -172,7 +172,7 @@ export default function LeagueCalendarWidget() {
               );
             })}
           {!loading && upcomingMatches.length === 0 && (
-            <div>
+            <div className="py-[40px] text-center">
               <span className="text-[15px] text-[rgba(0,0,0,0.6)]">
                 Esta semana no hay juegos.
               </span>

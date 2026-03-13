@@ -45,7 +45,7 @@ export default function SeasonPlayerLeaderItem({
           <p
             className={cx('text-[rgba(15,23,31,0.9)]', {
               'text-[13px]/5': size === 'sm',
-              'text-[15px]/4': size === 'md',
+              'text-[16px]/4': size === 'md',
               'text-[17px]/5': size === 'lg',
             })}
           >

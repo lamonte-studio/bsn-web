@@ -4,8 +4,9 @@ import LeagueCalendarWidget from '@/match/client/widgets/LeagueCalendarWidget';
 export default function CalendarioPage() {
   return (
     <FullWidthLayout
+      divider
       subheader={
-        <section className="pb-[100px] pt-[40px] md:pb-[120px] md:pt-[56px]">
+        <section className="py-[30px] md:py-[60px]">
           <div className="container">
             <h2 className="text-center text-[26px] text-white md:text-[36px] lg:text-[42px]">
               Calendario 2026

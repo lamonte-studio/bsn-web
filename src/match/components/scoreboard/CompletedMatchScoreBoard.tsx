@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import Link from 'next/link';
 import { MATCH_DATE_FORMAT } from '@/constants';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
 import { formatDate } from '@/utils/date-formatter';
@@ -55,25 +56,27 @@ export default function CompletedMatchScoreBoard({
     <div>
       <div className="flex flex-row justify-between items-start gap-3 md:gap-4">
         <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
-          <div className="hidden text-right md:block">
+          <Link href={`/equipos/${visitorTeam.code}`} className="hidden text-right md:block">
             <h4 className="text-white lg:text-[26px]/8">{getFirstWord(visitorTeam.nickname)}</h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
               {visitorTeam.city}
             </p>
-          </div>
-          <div
-            className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
-            style={{
-              borderColor: visitorTeam.color || 'rgba(255, 255, 255, 0.5)',
-            }}
-          >
-            <div className="scale-[0.6] md:scale-[1]">
-              <TeamLogoAvatar teamCode={visitorTeam.code} size={60} />
+          </Link>
+          <Link href={`/equipos/${visitorTeam.code}`}>
+            <div
+              className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
+              style={{
+                borderColor: visitorTeam.color || 'rgba(255, 255, 255, 0.5)',
+              }}
+            >
+              <div className="scale-[0.6] md:scale-[1]">
+                <TeamLogoAvatar teamCode={visitorTeam.code} size={60} />
+              </div>
             </div>
-          </div>
-          <div className="md:hidden">
+          </Link>
+          <Link href={`/equipos/${visitorTeam.code}`} className="md:hidden">
             <p className="text-[21px] text-white">{visitorTeam.code}</p>
-          </div>
+          </Link>
         </div>
         <div className="grow">
           <div className="flex flex-row items-center justify-between gap-2">
@@ -128,7 +131,7 @@ export default function CompletedMatchScoreBoard({
           </div>
         </div>
         <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
-          <div
+          <Link href={`/equipos/${homeTeam.code}`}
             className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
             style={{
               borderColor: homeTeam.color || 'rgba(255, 255, 255, 0.5)',
@@ -137,18 +140,18 @@ export default function CompletedMatchScoreBoard({
             <div className="scale-[0.6] md:scale-[1]">
               <TeamLogoAvatar teamCode={homeTeam.code} size={60} />
             </div>
-          </div>
-          <div className="hidden text-left md:block">
+          </Link>
+          <Link href={`/equipos/${homeTeam.code}`} className="hidden text-left md:block">
             <h4 className="text-white lg:text-[26px]/8">
               {getFirstWord(homeTeam.nickname)}
             </h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
               {homeTeam.city}
             </p>
-          </div>
-          <div className="md:hidden">
+          </Link>
+          <Link href={`/equipos/${homeTeam.code}`} className="md:hidden">
             <p className="text-[21px] text-white">{homeTeam.code}</p>
-          </div>
+          </Link>
         </div>
       </div>
     </div>

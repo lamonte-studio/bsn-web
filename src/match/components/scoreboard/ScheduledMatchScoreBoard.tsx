@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { MATCH_DATE_FORMAT, MATCH_TIME_FORMAT } from '@/constants';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
 import { formatDate } from '@/utils/date-formatter';
@@ -39,7 +40,7 @@ export default function ScheduledMatchScoreBoard({
   return (
     <div>
       <div className="flex flex-row justify-between items-start gap-3 md:gap-4 md:items-center">
-        <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row md:items-end">
+        <Link href={`/equipos/${visitorTeam.code}`} className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row md:items-end">
           <div className="hidden text-right md:block">
             <h4 className="text-white lg:text-[26px]/8">{getFirstWord(visitorTeam.nickname)}</h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
@@ -69,18 +70,18 @@ export default function ScheduledMatchScoreBoard({
               {visitorTeam.competitionStandings?.lost ?? 0}
             </p>
           </div>
-        </div>
+        </Link>
         <div className="grow">
           <div className="flex flex-row items-center justify-between gap-2 md:justify-center">
-            <div className="md:hidden">
+            <Link href={`/equipos/${visitorTeam.code}`} className="md:hidden">
               <h4 className="text-[40px] text-white">{visitorTeam.code}</h4>
-            </div>
+            </Link>
             <p className="text-[19px] text-white text-center md:text-[37px]">
               {formatDate(startAt, MATCH_TIME_FORMAT)}
             </p>
-            <div className="md:hidden">
+            <Link href={`/equipos/${homeTeam.code}`} className="md:hidden">
               <h4 className="text-[40px] text-white">{homeTeam.code}</h4>
-            </div>
+            </Link>
           </div>
           <div>
             <p className="font-barlow text-[13px] text-white text-center md:mb-2 md:text-[15px]">
@@ -91,7 +92,7 @@ export default function ScheduledMatchScoreBoard({
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row md:items-end">
+        <Link href={`/equipos/${homeTeam.code}`} className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row md:items-end">
           <div
             className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
             style={{
@@ -123,7 +124,7 @@ export default function ScheduledMatchScoreBoard({
               {homeTeam.competitionStandings?.lost ?? 0}
             </p>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );

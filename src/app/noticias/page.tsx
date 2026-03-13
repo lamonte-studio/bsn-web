@@ -33,11 +33,12 @@ export default async function NoticiasPage() {
   const data: NewsType[] = await fetchTopNews();
   return (
     <FullWidthLayout
+      divider
       subheader={
-        <section className="pb-[116px] lg:pt-[8px] lg:pb-[128px]">
+        <section className="pt-[23px] pb-[116px] lg:pt-[56px] lg:pb-[138px]">
           <div className="container">
             <div>
-              <h2 className="text-center text-white md:text-[36px] lg:text-[42px]">
+              <h2 className="text-center text-white text-[27px] md:text-[36px] lg:text-[42px]">
                 Lo último en el BSN
               </h2>
             </div>

@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import Lottie from 'lottie-react';
+import Link from 'next/link';
 import { MATCH_DATE_FORMAT } from '@/constants';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
 import animationLiveStreamData from './live-stream.json';
@@ -52,7 +53,7 @@ export default function LiveMatchScoreBoardWidget({
   return (
     <div>
       <div className="flex flex-row justify-between items-start gap-3 md:gap-4">
-        <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
+        <Link href={`/equipos/${visitorTeam.code}`} className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
           <div className="hidden text-right md:block">
             <h4 className="text-white lg:text-[26px]/8">{getFirstWord(visitorTeam.nickname)}</h4>
             <p className="font-barlow text-[15px] text-[rgba(255,255,255,0.7)]">
@@ -75,7 +76,7 @@ export default function LiveMatchScoreBoardWidget({
           <div className="md:hidden">
             <p className="text-[21px] text-white">{visitorTeam.code}</p>
           </div>
-        </div>
+        </Link>
         <div className="grow">
           <div className="hidden flex-row gap-1 items-center justify-center -mb-[25px] md:flex">
             <Lottie
@@ -124,7 +125,7 @@ export default function LiveMatchScoreBoardWidget({
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
+        <Link href={`/equipos/${homeTeam.code}`} className="flex flex-col items-center gap-[7px] md:gap-[24px] md:flex-row">
           <div
             className="flex flex-row items-center justify-center border-2 rounded-full  h-[60px] w-[60px] md:h-[100px] md:w-[100px]"
             style={{
@@ -149,7 +150,7 @@ export default function LiveMatchScoreBoardWidget({
           <div className="md:hidden">
             <p className="text-[21px] text-white">{homeTeam.code}</p>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );

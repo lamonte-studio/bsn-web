@@ -21,7 +21,7 @@ export default function SeasonTeamPlayerLeaderItem({
   return (
     <Link
       href={`/jugadores/${player.id}`}
-      className="flex items-center py-1 gap-3 pointer-events-none cursor-default"
+      className="flex items-center py-1 gap-3"
     >
       <div className="w-4 text-right">
         <span className="font-barlow-condensed text-[15px] text-[rgba(0,0,0,0.8)]">
@@ -35,12 +35,12 @@ export default function SeasonTeamPlayerLeaderItem({
           name={player.name}
         />
         <div className="flex-1">
-          <p className="font-special-gothic-condensed-one text-[17px] text-[rgba(15,23,31,0.9)]">
+          <p className="text-[16px] text-[rgba(15,23,31,0.9)]">
             {player.name}
           </p>
         </div>
       </div>
-      <div className="font-special-gothic-condensed-one text-[24px] text-[rgba(15,23,31,0.9)] md:text-[32px]">
+      <div className="text-[24px] text-[rgba(15,23,31,0.9)] md:text-[32px]">
         {statValue}
       </div>
     </Link>
