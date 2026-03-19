@@ -118,23 +118,22 @@ export const TEAM_UPCOMING_CALENDAR = gql`
 `;
 
 export const TEAM_PLAYERS_CONNECTION = gql`
-  query getTeamPlayers($code: String!, $first: Int!, $after: String) {
-    teamPlayersStatsConnection(code: $code, first: $first, after: $after) {
+  query getTeamPlayers($code: String!, $seasonProviderId: String, $first: Int!, $after: String) {
+    teamRostersConnection(code: $code, seasonProviderId: $seasonProviderId, first: $first, after: $after) {
       edges {
         node {
-          providerId
-          name
-          nickname
-          avatarUrl
-          dob
-          height
-          weight
-          playingPosition
-          shirtNumber
-          seasonRoster {
-            jerseyNumber
-            playingPosition
+          player {
+            providerId
+            name
+            nickname
+            avatarUrl
+            dob
+            height
+            weight
           }
+          playingPosition
+          jerseyNumber
+          status
         }
       }
     }

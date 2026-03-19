@@ -14,10 +14,11 @@ import { formatDate } from '@/utils/date-formatter';
 
 type Props = {
   teamCode: string;
+  seasonProviderId?: string;
 };
 
-export default function TeamPlayersWidget({ teamCode }: Props) {
-  const { data, loading } = useTeamPlayersConnection(teamCode);
+export default function TeamPlayersWidget({ teamCode, seasonProviderId }: Props) {
+  const { data, loading } = useTeamPlayersConnection(teamCode, seasonProviderId);
 
   if (loading) {
     return (
@@ -67,8 +68,8 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
           </tr>
         </thead>
         <tbody>
-          {data.edges.map(({ node }, index) => (
-            <tr key={`player-${node.providerId}`}>
+          {data.map((node, index) => (
+            <tr key={`player-${node.player.providerId}`}>
               <td
                 className="px-4 py-3"
                 style={{
@@ -79,7 +80,7 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {node.seasonRoster?.jerseyNumber ?? '—'}
+                  {node.jerseyNumber ?? '—'}
                 </span>
               </td>
               <td
@@ -90,15 +91,15 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
                 }}
               >
                 <Link
-                  href={`/jugadores/${node.providerId}`}
+                  href={`/jugadores/${node.player.providerId}`}
                   className="flex flex-row items-center gap-3"
                 >
                   <PlayerPhotoAvatar
-                    photoUrl={node.avatarUrl || ''}
-                    name={node.name}
+                    photoUrl={node.player.avatarUrl || ''}
+                    name={node.player.name}
                     size={30}
                   />
-                  <span className="text-[15px]">{node.name}</span>
+                  <span className="text-[15px]">{node.player.name}</span>
                 </Link>
               </td>
               <td
@@ -109,7 +110,7 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {node.seasonRoster?.playingPosition || 'N/A'}
+                  {node.playingPosition || 'N/A'}
                 </span>
               </td>
               <td
@@ -120,8 +121,8 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {centimeterToInches(node.height) > 0
-                    ? formatInches(centimeterToInches(node.height))
+                  {centimeterToInches(node.player.height) > 0
+                    ? formatInches(centimeterToInches(node.player.height))
                     : 'N/A'}
                 </span>
               </td>
@@ -133,8 +134,8 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {kilogramToPounds(node.weight) > 0
-                    ? `${numeral(kilogramToPounds(node.weight)).format('0')} lbs`
+                  {kilogramToPounds(node.player.weight) > 0
+                    ? `${numeral(kilogramToPounds(node.player.weight)).format('0')} lbs`
                     : 'N/A'}
                 </span>
               </td>
@@ -146,8 +147,8 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
                 }}
               >
                 <span className="font-barlow text-[13px]">
-                  {node.dob
-                    ? formatDate(node.dob, PLAYER_BIRTHDAY_FORMAT)
+                  {node.player.dob
+                    ? formatDate(node.player.dob, PLAYER_BIRTHDAY_FORMAT)
                     : 'N/A'}
                 </span>
               </td>
@@ -159,7 +160,7 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
                 }}
               >
                 <Link
-                  href={`/jugadores/${node.providerId}`}
+                  href={`/jugadores/${node.player.providerId}`}
                 >
                   <span className="text-[15px] text-black">Ver perfil</span>
                   <img
@@ -171,7 +172,7 @@ export default function TeamPlayersWidget({ teamCode }: Props) {
               </td>
             </tr>
           ))}
-          {data.edges.length === 0 && (
+          {data.length === 0 && (
             <tr>
               <td className="px-4 py-3 text-center" colSpan={7}>
                 <span className="text-[rgba(0,0,0,0.6)]">

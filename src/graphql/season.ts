@@ -29,3 +29,16 @@ export const CURRENT_SEASON = gql`
     }
   }
 `;
+
+export const LAST_SEASON = gql`
+  query getLastSeason {
+    lastSeason {
+      providerId
+      name
+      year
+      startDate
+      endDate
+      current
+    }
+  }
+`;

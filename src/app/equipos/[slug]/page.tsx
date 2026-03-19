@@ -25,7 +25,7 @@ import { ordinalNumber } from '@/utils/number-formater';
 import { getFirstWord } from '@/utils/text';
 import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import { SeasonType } from '@/season/types';
-import { CURRENT_SEASON } from '@/graphql/season';
+import { CURRENT_SEASON, LAST_SEASON } from '@/graphql/season';
 
 type TeamPageResponse = {
   team: TeamType;
@@ -120,12 +120,29 @@ const fetchCurrentSeason = async (): Promise<SeasonType | null> => {
   return data?.currentSeason ?? null;
 };
 
+type LastSeasonResponse = {
+  lastSeason?: SeasonType;
+};
+
+const fetchLastSeason = async (): Promise<SeasonType | null> => {
+  const { data, error } = await getClient().query<LastSeasonResponse>({
+    query: LAST_SEASON,
+  });
+
+  if (error) {
+    console.error('Error fetching last season:', error);
+    return null;
+  }
+  return data?.lastSeason ?? null;
+}
+
 export default async function DetalleEquipoPage({
   params,
 }: PageProps<'/equipos/[slug]'>) {
   const { slug } = await params;
   const data: TeamPageResponse = await fetchTeam(slug);
   const currentSeason: SeasonType | null = await fetchCurrentSeason();
+  const lastSeason: SeasonType | null = await fetchLastSeason();
 
   return (
     <FullWidthLayout
@@ -338,11 +355,11 @@ export default async function DetalleEquipoPage({
                   </div>
                   <div>
                     <p className="font-barlow text-[13px] text-[rgba(15,23,31,0.7)]">
-                      Temporada 2026 • Regular
+                      {lastSeason?.name ?? ''}
                     </p>
                   </div>
                 </div>
-                <TeamPlayersWidget teamCode={data.team.code} />
+                <TeamPlayersWidget teamCode={data.team.code} seasonProviderId={lastSeason?.providerId} />
               </div>
             </div>
           </TabPanel>

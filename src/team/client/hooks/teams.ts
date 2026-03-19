@@ -42,18 +42,23 @@ export function useUpcomingCalendarConnection(code: string, first: number = 5) {
 }
 
 type TeamPlayersConnectionResponse = {
-  teamPlayersStatsConnection: {
+  teamRostersConnection: {
     edges: {
-      node: TeamPlayerType;
+      node: {
+        player: TeamPlayerType;
+        playingPosition: string;
+        jerseyNumber: number;
+        status: string;
+      };
     }[];
   };
 };
 
-export function useTeamPlayersConnection(code: string, first: number = 25) {
+export function useTeamPlayersConnection(code: string, seasonProviderId?: string, first: number = 25) {
   const { data, loading, error } = useQuery<TeamPlayersConnectionResponse>(
     TEAM_PLAYERS_CONNECTION,
     {
-      variables: { code, first },
+      variables: { code, seasonProviderId, first },
       fetchPolicy: 'network-only',
     },
   );
@@ -63,17 +68,25 @@ export function useTeamPlayersConnection(code: string, first: number = 25) {
   }
 
   return {
-    data: data?.teamPlayersStatsConnection ?? { edges: [] },
+    data: data?.teamRostersConnection?.edges.map(edge => edge.node) ?? [],
     loading,
     error,
   };
 }
 
+type TeamPlayersStatsConnectionResponse = {
+  teamPlayersStatsConnection: {
+    edges: {
+      node: TeamPlayerType;
+    }[];
+  };
+};
+
 export function useTeamPlayersStatsConnection(
   code: string,
   first: number = 25,
 ) {
-  const { data, loading, error } = useQuery<TeamPlayersConnectionResponse>(
+  const { data, loading, error } = useQuery<TeamPlayersStatsConnectionResponse>(
     TEAM_PLAYERS_STATS_CONNECTION,
     {
       variables: { code, first },
