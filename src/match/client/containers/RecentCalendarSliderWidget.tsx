@@ -25,7 +25,10 @@ type MatchItem = {
 type SliderItem = DateItem | MatchItem;
 
 export default function RecentCalendarSliderWidget() {
-  const { data, loading, error } = useRecentCalendar();
+  const { data, loading } = useRecentCalendar({
+    daysBefore: 14,
+    daysAfter: 21,
+  });
 
   const today = useMemo(() => moment().startOf('day'), []);
 
@@ -113,69 +116,71 @@ export default function RecentCalendarSliderWidget() {
   }
 
   return (
-    <RecentCalendarSlider
-      data={sortedMatches}
-      initialSlide={initialSlide}
-      render={(item: SliderItem) => {
-        // Renderizar header de fecha
-        if (item.type === 'date-item') {
+    <>
+      <RecentCalendarSlider
+        data={sortedMatches}
+        initialSlide={initialSlide}
+        render={(item: SliderItem) => {
+          // Renderizar header de fecha
+          if (item.type === 'date-item') {
+            return (
+              <div key={item.id} className="px-[5px]">
+                <RecentCalendarDateItem date={item.date} />
+              </div>
+            );
+          }
+
+          // Renderizar partido
+          const match = item.data;
           return (
-            <div key={item.id} className="px-[5px]">
-              <RecentCalendarDateItem date={item.date} />
+            <div key={`match-${match.providerId}`} className="px-[5px]">
+              {![
+                MATCH_STATUS.COMPLETE,
+                MATCH_STATUS.FINISHED,
+                MATCH_STATUS.SCHEDULED,
+              ].includes(match.status ?? '') && (
+                <LiveMatchCard
+                  matchProviderId={match.providerId}
+                  homeTeam={match.homeTeam}
+                  visitorTeam={match.visitorTeam}
+                  currentQuarter={match.currentPeriod}
+                  currentTime={match.currentTime}
+                  mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
+                  status={match.status}
+                  overtimePeriods={match.overtimePeriods}
+                  isFinals={match.isFinals}
+                  finalsDescription={match.finalsDescription}
+                />
+              )}
+              {[MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(
+                match.status,
+              ) && (
+                <CompletedMatchCard
+                  matchProviderId={match.providerId}
+                  startAt={match.startAt}
+                  homeTeam={match.homeTeam}
+                  visitorTeam={match.visitorTeam}
+                  overtimePeriods={match.overtimePeriods}
+                  isFinals={match.isFinals}
+                  finalsDescription={match.finalsDescription}
+                />
+              )}
+              {[MATCH_STATUS.SCHEDULED].includes(match.status) && (
+                <ScheduledMatchCard
+                  matchProviderId={match.providerId}
+                  startAt={match.startAt}
+                  homeTeam={match.homeTeam}
+                  visitorTeam={match.visitorTeam}
+                  mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
+                  ticketUrl={match.homeTeam.ticketUrl}
+                  isFinals={match.isFinals}
+                  finalsDescription={match.finalsDescription}
+                />
+              )}
             </div>
           );
-        }
-
-        // Renderizar partido
-        const match = item.data;
-        return (
-          <div key={`match-${match.providerId}`} className="px-[5px]">
-            {![
-              MATCH_STATUS.COMPLETE,
-              MATCH_STATUS.FINISHED,
-              MATCH_STATUS.SCHEDULED,
-            ].includes(match.status ?? '') && (
-              <LiveMatchCard
-                matchProviderId={match.providerId}
-                homeTeam={match.homeTeam}
-                visitorTeam={match.visitorTeam}
-                currentQuarter={match.currentPeriod}
-                currentTime={match.currentTime}
-                mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
-                status={match.status}
-                overtimePeriods={match.overtimePeriods}
-                isFinals={match.isFinals}
-                finalsDescription={match.finalsDescription}
-              />
-            )}
-            {[MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(
-              match.status,
-            ) && (
-              <CompletedMatchCard
-                matchProviderId={match.providerId}
-                startAt={match.startAt}
-                homeTeam={match.homeTeam}
-                visitorTeam={match.visitorTeam}
-                overtimePeriods={match.overtimePeriods}
-                isFinals={match.isFinals}
-                finalsDescription={match.finalsDescription}
-              />
-            )}
-            {[MATCH_STATUS.SCHEDULED].includes(match.status) && (
-              <ScheduledMatchCard
-                matchProviderId={match.providerId}
-                startAt={match.startAt}
-                homeTeam={match.homeTeam}
-                visitorTeam={match.visitorTeam}
-                mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
-                ticketUrl={match.homeTeam.ticketUrl}
-                isFinals={match.isFinals}
-                finalsDescription={match.finalsDescription}
-              />
-            )}
-          </div>
-        );
-      }}
-    />
+        }}
+      />
+    </>
   );
 }
