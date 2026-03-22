@@ -9,8 +9,9 @@ import MatchInfoCard from '@/match/components/MatchInfoCard';
 import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
-import { MatchLiveStreamVideo } from '../media/MatchLiveStreamVideo';
+import { CastrLivePlayer } from '../media/CastrLivePlayer';
 import WSCBsnWidget from '@/highlights/client/components/WSCBsnWidget';
+import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
 
 type Props = {
   match: MatchType;
@@ -34,7 +35,7 @@ export default function LiveMatchPage({ match }: Props) {
       <div className="-mt-[170px] md:-mt-[316px]">
         <div className="container">
           <div className="mb-[26px] mx-auto md:mb-[40px] md:w-[688px]">
-            <MatchLiveStreamVideo src={match.streamUrl ?? ''} />
+            <CastrLivePlayer />
           </div>
         </div>
       </div>
@@ -106,7 +107,11 @@ export default function LiveMatchPage({ match }: Props) {
               </div>
             </div>
           </TabPanel>
-          <TabPanel></TabPanel>
+          <TabPanel>
+            <div className="container">
+              <MatchBoxScoreWidget match={match} usePolling />
+            </div>
+          </TabPanel>
         </TabPanels>
       </TabGroup>
     </FullWidthLayout>

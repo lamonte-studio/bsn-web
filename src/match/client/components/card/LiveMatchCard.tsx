@@ -3,8 +3,6 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import Lottie from 'lottie-react';
-import moment from 'moment';
-
 import {
   Card,
   CardBody,
@@ -14,6 +12,7 @@ import {
 import MatchCompetitor from '../competitor/MatchCompetitor';
 import animationLiveStreamData from './live-stream.json';
 import { getFirstWord } from '@/utils/text';
+import { formatGameClockDisplay } from '@/utils/game-clock';
 import { MATCH_STATUS } from '@/constants';
 
 type Props = {
@@ -59,12 +58,10 @@ export default function LiveMatchCard({
   isFinals = false,
   finalsDescription = '',
 }: Props) {
-  const currentPeriodTime = useMemo(() => {
-    if (!currentTime) {
-      return '00:00';
-    }
-    return moment(currentTime, 'mm:ss:SS').format('m:ss');
-  }, [currentTime]);
+  const currentPeriodTime = useMemo(
+    () => formatGameClockDisplay(currentTime),
+    [currentTime],
+  );
 
   const currentStatusLabel = useMemo(() => {
     let statusLabel = overtimePeriods > 0 ? 'OT' : `Q${currentQuarter}`;
