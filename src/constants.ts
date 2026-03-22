@@ -2,11 +2,6 @@ export const SITE_NAME = 'BSN';
 export const DOMAIN_URL = 'https://www.bsnpr.com';
 export const DEFAULT_MEDIA_PROVIDER = 'BSN App • YouTube';
 
-/** Main live embed (Castr). Override with `NEXT_PUBLIC_CASTR_PLAYER_URL`. */
-export const CASTR_LIVE_PLAYER_URL =
-  process.env.NEXT_PUBLIC_CASTR_PLAYER_URL ??
-  'https://player.castr.com/live_3b865520256511f182516fbcda4c9e29';
-
 export const MATCH_STATUS = {
   DELAYED: 'DELAYED',
   LOADED: 'LOADED',

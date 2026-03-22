@@ -9,7 +9,7 @@ import MatchInfoCard from '@/match/components/MatchInfoCard';
 import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
-import { CastrLivePlayer } from '../media/CastrLivePlayer';
+import { LiveMatchStream } from '../media/LiveMatchStream';
 import WSCBsnWidget from '@/highlights/client/components/WSCBsnWidget';
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
 
@@ -35,7 +35,7 @@ export default function LiveMatchPage({ match }: Props) {
       <div className="-mt-[170px] md:-mt-[316px]">
         <div className="container">
           <div className="mb-[26px] mx-auto md:mb-[40px] md:w-[688px]">
-            <CastrLivePlayer />
+            <LiveMatchStream streamUrl={match.streamUrl} />
           </div>
         </div>
       </div>
