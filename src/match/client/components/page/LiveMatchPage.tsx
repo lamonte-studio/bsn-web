@@ -10,7 +10,7 @@ import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import { LiveMatchStream } from '../media/LiveMatchStream';
-import WSCBsnWidget from '@/highlights/client/components/WSCBsnWidget';
+import WSCMoments from '@/highlights/client/components/WSCMoments';
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
 
 type Props = {
@@ -59,17 +59,12 @@ export default function LiveMatchPage({ match }: Props) {
                     <div className="flex flex-row justify-between items-center mb-[30px]">
                       <div>
                         <h3 className="text-[22px] text-black md:text-[24px]">
-                          Highlights
+                          Mejores jugadas
                         </h3>
                       </div>
                     </div>
                     <div>
-                      <WSCBsnWidget
-                        id={`match-highlights-widget-${match.providerId}`}
-                        labels={[`g-${match.providerId}`]}
-                        orderType="RecentlyUpdatedFirst"
-                        contentType="moment"
-                      />
+                      <WSCMoments />
                     </div>
                   </div>
                   {/* <div className="mb-6 md:mb-10 lg:mb-15">
