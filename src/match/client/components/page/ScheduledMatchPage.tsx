@@ -7,6 +7,7 @@ import CompletedMatchCardBasic from '@/match/components/card/CompletedMatchCardB
 import MatchInfoCard from '@/match/components/MatchInfoCard';
 import ScheduledMatchScoreBoard from '@/match/components/scoreboard/ScheduledMatchScoreBoard';
 import MatchTeamStatsComparison from '@/match/components/stats/MatchTeamStatsComparison';
+import type { MatchTeamComparisonBoxScore } from '@/match/components/stats/MatchTeamStatsComparison';
 import { MatchType } from '@/match/types';
 import MatchFeaturedPlayers from '../MatchFeaturedPlayers';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
@@ -24,22 +25,8 @@ type LeadersCategoryStatsType = {
 
 type Props = {
   match: MatchType;
-  homeTeamBoxScore: {
-    points: number;
-    rebounds: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    turnovers: number;
-  };
-  visitorTeamBoxScore: {
-    points: number;
-    rebounds: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    turnovers: number;
-  };
+  homeTeamBoxScore: MatchTeamComparisonBoxScore;
+  visitorTeamBoxScore: MatchTeamComparisonBoxScore;
   headToHeadMatches: MatchType[];
   homeTeamPointsLeaders: LeadersCategoryStatsType[];
   homeTeamAssistsLeaders: LeadersCategoryStatsType[];
@@ -234,22 +221,8 @@ export default function ScheduledMatchPage({
                 <MatchTeamStatsComparison
                   homeTeam={{ code: match.homeTeam.code }}
                   visitorTeam={{ code: match.visitorTeam.code }}
-                  homeTeamBoxScore={{
-                    points: homeTeamBoxScore.points,
-                    rebounds: homeTeamBoxScore.rebounds,
-                    assists: homeTeamBoxScore.assists,
-                    steals: homeTeamBoxScore.steals,
-                    blocks: homeTeamBoxScore.blocks,
-                    turnovers: homeTeamBoxScore.turnovers,
-                  }}
-                  visitorTeamBoxScore={{
-                    points: visitorTeamBoxScore.points,
-                    rebounds: visitorTeamBoxScore.rebounds,
-                    assists: visitorTeamBoxScore.assists,
-                    steals: visitorTeamBoxScore.steals,
-                    blocks: visitorTeamBoxScore.blocks,
-                    turnovers: visitorTeamBoxScore.turnovers,
-                  }}
+                  homeTeamBoxScore={homeTeamBoxScore}
+                  visitorTeamBoxScore={visitorTeamBoxScore}
                 />
               </div>
             </div>

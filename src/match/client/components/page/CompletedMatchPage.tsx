@@ -1,3 +1,5 @@
+'use client';
+
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 
 import MatchInfoCard from '@/match/components/MatchInfoCard';
@@ -6,13 +8,13 @@ import MatchQuarterScoreBoard from '@/match/components/scoreboard/MatchQuarterSc
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
 import MatchPlayerLeadersCard from '@/stats/components/season/leader/player/MatchPlayerLeadersCard';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
+import MatchTeamStatsComparison from '@/match/components/stats/MatchTeamStatsComparison';
+import type { MatchTeamComparisonBoxScore } from '@/match/components/stats/MatchTeamStatsComparison';
 
 import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import { MatchType } from '@/match/types';
 import MatchYoutubeVideoCard from '../card/MatchYoutubeVideoCard';
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
-import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
-import WSCBsnWidget from '@/highlights/client/components/WSCBsnWidget';
 
 type MatchPlayerBoxScore = {
   player: {
@@ -37,6 +39,8 @@ type MatchPlayerBoxScore = {
 
 type Props = {
   match: MatchType;
+  homeTeamBoxScore: MatchTeamComparisonBoxScore;
+  visitorTeamBoxScore: MatchTeamComparisonBoxScore;
   pointsLeaders?: MatchPlayerBoxScore[];
   reboundsLeaders?: MatchPlayerBoxScore[];
   assistsLeaders?: MatchPlayerBoxScore[];
@@ -47,6 +51,8 @@ type Props = {
 
 export default function CompletedMatchPage({
   match,
+  homeTeamBoxScore,
+  visitorTeamBoxScore,
   pointsLeaders = [],
   reboundsLeaders = [],
   assistsLeaders = [],
@@ -85,7 +91,6 @@ export default function CompletedMatchPage({
         </section>
       }
     >
-      <WSCBlazeSDK apiKey={process.env.NEXT_PUBLIC_WSC_API_KEY || ''} />
       <TabGroup>
         <TabList className="bg-bsn pb-[20px] md:pb-[28px]">
           <div className="container text-center space-x-[30px]">
@@ -145,23 +150,6 @@ export default function CompletedMatchPage({
                         })) ?? []
                       }
                     />
-                  </div>
-                  <div className="mb-6 md:mb-10 lg:mb-15">
-                    <div className="flex flex-row justify-between items-center mb-[30px]">
-                      <div>
-                        <h3 className="text-[22px] text-black md:text-[24px]">
-                          Mejores jugadas
-                        </h3>
-                      </div>
-                    </div>
-                    <div>
-                      <WSCBsnWidget
-                        id={`match-highlights-widget-${match.providerId}`}
-                        labels={[`g-${match.providerId}`]}
-                        orderType="RecentlyUpdatedFirst"
-                        contentType="moment"
-                      />
-                    </div>
                   </div>
                   <div className="mb-6 md:mb-10 lg:mb-15">
                     <div className="flex flex-row justify-between items-center mb-6 md:mb-[28px]">
@@ -283,6 +271,14 @@ export default function CompletedMatchPage({
                       venue={{ name: match.venue?.name ?? '' }}
                       channel={match.channel ?? DEFAULT_MEDIA_PROVIDER}
                       ticketUrl={match.homeTeam.ticketUrl}
+                    />
+                  </div>
+                  <div className="mb-6 md:mb-10 lg:mb-15">
+                    <MatchTeamStatsComparison
+                      homeTeam={{ code: match.homeTeam.code }}
+                      visitorTeam={{ code: match.visitorTeam.code }}
+                      homeTeamBoxScore={homeTeamBoxScore}
+                      visitorTeamBoxScore={visitorTeamBoxScore}
                     />
                   </div>
                   <div className="mb-10 md:mb-4">

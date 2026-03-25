@@ -10,6 +10,7 @@ import { MATCH_LEADERS_STATS, SEASON_TEAM_LEADER_PLAYER_STATS } from '@/graphql/
 import CompletedMatchPage from '@/match/client/components/page/CompletedMatchPage';
 import LiveMatchPage from '@/match/client/components/page/LiveMatchPage';
 import ScheduledMatchPage from '@/match/client/components/page/ScheduledMatchPage';
+import type { MatchTeamComparisonBoxScore } from '@/match/components/stats/MatchTeamStatsComparison';
 import { MatchType } from '@/match/types';
 
 type LeadersCategoryStatsType = {
@@ -44,22 +45,8 @@ type MatchPlayerBoxScore = {
 
 type MatchResponse = {
   match: MatchType;
-  homeTeamBoxScore: {
-    points: number;
-    rebounds: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    turnovers: number;
-  };
-  visitorTeamBoxScore: {
-    points: number;
-    rebounds: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    turnovers: number;
-  };
+  homeTeamBoxScore: MatchTeamComparisonBoxScore;
+  visitorTeamBoxScore: MatchTeamComparisonBoxScore;
   homeTeamPointsLeaders: LeadersCategoryStatsType[];
   homeTeamAssistsLeaders: LeadersCategoryStatsType[];
   homeTeamReboundsLeaders: LeadersCategoryStatsType[];
@@ -165,20 +152,40 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
   const response: MatchResponse = {
     match,
     homeTeamBoxScore: {
-      points: 0,
-      rebounds: 0,
+      fieldGoalsMade: 0,
+      fieldGoalsAttempted: 0,
+      fieldGoalsPercentage: 0,
+      threePointersMade: 0,
+      threePointersAttempted: 0,
+      threePointersPercentage: 0,
+      freeThrowsMade: 0,
+      freeThrowsAttempted: 0,
+      freeThrowsPercentage: 0,
+      offensiveRebounds: 0,
+      reboundsTotal: 0,
       assists: 0,
+      turnovers: 0,
       steals: 0,
       blocks: 0,
-      turnovers: 0,
+      foulsPersonal: 0,
     },
     visitorTeamBoxScore: {
-      points: 0,
-      rebounds: 0,
+      fieldGoalsMade: 0,
+      fieldGoalsAttempted: 0,
+      fieldGoalsPercentage: 0,
+      threePointersMade: 0,
+      threePointersAttempted: 0,
+      threePointersPercentage: 0,
+      freeThrowsMade: 0,
+      freeThrowsAttempted: 0,
+      freeThrowsPercentage: 0,
+      offensiveRebounds: 0,
+      reboundsTotal: 0,
       assists: 0,
+      turnovers: 0,
       steals: 0,
       blocks: 0,
-      turnovers: 0,
+      foulsPersonal: 0,
     },
     headToHeadMatches: [],
     homeTeamPointsLeaders: [],
@@ -215,20 +222,59 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
     }
 
     response.homeTeamBoxScore = {
-      points: matchTeamsBoxScore.homeTeamBoxscore?.points ?? 0,
-      rebounds: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
+      fieldGoalsMade: matchTeamsBoxScore.homeTeamBoxscore?.fieldGoalsMade ?? 0,
+      fieldGoalsAttempted:
+        matchTeamsBoxScore.homeTeamBoxscore?.fieldGoalsAttempted ?? 0,
+      fieldGoalsPercentage:
+        matchTeamsBoxScore.homeTeamBoxscore?.fieldGoalsPercentage ?? 0,
+      threePointersMade:
+        matchTeamsBoxScore.homeTeamBoxscore?.threePointersMade ?? 0,
+      threePointersAttempted:
+        matchTeamsBoxScore.homeTeamBoxscore?.threePointersAttempted ?? 0,
+      threePointersPercentage:
+        matchTeamsBoxScore.homeTeamBoxscore?.threePointersPercentage ?? 0,
+      freeThrowsMade: matchTeamsBoxScore.homeTeamBoxscore?.freeThrowsMade ?? 0,
+      freeThrowsAttempted:
+        matchTeamsBoxScore.homeTeamBoxscore?.freeThrowsAttempted ?? 0,
+      freeThrowsPercentage:
+        matchTeamsBoxScore.homeTeamBoxscore?.freeThrowsPercentage ?? 0,
+      offensiveRebounds:
+        matchTeamsBoxScore.homeTeamBoxscore?.offensiveRebounds ?? 0,
+      reboundsTotal: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
       assists: matchTeamsBoxScore.homeTeamBoxscore?.assists ?? 0,
+      turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
       steals: matchTeamsBoxScore.homeTeamBoxscore?.steals ?? 0,
       blocks: matchTeamsBoxScore.homeTeamBoxscore?.blocks ?? 0,
-      turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
+      foulsPersonal: matchTeamsBoxScore.homeTeamBoxscore?.foulsPersonal ?? 0,
     };
     response.visitorTeamBoxScore = {
-      points: matchTeamsBoxScore.visitorTeamBoxscore?.points ?? 0,
-      rebounds: matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
+      fieldGoalsMade:
+        matchTeamsBoxScore.visitorTeamBoxscore?.fieldGoalsMade ?? 0,
+      fieldGoalsAttempted:
+        matchTeamsBoxScore.visitorTeamBoxscore?.fieldGoalsAttempted ?? 0,
+      fieldGoalsPercentage:
+        matchTeamsBoxScore.visitorTeamBoxscore?.fieldGoalsPercentage ?? 0,
+      threePointersMade:
+        matchTeamsBoxScore.visitorTeamBoxscore?.threePointersMade ?? 0,
+      threePointersAttempted:
+        matchTeamsBoxScore.visitorTeamBoxscore?.threePointersAttempted ?? 0,
+      threePointersPercentage:
+        matchTeamsBoxScore.visitorTeamBoxscore?.threePointersPercentage ?? 0,
+      freeThrowsMade:
+        matchTeamsBoxScore.visitorTeamBoxscore?.freeThrowsMade ?? 0,
+      freeThrowsAttempted:
+        matchTeamsBoxScore.visitorTeamBoxscore?.freeThrowsAttempted ?? 0,
+      freeThrowsPercentage:
+        matchTeamsBoxScore.visitorTeamBoxscore?.freeThrowsPercentage ?? 0,
+      offensiveRebounds:
+        matchTeamsBoxScore.visitorTeamBoxscore?.offensiveRebounds ?? 0,
+      reboundsTotal:
+        matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
       assists: matchTeamsBoxScore.visitorTeamBoxscore?.assists ?? 0,
+      turnovers: matchTeamsBoxScore.visitorTeamBoxscore?.turnovers ?? 0,
       steals: matchTeamsBoxScore.visitorTeamBoxscore?.steals ?? 0,
       blocks: matchTeamsBoxScore.visitorTeamBoxscore?.blocks ?? 0,
-      turnovers: matchTeamsBoxScore.visitorTeamBoxscore?.turnovers ?? 0,
+      foulsPersonal: matchTeamsBoxScore.visitorTeamBoxscore?.foulsPersonal ?? 0,
     };
 
     const { data: headToHeadMatchesData } =
@@ -282,7 +328,79 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
       ) ?? [];
   }
 
-  if (match.status === MATCH_STATUS.COMPLETE) {
+  if ([MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(match.status)) {
+    const { data: matchTeamsBoxScoreData } =
+      await getClient().query<MatchTeamsBoxScoreResponse>({
+        query: MATCH_TEAMS_BOXSCORE,
+        variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
+      });
+
+    const matchTeamsBoxScore = matchTeamsBoxScoreData?.matchTeamsBoxscore;
+
+    if (matchTeamsBoxScore == null) {
+      console.error(
+        'No match teams boxscore data found for provider ID:',
+        matchProviderId,
+      );
+      throw new Error('Match teams boxscore not found');
+    }
+
+    response.homeTeamBoxScore = {
+      fieldGoalsMade: matchTeamsBoxScore.homeTeamBoxscore?.fieldGoalsMade ?? 0,
+      fieldGoalsAttempted:
+        matchTeamsBoxScore.homeTeamBoxscore?.fieldGoalsAttempted ?? 0,
+      fieldGoalsPercentage:
+        matchTeamsBoxScore.homeTeamBoxscore?.fieldGoalsPercentage ?? 0,
+      threePointersMade:
+        matchTeamsBoxScore.homeTeamBoxscore?.threePointersMade ?? 0,
+      threePointersAttempted:
+        matchTeamsBoxScore.homeTeamBoxscore?.threePointersAttempted ?? 0,
+      threePointersPercentage:
+        matchTeamsBoxScore.homeTeamBoxscore?.threePointersPercentage ?? 0,
+      freeThrowsMade: matchTeamsBoxScore.homeTeamBoxscore?.freeThrowsMade ?? 0,
+      freeThrowsAttempted:
+        matchTeamsBoxScore.homeTeamBoxscore?.freeThrowsAttempted ?? 0,
+      freeThrowsPercentage:
+        matchTeamsBoxScore.homeTeamBoxscore?.freeThrowsPercentage ?? 0,
+      offensiveRebounds:
+        matchTeamsBoxScore.homeTeamBoxscore?.offensiveRebounds ?? 0,
+      reboundsTotal: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
+      assists: matchTeamsBoxScore.homeTeamBoxscore?.assists ?? 0,
+      turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
+      steals: matchTeamsBoxScore.homeTeamBoxscore?.steals ?? 0,
+      blocks: matchTeamsBoxScore.homeTeamBoxscore?.blocks ?? 0,
+      foulsPersonal: matchTeamsBoxScore.homeTeamBoxscore?.foulsPersonal ?? 0,
+    };
+    response.visitorTeamBoxScore = {
+      fieldGoalsMade:
+        matchTeamsBoxScore.visitorTeamBoxscore?.fieldGoalsMade ?? 0,
+      fieldGoalsAttempted:
+        matchTeamsBoxScore.visitorTeamBoxscore?.fieldGoalsAttempted ?? 0,
+      fieldGoalsPercentage:
+        matchTeamsBoxScore.visitorTeamBoxscore?.fieldGoalsPercentage ?? 0,
+      threePointersMade:
+        matchTeamsBoxScore.visitorTeamBoxscore?.threePointersMade ?? 0,
+      threePointersAttempted:
+        matchTeamsBoxScore.visitorTeamBoxscore?.threePointersAttempted ?? 0,
+      threePointersPercentage:
+        matchTeamsBoxScore.visitorTeamBoxscore?.threePointersPercentage ?? 0,
+      freeThrowsMade:
+        matchTeamsBoxScore.visitorTeamBoxscore?.freeThrowsMade ?? 0,
+      freeThrowsAttempted:
+        matchTeamsBoxScore.visitorTeamBoxscore?.freeThrowsAttempted ?? 0,
+      freeThrowsPercentage:
+        matchTeamsBoxScore.visitorTeamBoxscore?.freeThrowsPercentage ?? 0,
+      offensiveRebounds:
+        matchTeamsBoxScore.visitorTeamBoxscore?.offensiveRebounds ?? 0,
+      reboundsTotal:
+        matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
+      assists: matchTeamsBoxScore.visitorTeamBoxscore?.assists ?? 0,
+      turnovers: matchTeamsBoxScore.visitorTeamBoxscore?.turnovers ?? 0,
+      steals: matchTeamsBoxScore.visitorTeamBoxscore?.steals ?? 0,
+      blocks: matchTeamsBoxScore.visitorTeamBoxscore?.blocks ?? 0,
+      foulsPersonal: matchTeamsBoxScore.visitorTeamBoxscore?.foulsPersonal ?? 0,
+    };
+
     const { data: matchPeriodsBoxScoreData } =
       await getClient().query<MatchPeriodsBoxScoreResponse>({
         query: MATCH_PERIODS_BOXSCORE,
@@ -350,6 +468,8 @@ export default async function PartidoPage({
       ) && (
         <CompletedMatchPage
           match={data.match}
+          homeTeamBoxScore={data.homeTeamBoxScore}
+          visitorTeamBoxScore={data.visitorTeamBoxScore}
           pointsLeaders={data.pointsLeaders}
           reboundsLeaders={data.reboundsLeaders}
           assistsLeaders={data.assistsLeaders}
