@@ -329,7 +329,7 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
       ) ?? [];
   }
 
-  if (match.status === MATCH_STATUS.COMPLETE) {
+  if ([MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(match.status)) {
     const { data: matchPeriodsBoxScoreData } =
       await getClient().query<MatchPeriodsBoxScoreResponse>({
         query: MATCH_PERIODS_BOXSCORE,
