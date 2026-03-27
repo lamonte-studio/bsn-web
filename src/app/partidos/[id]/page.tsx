@@ -6,7 +6,10 @@ import {
   MATCH_PERIODS_BOXSCORE,
   MATCH_TEAMS_BOXSCORE,
 } from '@/graphql/match';
-import { MATCH_LEADERS_STATS, SEASON_TEAM_LEADER_PLAYER_STATS } from '@/graphql/stats';
+import {
+  MATCH_LEADERS_STATS,
+  SEASON_TEAM_LEADER_PLAYER_STATS,
+} from '@/graphql/stats';
 import { TEAM_DETAIL } from '@/graphql/team';
 import CompletedMatchPage from '@/match/client/components/page/CompletedMatchPage';
 import LiveMatchPage from '@/match/client/components/page/LiveMatchPage';
@@ -209,6 +212,49 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
     threePointersMadeLeaders: [],
   };
 
+  if (
+    [
+      MATCH_STATUS.IN_PROGRESS,
+      MATCH_STATUS.PERIOD_BREAK,
+      MATCH_STATUS.PENDING,
+      MATCH_STATUS.READY,
+      MATCH_STATUS.SCHEDULED,
+    ].includes(match.status)
+  ) {
+    const { data: matchTeamsBoxScoreData } =
+      await getClient().query<MatchTeamsBoxScoreResponse>({
+        query: MATCH_TEAMS_BOXSCORE,
+        variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
+      });
+
+    const matchTeamsBoxScore = matchTeamsBoxScoreData?.matchTeamsBoxscore;
+
+    if (matchTeamsBoxScore == null) {
+      console.error(
+        'No match teams boxscore data found for provider ID:',
+        matchProviderId,
+      );
+      throw new Error('Match teams boxscore not found');
+    }
+
+    response.homeTeamBoxScore = {
+      points: matchTeamsBoxScore.homeTeamBoxscore?.points ?? 0,
+      rebounds: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
+      assists: matchTeamsBoxScore.homeTeamBoxscore?.assists ?? 0,
+      steals: matchTeamsBoxScore.homeTeamBoxscore?.steals ?? 0,
+      blocks: matchTeamsBoxScore.homeTeamBoxscore?.blocks ?? 0,
+      turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
+    };
+    response.visitorTeamBoxScore = {
+      points: matchTeamsBoxScore.visitorTeamBoxscore?.points ?? 0,
+      rebounds: matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
+      assists: matchTeamsBoxScore.visitorTeamBoxscore?.assists ?? 0,
+      steals: matchTeamsBoxScore.visitorTeamBoxscore?.steals ?? 0,
+      blocks: matchTeamsBoxScore.visitorTeamBoxscore?.blocks ?? 0,
+      turnovers: matchTeamsBoxScore.visitorTeamBoxscore?.turnovers ?? 0,
+    };
+  }
+
   if (match.status === MATCH_STATUS.SCHEDULED) {
     const [{ data: homeTeamDetail }, { data: visitorTeamDetail }] =
       await Promise.all([
@@ -245,39 +291,6 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
       };
     }
 
-    const { data: matchTeamsBoxScoreData } =
-      await getClient().query<MatchTeamsBoxScoreResponse>({
-        query: MATCH_TEAMS_BOXSCORE,
-        variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
-      });
-
-    const matchTeamsBoxScore = matchTeamsBoxScoreData?.matchTeamsBoxscore;
-
-    if (matchTeamsBoxScore == null) {
-      console.error(
-        'No match teams boxscore data found for provider ID:',
-        matchProviderId,
-      );
-      throw new Error('Match teams boxscore not found');
-    }
-
-    response.homeTeamBoxScore = {
-      points: matchTeamsBoxScore.homeTeamBoxscore?.points ?? 0,
-      rebounds: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
-      assists: matchTeamsBoxScore.homeTeamBoxscore?.assists ?? 0,
-      steals: matchTeamsBoxScore.homeTeamBoxscore?.steals ?? 0,
-      blocks: matchTeamsBoxScore.homeTeamBoxscore?.blocks ?? 0,
-      turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
-    };
-    response.visitorTeamBoxScore = {
-      points: matchTeamsBoxScore.visitorTeamBoxscore?.points ?? 0,
-      rebounds: matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
-      assists: matchTeamsBoxScore.visitorTeamBoxscore?.assists ?? 0,
-      steals: matchTeamsBoxScore.visitorTeamBoxscore?.steals ?? 0,
-      blocks: matchTeamsBoxScore.visitorTeamBoxscore?.blocks ?? 0,
-      turnovers: matchTeamsBoxScore.visitorTeamBoxscore?.turnovers ?? 0,
-    };
-
     const { data: headToHeadMatchesData } =
       await getClient().query<HeadToHeadMatchesResponse>({
         query: HEAD_TO_HEAD_MATCHES,
@@ -289,8 +302,9 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
         },
       });
     response.headToHeadMatches =
-      headToHeadMatchesData?.headToHeadMatchesConnection.edges.map((edge) => edge.node) ??
-      [];
+      headToHeadMatchesData?.headToHeadMatchesConnection.edges.map(
+        (edge) => edge.node,
+      ) ?? [];
 
     const { data: matchHomeTeamLeadersData } =
       await getClient().query<MatchTeamLeadersResponse>({
@@ -358,21 +372,18 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
         fetchPolicy: 'network-only',
       });
 
-    response.pointsLeaders = matchLeadersStatsData?.pointsLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
-    response.reboundsLeaders = matchLeadersStatsData?.reboundsLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
-    response.assistsLeaders = matchLeadersStatsData?.assistsLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
-    response.stealsLeaders = matchLeadersStatsData?.stealsLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
-    response.blocksLeaders = matchLeadersStatsData?.blocksLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
+    response.pointsLeaders =
+      matchLeadersStatsData?.pointsLeaders.edges.map((edge) => edge.node) ?? [];
+    response.reboundsLeaders =
+      matchLeadersStatsData?.reboundsLeaders.edges.map((edge) => edge.node) ??
+      [];
+    response.assistsLeaders =
+      matchLeadersStatsData?.assistsLeaders.edges.map((edge) => edge.node) ??
+      [];
+    response.stealsLeaders =
+      matchLeadersStatsData?.stealsLeaders.edges.map((edge) => edge.node) ?? [];
+    response.blocksLeaders =
+      matchLeadersStatsData?.blocksLeaders.edges.map((edge) => edge.node) ?? [];
     response.threePointersMadeLeaders =
       matchLeadersStatsData?.threePointersMadeLeaders.edges.map(
         (edge) => edge.node,
@@ -391,7 +402,11 @@ export default async function PartidoPage({
   return (
     <>
       {isLiveMatchPageStatus(data.match.status) && (
-        <LiveMatchPage match={data.match} />
+        <LiveMatchPage
+          match={data.match}
+          homeTeamBoxScore={data.homeTeamBoxScore}
+          visitorTeamBoxScore={data.visitorTeamBoxScore}
+        />
       )}
       {[MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(
         data.match.status,

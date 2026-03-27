@@ -12,12 +12,29 @@ import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import { LiveMatchStream } from '../media/LiveMatchStream';
 import WSCMoments from '@/highlights/client/components/WSCMoments';
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
+import MatchTeamStatsComparison from '@/match/components/stats/MatchTeamStatsComparison';
 
 type Props = {
   match: MatchType;
+  homeTeamBoxScore?: {
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+  };
+  visitorTeamBoxScore?: {
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+  };
 };
 
-export default function LiveMatchPage({ match }: Props) {
+export default function LiveMatchPage({ match, homeTeamBoxScore, visitorTeamBoxScore }: Props) {
   return (
     <FullWidthLayout
       divider
@@ -85,6 +102,28 @@ export default function LiveMatchPage({ match }: Props) {
                         venue={{ name: match.venue?.name ?? '' }}
                         channel={match.channel ?? DEFAULT_MEDIA_PROVIDER}
                         ticketUrl={match.homeTeam.ticketUrl}
+                      />
+                    </div>
+                    <div className="mb-6 md:mb-10 lg:mb-15">
+                      <MatchTeamStatsComparison
+                        homeTeam={{ code: match.homeTeam.code }}
+                        visitorTeam={{ code: match.visitorTeam.code }}
+                        homeTeamBoxScore={{
+                          points: homeTeamBoxScore?.points ?? 0,
+                          rebounds: homeTeamBoxScore?.rebounds ?? 0,
+                          assists: homeTeamBoxScore?.assists ?? 0,
+                          steals: homeTeamBoxScore?.steals ?? 0,
+                          blocks: homeTeamBoxScore?.blocks ?? 0,
+                          turnovers: homeTeamBoxScore?.turnovers ?? 0,
+                        }}
+                        visitorTeamBoxScore={{
+                          points: visitorTeamBoxScore?.points ?? 0,
+                          rebounds: visitorTeamBoxScore?.rebounds ?? 0,
+                          assists: visitorTeamBoxScore?.assists ?? 0,
+                          steals: visitorTeamBoxScore?.steals ?? 0,
+                          blocks: visitorTeamBoxScore?.blocks ?? 0,
+                          turnovers: visitorTeamBoxScore?.turnovers ?? 0,
+                        }}
                       />
                     </div>
                     <div className="mb-[30px] md:mb-[40px]">
