@@ -10,7 +10,7 @@ import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import { LiveMatchStream } from '../media/LiveMatchStream';
-import WSCMoments from '@/highlights/client/components/WSCMoments';
+import MatchWscStoriesWidget from '../MatchWscStoriesWidget';
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
 import MatchTeamStatsComparison from '@/match/components/stats/MatchTeamStatsComparison';
 
@@ -87,7 +87,7 @@ export default function LiveMatchPage({ match, homeTeamBoxScore, visitorTeamBoxS
                       </div>
                     </div>
                     <div>
-                      <WSCMoments />
+                      <MatchWscStoriesWidget matchProviderId={match.providerId} />
                     </div>
                   </div>
                   {/* <div className="mb-6 md:mb-10 lg:mb-15">
