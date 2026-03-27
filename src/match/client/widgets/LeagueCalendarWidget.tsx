@@ -161,15 +161,20 @@ export default function LeagueCalendarWidget() {
                   {isCalendarFinishedMatch(match.status) ? (
                     <CalendarFinishedMatchRow
                       providerId={match.providerId}
+                      startAt={match.startAt}
                       homeTeam={{
                         code: match.homeTeam.code,
                         nickname: match.homeTeam.nickname,
+                        city: match.homeTeam.city,
                         score: match.homeTeam.score ?? '0',
+                        competitionStandings: match.homeTeam.competitionStandings,
                       }}
                       visitorTeam={{
                         code: match.visitorTeam.code,
                         nickname: match.visitorTeam.nickname,
+                        city: match.visitorTeam.city,
                         score: match.visitorTeam.score ?? '0',
+                        competitionStandings: match.visitorTeam.competitionStandings,
                       }}
                       overtimePeriods={match.overtimePeriods}
                     />
@@ -183,12 +188,16 @@ export default function LeagueCalendarWidget() {
                       homeTeam={{
                         code: match.homeTeam.code,
                         nickname: match.homeTeam.nickname,
+                        city: match.homeTeam.city,
                         score: match.homeTeam.score ?? '0',
+                        competitionStandings: match.homeTeam.competitionStandings,
                       }}
                       visitorTeam={{
                         code: match.visitorTeam.code,
                         nickname: match.visitorTeam.nickname,
+                        city: match.visitorTeam.city,
                         score: match.visitorTeam.score ?? '0',
+                        competitionStandings: match.visitorTeam.competitionStandings,
                       }}
                       contextTeamCode={match.homeTeam.code}
                     />
