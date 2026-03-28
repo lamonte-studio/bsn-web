@@ -46,7 +46,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mb-15 lg:hidden">
-              <LatestNewsWidget />
+              {/* <LatestNewsWidget /> */}
             </div>
             <div className="mb-4 md:mb-8 lg:mb-17">
               <div className="flex flex-row justify-between items-center mb-4 md:mb-[26px]">
