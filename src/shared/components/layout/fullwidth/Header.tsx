@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   CloseButton,
   Dialog,
@@ -12,11 +13,16 @@ import {
   PopoverButton,
   PopoverPanel,
 } from '@headlessui/react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function HeaderBoxLayout() {
   const [isOpen, setIsOpen] = useState(false);
   const equiposButtonRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <>
@@ -365,11 +371,16 @@ export default function HeaderBoxLayout() {
           </div>
         </div>
       </div>
-      <Dialog
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        className="relative z-50"
-      >
+      {/*
+        Mount Dialog only while open so Headless UI cannot leave a stale full-screen
+        layer after close/hydration (fixes mobile web: content flashes then dark overlay).
+      */}
+      {isOpen ? (
+        <Dialog
+          open
+          onClose={() => setIsOpen(false)}
+          className="relative z-50"
+        >
         <div className="fixed inset-0 flex h-screen w-screen">
           <DialogPanel className="bg-[#171819] w-full py-[10px]">
             <div className="container">
@@ -579,7 +590,8 @@ export default function HeaderBoxLayout() {
             </ul>
           </DialogPanel>
         </div>
-      </Dialog>
+        </Dialog>
+      ) : null}
     </>
   );
 }
