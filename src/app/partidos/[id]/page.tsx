@@ -217,6 +217,39 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
   }
 
   const devForceLive = isDevForcedLiveMatchPage(matchProviderId);
+  const scheduledPreview =
+    !devForceLive &&
+    isScheduledMatchPageStatus(match.status, match.providerFixtureStatus);
+  const completedUi =
+    !devForceLive &&
+    isCompletedMatchForUi(match.status, match.providerFixtureStatus);
+  /** Misma rama que antes: `devForceLive` o partido en juego (no cerrado en UI). */
+  const liveLayoutLeaders =
+    devForceLive ||
+    isLiveMatchPageStatus(match.status, match.providerFixtureStatus);
+
+  /** Estados con totales de equipo en juego; excluye programado/reprogramado (usan `TEAM_STATS` abajo). */
+  const statusesNeedingMatchTeamsBoxscore = [
+    MATCH_STATUS.IN_PROGRESS,
+    MATCH_STATUS.PERIOD_BREAK,
+    MATCH_STATUS.PENDING,
+    MATCH_STATUS.READY,
+    MATCH_STATUS.DELAYED,
+    MATCH_STATUS.INTERRUPTED,
+    MATCH_STATUS.WARMUP,
+    MATCH_STATUS.PREMATCH,
+    MATCH_STATUS.ANTHEM,
+    MATCH_STATUS.ONCOURT,
+    MATCH_STATUS.STANDBY,
+    MATCH_STATUS.COUNTDOWN,
+    MATCH_STATUS.LOADED,
+  ] as const;
+
+  const needsMatchTeamsBoxscore =
+    devForceLive ||
+    (statusesNeedingMatchTeamsBoxscore as readonly string[]).includes(
+      match.status,
+    );
 
   const response: MatchResponse = {
     match,
@@ -253,87 +286,227 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
     threePointersMadeLeaders: [],
   };
 
-  // Totales de equipo (boxscore agregado): aplica a en vivo, pre-partido y otros estados listados.
-  // `devForceLive`: fixture finalizado en API pero vista live local → también cargar agregados.
-  if (
-    devForceLive ||
-    [
-      MATCH_STATUS.IN_PROGRESS,
-      MATCH_STATUS.PERIOD_BREAK,
-      MATCH_STATUS.PENDING,
-      MATCH_STATUS.READY,
-      MATCH_STATUS.SCHEDULED,
-      MATCH_STATUS.DELAYED,
-      MATCH_STATUS.INTERRUPTED,
-      MATCH_STATUS.WARMUP,
-      MATCH_STATUS.PREMATCH,
-      MATCH_STATUS.ANTHEM,
-      MATCH_STATUS.ONCOURT,
-      MATCH_STATUS.STANDBY,
-      MATCH_STATUS.COUNTDOWN,
-      MATCH_STATUS.LOADED,
-    ].includes(match.status)
-  ) {
-    try {
-      const { data: matchTeamsBoxScoreData, error: teamsBoxError } =
-        await getClient().query<MatchTeamsBoxScoreResponse>({
+  // Tras MATCH: paralelizar GraphQL independiente (menos RTT acumulado en la primera carga).
+  // Vista programada: no pedir `MATCH_TEAMS_BOXSCORE` (se reemplaza con `TEAM_STATS` abajo).
+  type ParallelPiece =
+    | {
+        kind: 'teamsBox';
+        data: MatchTeamsBoxScoreResponse | undefined;
+        error: Error | undefined;
+      }
+    | { kind: 'periods'; data: MatchPeriodsBoxScoreResponse | undefined }
+    | {
+        kind: 'gameLeaders';
+        data: MatchLeadersStatsResponse | undefined;
+        error: Error | undefined;
+      };
+
+  const parallelPieces: Promise<ParallelPiece>[] = [];
+
+  if (!scheduledPreview && needsMatchTeamsBoxscore) {
+    parallelPieces.push(
+      getClient()
+        .query<MatchTeamsBoxScoreResponse>({
           query: MATCH_TEAMS_BOXSCORE,
           variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
           errorPolicy: 'all',
-        });
+        })
+        .then((r) => ({
+          kind: 'teamsBox' as const,
+          data: r.data,
+          error: r.error,
+        }))
+        .catch((e) => {
+          console.error(
+            '[fetchMatch] MATCH_TEAMS_BOXSCORE request failed:',
+            matchProviderId,
+            e,
+          );
+          return {
+            kind: 'teamsBox' as const,
+            data: undefined,
+            error: e instanceof Error ? e : new Error(String(e)),
+          };
+        }),
+    );
+  }
 
-      if (teamsBoxError) {
-        console.error(
-          '[fetchMatch] MATCH_TEAMS_BOXSCORE GraphQL error:',
-          matchProviderId,
-          teamsBoxError,
-        );
-      }
+  if (completedUi) {
+    parallelPieces.push(
+      getClient()
+        .query<MatchPeriodsBoxScoreResponse>({
+          query: MATCH_PERIODS_BOXSCORE,
+          variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
+        })
+        .then((r) => ({ kind: 'periods' as const, data: r.data })),
+    );
+    parallelPieces.push(
+      getClient()
+        .query<MatchLeadersStatsResponse>({
+          query: MATCH_LEADERS_STATS,
+          variables: { matchProviderId: matchProviderId, first: 3 },
+          errorPolicy: 'all',
+        })
+        .then((r) => ({
+          kind: 'gameLeaders' as const,
+          data: r.data,
+          error: r.error,
+        }))
+        .catch((e) => {
+          console.error(
+            '[fetchMatch] MATCH_LEADERS_STATS (completed) request failed:',
+            matchProviderId,
+            e,
+          );
+          return {
+            kind: 'gameLeaders' as const,
+            data: undefined,
+            error: e instanceof Error ? e : new Error(String(e)),
+          };
+        }),
+    );
+  } else if (liveLayoutLeaders) {
+    parallelPieces.push(
+      getClient()
+        .query<MatchLeadersStatsResponse>({
+          query: MATCH_LEADERS_STATS,
+          variables: { matchProviderId: matchProviderId, first: 3 },
+          errorPolicy: 'all',
+        })
+        .then((r) => ({
+          kind: 'gameLeaders' as const,
+          data: r.data,
+          error: r.error,
+        }))
+        .catch((e) => {
+          console.error(
+            '[fetchMatch] live MATCH_LEADERS_STATS request failed:',
+            matchProviderId,
+            e,
+          );
+          return {
+            kind: 'gameLeaders' as const,
+            data: undefined,
+            error: e instanceof Error ? e : new Error(String(e)),
+          };
+        }),
+    );
+  }
 
-      const matchTeamsBoxScore = matchTeamsBoxScoreData?.matchTeamsBoxscore;
+  const parallelResults = await Promise.all(parallelPieces);
 
-      if (matchTeamsBoxScore != null) {
-        response.homeTeamBoxScore = {
-          points: matchTeamsBoxScore.homeTeamBoxscore?.points ?? 0,
-          rebounds: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
-          assists: matchTeamsBoxScore.homeTeamBoxscore?.assists ?? 0,
-          steals: matchTeamsBoxScore.homeTeamBoxscore?.steals ?? 0,
-          blocks: matchTeamsBoxScore.homeTeamBoxscore?.blocks ?? 0,
-          turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
-        };
-        response.visitorTeamBoxScore = {
-          points: matchTeamsBoxScore.visitorTeamBoxscore?.points ?? 0,
-          rebounds: matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
-          assists: matchTeamsBoxScore.visitorTeamBoxscore?.assists ?? 0,
-          steals: matchTeamsBoxScore.visitorTeamBoxscore?.steals ?? 0,
-          blocks: matchTeamsBoxScore.visitorTeamBoxscore?.blocks ?? 0,
-          turnovers: matchTeamsBoxScore.visitorTeamBoxscore?.turnovers ?? 0,
-        };
-      } else {
-        console.warn(
-          '[fetchMatch] matchTeamsBoxscore null or missing; keeping zero totals',
-          matchProviderId,
-        );
-      }
-    } catch (e) {
+  const teamsBoxPiece = parallelResults.find((p) => p.kind === 'teamsBox');
+  const periodsPiece = parallelResults.find((p) => p.kind === 'periods');
+  const gameLeadersPiece = parallelResults.find((p) => p.kind === 'gameLeaders');
+
+  const applyGameLeaders = (
+    matchLeadersStatsData: MatchLeadersStatsResponse | undefined,
+  ) => {
+    if (matchLeadersStatsData == null) {
+      return;
+    }
+    response.pointsLeaders =
+      matchLeadersStatsData.pointsLeaders.edges.map((edge) => edge.node) ?? [];
+    response.reboundsLeaders =
+      matchLeadersStatsData.reboundsLeaders.edges.map((edge) => edge.node) ??
+      [];
+    response.assistsLeaders =
+      matchLeadersStatsData.assistsLeaders.edges.map((edge) => edge.node) ??
+      [];
+    response.stealsLeaders =
+      matchLeadersStatsData.stealsLeaders.edges.map((edge) => edge.node) ?? [];
+    response.blocksLeaders =
+      matchLeadersStatsData.blocksLeaders.edges.map((edge) => edge.node) ?? [];
+    response.threePointersMadeLeaders =
+      matchLeadersStatsData.threePointersMadeLeaders.edges.map(
+        (edge) => edge.node,
+      ) ?? [];
+  };
+
+  if (teamsBoxPiece != null && teamsBoxPiece.kind === 'teamsBox') {
+    if (teamsBoxPiece.error) {
       console.error(
-        '[fetchMatch] MATCH_TEAMS_BOXSCORE request failed:',
+        '[fetchMatch] MATCH_TEAMS_BOXSCORE GraphQL error:',
         matchProviderId,
-        e,
+        teamsBoxPiece.error,
+      );
+    }
+    const matchTeamsBoxScore = teamsBoxPiece.data?.matchTeamsBoxscore;
+    if (matchTeamsBoxScore != null) {
+      response.homeTeamBoxScore = {
+        points: matchTeamsBoxScore.homeTeamBoxscore?.points ?? 0,
+        rebounds: matchTeamsBoxScore.homeTeamBoxscore?.reboundsTotal ?? 0,
+        assists: matchTeamsBoxScore.homeTeamBoxscore?.assists ?? 0,
+        steals: matchTeamsBoxScore.homeTeamBoxscore?.steals ?? 0,
+        blocks: matchTeamsBoxScore.homeTeamBoxscore?.blocks ?? 0,
+        turnovers: matchTeamsBoxScore.homeTeamBoxscore?.turnovers ?? 0,
+      };
+      response.visitorTeamBoxScore = {
+        points: matchTeamsBoxScore.visitorTeamBoxscore?.points ?? 0,
+        rebounds: matchTeamsBoxScore.visitorTeamBoxscore?.reboundsTotal ?? 0,
+        assists: matchTeamsBoxScore.visitorTeamBoxscore?.assists ?? 0,
+        steals: matchTeamsBoxScore.visitorTeamBoxscore?.steals ?? 0,
+        blocks: matchTeamsBoxScore.visitorTeamBoxscore?.blocks ?? 0,
+        turnovers: matchTeamsBoxScore.visitorTeamBoxscore?.turnovers ?? 0,
+      };
+    } else {
+      console.warn(
+        '[fetchMatch] matchTeamsBoxscore null or missing; keeping zero totals',
+        matchProviderId,
       );
     }
   }
 
-  // Programado o reprogramado: W–L desde `team`, cara a cara, líderes de TEMPORADA por equipo (no del juego).
+  if (completedUi && periodsPiece != null && periodsPiece.kind === 'periods') {
+    const matchPeriodsBoxScore = periodsPiece.data?.matchPeriods;
+    if (matchPeriodsBoxScore == null) {
+      console.error(
+        'No match periods boxscore data found for provider ID:',
+        matchProviderId,
+      );
+      throw new Error('Match periods boxscore not found');
+    }
+    response.match = {
+      ...response.match,
+      periods: matchPeriodsBoxScore.periods,
+    };
+  }
+
   if (
-    !devForceLive &&
-    isScheduledMatchPageStatus(match.status, match.providerFixtureStatus)
+    gameLeadersPiece != null &&
+    gameLeadersPiece.kind === 'gameLeaders'
   ) {
+    if (completedUi) {
+      if (gameLeadersPiece.error) {
+        console.error(
+          '[fetchMatch] MATCH_LEADERS_STATS (completed) error:',
+          matchProviderId,
+          gameLeadersPiece.error,
+        );
+      }
+      applyGameLeaders(gameLeadersPiece.data);
+    } else if (liveLayoutLeaders) {
+      if (gameLeadersPiece.error) {
+        console.error(
+          '[fetchMatch] live MATCH_LEADERS_STATS error:',
+          matchProviderId,
+          gameLeadersPiece.error,
+        );
+      }
+      applyGameLeaders(gameLeadersPiece.data);
+    }
+  }
+
+  // Programado o reprogramado: una sola tanda paralela (antes: 4 + 1 + 2 RTT).
+  if (scheduledPreview) {
     const [
       { data: homeTeamDetail },
       { data: visitorTeamDetail },
       { data: homeTeamStatsData },
       { data: visitorTeamStatsData },
+      { data: headToHeadMatchesData },
+      { data: matchHomeTeamLeadersData },
+      { data: matchVisitorTeamLeadersData },
     ] = await Promise.all([
       getClient().query<TeamDetailStandingsResponse>({
         query: TEAM_DETAIL,
@@ -350,6 +523,29 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
       getClient().query<TeamStatsForComparisonResponse>({
         query: TEAM_STATS,
         variables: { code: match.visitorTeam.code },
+      }),
+      getClient().query<HeadToHeadMatchesResponse>({
+        query: HEAD_TO_HEAD_MATCHES,
+        variables: {
+          teamCodeA: match.homeTeam.code,
+          teamCodeB: match.visitorTeam.code,
+          toDate: match.startAt,
+          first: 5,
+        },
+      }),
+      getClient().query<MatchTeamLeadersResponse>({
+        query: SEASON_TEAM_LEADER_PLAYER_STATS,
+        variables: {
+          teamCode: match.homeTeam.code,
+          first: SEASON_TEAM_LEADERS_CONNECTION_FIRST,
+        },
+      }),
+      getClient().query<MatchTeamLeadersResponse>({
+        query: SEASON_TEAM_LEADER_PLAYER_STATS,
+        variables: {
+          teamCode: match.visitorTeam.code,
+          first: SEASON_TEAM_LEADERS_CONNECTION_FIRST,
+        },
       }),
     ]);
 
@@ -383,38 +579,10 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
       };
     }
 
-    const { data: headToHeadMatchesData } =
-      await getClient().query<HeadToHeadMatchesResponse>({
-        query: HEAD_TO_HEAD_MATCHES,
-        variables: {
-          teamCodeA: match.homeTeam.code,
-          teamCodeB: match.visitorTeam.code,
-          toDate: match.startAt,
-          first: 5,
-        },
-      });
     response.headToHeadMatches =
       headToHeadMatchesData?.headToHeadMatchesConnection.edges.map(
         (edge) => edge.node,
       ) ?? [];
-
-    const [{ data: matchHomeTeamLeadersData }, { data: matchVisitorTeamLeadersData }] =
-      await Promise.all([
-        getClient().query<MatchTeamLeadersResponse>({
-          query: SEASON_TEAM_LEADER_PLAYER_STATS,
-          variables: {
-            teamCode: match.homeTeam.code,
-            first: SEASON_TEAM_LEADERS_CONNECTION_FIRST,
-          },
-        }),
-        getClient().query<MatchTeamLeadersResponse>({
-          query: SEASON_TEAM_LEADER_PLAYER_STATS,
-          variables: {
-            teamCode: match.visitorTeam.code,
-            first: SEASON_TEAM_LEADERS_CONNECTION_FIRST,
-          },
-        }),
-      ]);
 
     const top = SEASON_TEAM_LEADERS_DISPLAY_TOP;
 
@@ -449,109 +617,6 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
     )
       .slice(0, top)
       .map((edge) => edge.node);
-  }
-
-  // Partido cerrado: parciales + líderes del JUEGO (`matchLeadersConnection` por `matchProviderId`).
-  if (
-    !devForceLive &&
-    isCompletedMatchForUi(match.status, match.providerFixtureStatus)
-  ) {
-    const { data: matchPeriodsBoxScoreData } =
-      await getClient().query<MatchPeriodsBoxScoreResponse>({
-        query: MATCH_PERIODS_BOXSCORE,
-        variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
-      });
-
-    const matchPeriodsBoxScore = matchPeriodsBoxScoreData?.matchPeriods;
-
-    if (matchPeriodsBoxScore == null) {
-      console.error(
-        'No match periods boxscore data found for provider ID:',
-        matchProviderId,
-      );
-      throw new Error('Match periods boxscore not found');
-    }
-
-    response.match = {
-      ...response.match,
-      periods: matchPeriodsBoxScore.periods,
-    };
-
-    const { data: matchLeadersStatsData } =
-      await getClient().query<MatchLeadersStatsResponse>({
-        query: MATCH_LEADERS_STATS,
-        variables: { matchProviderId: matchProviderId, first: 3 },
-        fetchPolicy: 'network-only',
-      });
-
-    response.pointsLeaders =
-      matchLeadersStatsData?.pointsLeaders.edges.map((edge) => edge.node) ?? [];
-    response.reboundsLeaders =
-      matchLeadersStatsData?.reboundsLeaders.edges.map((edge) => edge.node) ??
-      [];
-    response.assistsLeaders =
-      matchLeadersStatsData?.assistsLeaders.edges.map((edge) => edge.node) ??
-      [];
-    response.stealsLeaders =
-      matchLeadersStatsData?.stealsLeaders.edges.map((edge) => edge.node) ?? [];
-    response.blocksLeaders =
-      matchLeadersStatsData?.blocksLeaders.edges.map((edge) => edge.node) ?? [];
-    response.threePointersMadeLeaders =
-      matchLeadersStatsData?.threePointersMadeLeaders.edges.map(
-        (edge) => edge.node,
-      ) ?? [];
-  } else if (
-    devForceLive ||
-    isLiveMatchPageStatus(match.status, match.providerFixtureStatus)
-  ) {
-    // En vivo: mismos líderes con scope de partido que al finalizar (no líderes de liga ni solo un equipo).
-    try {
-      const { data: matchLeadersStatsData, error: liveLeadersError } =
-        await getClient().query<MatchLeadersStatsResponse>({
-          query: MATCH_LEADERS_STATS,
-          variables: { matchProviderId: matchProviderId, first: 3 },
-          fetchPolicy: 'network-only',
-          errorPolicy: 'all',
-        });
-
-      if (liveLeadersError) {
-        console.error(
-          '[fetchMatch] live MATCH_LEADERS_STATS error:',
-          matchProviderId,
-          liveLeadersError,
-        );
-      }
-
-      if (matchLeadersStatsData != null) {
-        response.pointsLeaders =
-          matchLeadersStatsData.pointsLeaders.edges.map((edge) => edge.node) ??
-          [];
-        response.reboundsLeaders =
-          matchLeadersStatsData.reboundsLeaders.edges.map(
-            (edge) => edge.node,
-          ) ?? [];
-        response.assistsLeaders =
-          matchLeadersStatsData.assistsLeaders.edges.map(
-            (edge) => edge.node,
-          ) ?? [];
-        response.stealsLeaders =
-          matchLeadersStatsData.stealsLeaders.edges.map((edge) => edge.node) ??
-          [];
-        response.blocksLeaders =
-          matchLeadersStatsData.blocksLeaders.edges.map((edge) => edge.node) ??
-          [];
-        response.threePointersMadeLeaders =
-          matchLeadersStatsData.threePointersMadeLeaders.edges.map(
-            (edge) => edge.node,
-          ) ?? [];
-      }
-    } catch (e) {
-      console.error(
-        '[fetchMatch] live MATCH_LEADERS_STATS request failed:',
-        matchProviderId,
-        e,
-      );
-    }
   }
 
   return response;
