@@ -155,10 +155,7 @@ export default function ScheduledMatchCard({
           </div>
         </div>
         <div className="pb-[12px] md:pb-[17px]">
-          <div
-            className="bg-[rgba(15,15,15,0.19)] border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[2px] md:p-[5px]"
-            style={{ backdropFilter: 'blur(40px)' }}
-          >
+          <div className="glass-match-card-pill border border-[rgba(255,255,255,0.21)] block text-center rounded-[18px] p-[2px] md:p-[5px]">
             <span className="text-sm text-white md:text-[15px]">
               Ver previa
             </span>

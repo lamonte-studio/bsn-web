@@ -47,11 +47,10 @@ export default function HeaderBoxLayout() {
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.04)',
+                  background: 'rgba(255, 255, 255, 0.12)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   boxShadow:
                     '0 0 1.5px rgba(0, 0, 0, 0.1), 0 1px 6px rgba(0, 0, 0, 0.15), inset 0 0.5px 0.5px rgba(255, 255, 255, 0.06)',
-                  backdropFilter: 'blur(4px)',
                   borderRadius: '100px',
                 }}
               >
