@@ -62,7 +62,7 @@ export default function LiveMatchPage({ match }: Props) {
         <section className="pb-[170px] md:pb-[310px]">
           <div className="container">
             <div className="mx-auto py-[32px] md:py-[42px] xl:py-[52px] lg:w-9/12 xl:w-8/12">
-              <LiveMatchScoreBoardWidget match={match} loading={loading} />
+              <LiveMatchScoreBoardWidget match={data} loading={loading} />
             </div>
           </div>
         </section>
