@@ -21,6 +21,7 @@ import MatchTeamStatsComparison from '@/match/components/stats/MatchTeamStatsCom
 import MatchGameLeadersSection, {
   type MatchGameLeaderPlayerBoxScore,
 } from '@/match/components/stats/MatchGameLeadersSection';
+import LiveMatchSectionErrorBoundary from '../LiveMatchSectionErrorBoundary';
 
 type Props = {
   match: MatchType;
@@ -67,7 +68,13 @@ export default function LiveMatchPage({
         <section className="pb-[170px] md:pb-[310px]">
           <div className="container">
             <div className="mx-auto py-[32px] md:py-[42px] xl:py-[52px] lg:w-9/12 xl:w-8/12">
-              <LiveMatchScoreBoardWidget matchProviderId={match.providerId} />
+              <LiveMatchSectionErrorBoundary
+                resetKey={match.providerId}
+                tone="dark"
+                fallbackTitle="No se pudo mostrar el marcador. Actualiza en unos segundos."
+              >
+                <LiveMatchScoreBoardWidget matchProviderId={match.providerId} />
+              </LiveMatchSectionErrorBoundary>
             </div>
           </div>
         </section>
@@ -184,7 +191,12 @@ export default function LiveMatchPage({
           </TabPanel>
           <TabPanel>
             <div className="container">
-              <MatchBoxScoreWidget match={match} usePolling />
+              <LiveMatchSectionErrorBoundary
+                resetKey={match.providerId}
+                fallbackTitle="No se pudo cargar el box score. Intenta de nuevo en unos segundos."
+              >
+                <MatchBoxScoreWidget match={match} usePolling />
+              </LiveMatchSectionErrorBoundary>
             </div>
           </TabPanel>
         </TabPanels>
