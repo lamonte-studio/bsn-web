@@ -87,7 +87,7 @@ export default function LiveMatchPage({
           </div>
         </div>
       </div>
-      <TabGroup>
+      <TabGroup defaultIndex={1}>
         <TabList>
           <div className="container text-center space-x-[30px]">
             <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(0,0,0,0.5)] text-base md:text-[22px] data-selected:text-black data-selected:border-b-2 data-selected:border-b-black">

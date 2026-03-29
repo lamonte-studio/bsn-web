@@ -44,3 +44,11 @@ export const MATCH_TIME_FORMAT = 'h:mm A';
 export const PLAYER_BIRTHDAY_FORMAT = 'D/M/YYYY';
 export const PLAYER_MATCH_DATE_FORMAT = 'D MMM, YYYY';
 export const BSN_TV_DATE_FORMAT = 'MMMM D, YYYY';
+
+/**
+ * `seasonPlayerStatsConnection` / `TEAM_LEADERS_STATS_CONNECTION`.
+ * Coherente con `SEASON_LEADER_COMPETITION_STATS_SYNC_LIMIT` en bsn-main (sync Synergy).
+ */
+export const SEASON_TEAM_LEADERS_CONNECTION_FIRST = 100;
+/** Filas visibles por categoría en cajas de líderes (partido programado, ficha equipo). */
+export const SEASON_TEAM_LEADERS_DISPLAY_TOP = 3;

@@ -1,4 +1,7 @@
-import { DATE_TIME_TZ_FORMAT } from '@/constants';
+import {
+  DATE_TIME_TZ_FORMAT,
+  SEASON_TEAM_LEADERS_CONNECTION_FIRST,
+} from '@/constants';
 import {
   TEAM_LEADERS_STATS_CONNECTION,
   TEAM_PLAYERS_CONNECTION,
@@ -156,7 +159,10 @@ type TeamLeadersConnectionResponse = {
   };
 };
 
-export function useTeamLeadersConnection(code: string, first: number = 5) {
+export function useTeamLeadersConnection(
+  code: string,
+  first: number = SEASON_TEAM_LEADERS_CONNECTION_FIRST,
+) {
   const { data, loading, error } = useQuery<TeamLeadersConnectionResponse>(
     TEAM_LEADERS_STATS_CONNECTION,
     {

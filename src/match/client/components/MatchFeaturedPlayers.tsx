@@ -4,7 +4,7 @@ import { useState } from 'react';
 type LeadersCategoryStatsType = {
   player: {
     providerId: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     name: string;
   };
   value: number;
@@ -26,6 +26,18 @@ const TABS = [
   { key: 'rebounds', label: 'Rebotes' },
   { key: 'assists', label: 'Asistencias' },
 ];
+
+function mapLeadersToCardRows(leaders: LeadersCategoryStatsType[]) {
+  return leaders.map((leader, index) => ({
+    position: index + 1,
+    player: {
+      id: leader.player.providerId,
+      avatarUrl: leader.player.avatarUrl ?? '',
+      name: leader.player.name,
+    },
+    statValue: leader.value,
+  }));
+}
 
 export default function MatchFeaturedPlayers({
   homeTeam,
@@ -68,28 +80,12 @@ export default function MatchFeaturedPlayers({
           <SeasonTeamPlayerLeadersCard
             title="Puntos por juego"
             teamCode={visitorTeam.code}
-            data={visitorTeamPointsLeaders.map((leader, index) => ({
-              position: index + 1,
-              player: {
-                id: leader.player.providerId,
-                avatarUrl: leader.player.avatarUrl,
-                name: leader.player.name,
-              },
-              statValue: leader.value,
-            }))}
+            data={mapLeadersToCardRows(visitorTeamPointsLeaders)}
           />
           <SeasonTeamPlayerLeadersCard
             title="Puntos por juego"
             teamCode={homeTeam.code}
-            data={homeTeamPointsLeaders.map((leader, index) => ({
-              position: index + 1,
-              player: {
-                id: leader.player.providerId,
-                avatarUrl: leader.player.avatarUrl,
-                name: leader.player.name,
-              },
-              statValue: leader.value,
-            }))}
+            data={mapLeadersToCardRows(homeTeamPointsLeaders)}
           />
         </div>
       )}
@@ -98,28 +94,12 @@ export default function MatchFeaturedPlayers({
           <SeasonTeamPlayerLeadersCard
             title="Rebotes por juego"
             teamCode={visitorTeam.code}
-            data={visitorTeamReboundsLeaders.map((leader, index) => ({
-              position: index + 1,
-              player: {
-                id: leader.player.providerId,
-                avatarUrl: leader.player.avatarUrl,
-                name: leader.player.name,
-              },
-              statValue: leader.value,
-            }))}
+            data={mapLeadersToCardRows(visitorTeamReboundsLeaders)}
           />
           <SeasonTeamPlayerLeadersCard
             title="Rebotes por juego"
             teamCode={homeTeam.code}
-            data={homeTeamReboundsLeaders.map((leader, index) => ({
-              position: index + 1,
-              player: {
-                id: leader.player.providerId,
-                avatarUrl: leader.player.avatarUrl,
-                name: leader.player.name,
-              },
-              statValue: leader.value,
-            }))}
+            data={mapLeadersToCardRows(homeTeamReboundsLeaders)}
           />
         </div>
       )}
@@ -128,28 +108,12 @@ export default function MatchFeaturedPlayers({
           <SeasonTeamPlayerLeadersCard
             title="Asistencias por juego"
             teamCode={visitorTeam.code}
-            data={visitorTeamAssistsLeaders.map((leader, index) => ({
-              position: index + 1,
-              player: {
-                id: leader.player.providerId,
-                avatarUrl: leader.player.avatarUrl,
-                name: leader.player.name,
-              },
-              statValue: leader.value,
-            }))}
+            data={mapLeadersToCardRows(visitorTeamAssistsLeaders)}
           />
           <SeasonTeamPlayerLeadersCard
             title="Asistencias por juego"
             teamCode={homeTeam.code}
-            data={homeTeamAssistsLeaders.map((leader, index) => ({
-              position: index + 1,
-              player: {
-                id: leader.player.providerId,
-                avatarUrl: leader.player.avatarUrl,
-                name: leader.player.name,
-              },
-              statValue: leader.value,
-            }))}
+            data={mapLeadersToCardRows(homeTeamAssistsLeaders)}
           />
         </div>
       )}

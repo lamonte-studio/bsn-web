@@ -216,6 +216,7 @@ export const MATCH_TEAMS_BOXSCORE = gql`
       id
       providerId
       homeTeam {
+        providerId
         name
         nickname
         code
@@ -225,6 +226,7 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         }
       }
       visitorTeam {
+        providerId
         name
         nickname
         code
@@ -244,6 +246,7 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         freeThrowsAttempted
         freeThrowsPercentage
         offensiveRebounds
+        defensiveRebounds
         reboundsTotal
         assists
         turnovers
@@ -251,6 +254,16 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         blocks
         foulsPersonal
         points
+        twoPointersMade
+        twoPointersAttempted
+        twoPointersPercentage
+        pointsFromTurnover
+        pointsInThePaint
+        pointsSecondChance
+        pointsFastBreak
+        pointsFromBench
+        biggestLead
+        biggestScoringRun
       }
       visitorTeamBoxscore {
         fieldGoalsMade
@@ -263,6 +276,7 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         freeThrowsAttempted
         freeThrowsPercentage
         offensiveRebounds
+        defensiveRebounds
         reboundsTotal
         assists
         turnovers
@@ -270,6 +284,16 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         blocks
         foulsPersonal
         points
+        twoPointersMade
+        twoPointersAttempted
+        twoPointersPercentage
+        pointsFromTurnover
+        pointsInThePaint
+        pointsSecondChance
+        pointsFastBreak
+        pointsFromBench
+        biggestLead
+        biggestScoringRun
       }
     }
   }
@@ -290,6 +314,7 @@ export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
     ) {
       player {
         providerId
+        avatarUrl
         name
         nickname
         shirtNumber
@@ -299,6 +324,9 @@ export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
         minutes
         points
         reboundsTotal
+        offensiveRebounds
+        defensiveRebounds
+        isStarter
         assists
         fieldGoalsMade
         fieldGoalsAttempted
@@ -306,10 +334,14 @@ export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
         threePointersMade
         threePointersAttempted
         threePointersPercentage
+        twoPointersMade
+        twoPointersAttempted
+        twoPointersPercentage
         freeThrowsMade
         freeThrowsAttempted
         freeThrowsPercentage
         foulsPersonal
+        foulsDrawn
         steals
         blocks
         turnovers

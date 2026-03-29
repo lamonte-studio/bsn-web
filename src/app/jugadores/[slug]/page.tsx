@@ -88,7 +88,7 @@ export default async function DetalleJugadorPage({
                       }}
                     >
                       <PlayerPhotoAvatar
-                        photoUrl={data.player.avatarUrl}
+                        photoUrl={data.player.avatarUrl ?? ''}
                         size={125}
                         name={data.player.name}
                       />
@@ -100,7 +100,7 @@ export default async function DetalleJugadorPage({
                       }}
                     >
                       <PlayerPhotoAvatar
-                        photoUrl={data.player.avatarUrl}
+                        photoUrl={data.player.avatarUrl ?? ''}
                         size={75}
                         name={data.player.name}
                       />

@@ -5,7 +5,7 @@ type Row = {
   position: number;
   player: {
     id: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     name: string;
   };
   statValue: number;
@@ -29,7 +29,10 @@ export default function SeasonTeamPlayerLeadersCard({ title, teamCode, data }: P
       <div className="px-[20px] pb-[12px]">
         <ul>
           {data.map((row, index) => (
-            <li key={index} className={index < data.length - 1 ? 'border-b border-[rgba(0,0,0,0.07)]' : ''}>
+            <li
+              key={row.player.id}
+              className={index < data.length - 1 ? 'border-b border-[rgba(0,0,0,0.07)]' : ''}
+            >
               <SeasonTeamPlayerLeaderItem
                 position={row.position}
                 player={row.player}

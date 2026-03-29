@@ -17,13 +17,9 @@ import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import MatchWscStoriesWidget from '../MatchWscStoriesWidget';
 
 /**
- * Partido finalizado: la sección “Líderes del juego” pasó a `MatchGameLeadersSection`
- * (antes: seis `MatchPlayerLeadersCard` repetidos en este archivo).
- *
- * `SHOW_MATCH_QUARTER_SCOREBOARD`: tabla por parcial (Q1–Q4) desactivada hasta que datos/API estén listos.
+ * Partido finalizado: parciales Q1–Q4 / OT desde `match.periods` (cargados en el servidor
+ * con `MATCH_PERIODS_BOXSCORE` en `/partidos/[id]`).
  */
-const SHOW_MATCH_QUARTER_SCOREBOARD = false;
-
 type Props = {
   match: MatchType;
   /** Todas las listas: líderes de este partido (`matchLeadersConnection`), no de liga ni un solo equipo. */
@@ -44,6 +40,14 @@ export default function CompletedMatchPage({
   blocksLeaders = [],
   threePointersMadeLeaders = [],
 }: Props) {
+  const periodQuarters =
+    match.periods?.map((period) => ({
+      periodNumber: period.periodNumber,
+      periodType: period.periodType,
+      homeTeam: { score: period.homeTeam.score },
+      visitorTeam: { score: period.visitorTeam.score },
+    })) ?? [];
+
   return (
     <FullWidthLayout
       divider
@@ -100,12 +104,12 @@ export default function CompletedMatchPage({
                       ticketUrl={match.homeTeam.ticketUrl}
                     />
                   </div>
-                  {SHOW_MATCH_QUARTER_SCOREBOARD && (
+                  {periodQuarters.length > 0 && (
                     <div className="mb-6 md:mb-10 lg:mb-15">
-                      <div className="flex flex-row justify-between items-center">
+                      <div className="flex flex-row justify-between items-center mb-[12px] md:mb-[16px]">
                         <div>
                           <h3 className="text-[22px] text-black md:text-[24px]">
-                            Resultado
+                            Resultado por periodo
                           </h3>
                         </div>
                       </div>
@@ -130,14 +134,7 @@ export default function CompletedMatchPage({
                               0,
                           },
                         }}
-                        quarters={
-                          match.periods?.map((period) => ({
-                            periodNumber: period.periodNumber,
-                            periodType: period.periodType,
-                            homeTeam: { score: period.homeTeam.score },
-                            visitorTeam: { score: period.visitorTeam.score },
-                          })) ?? []
-                        }
+                        quarters={periodQuarters}
                       />
                     </div>
                   )}

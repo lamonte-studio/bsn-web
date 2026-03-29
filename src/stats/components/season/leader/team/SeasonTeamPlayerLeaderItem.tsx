@@ -5,7 +5,7 @@ type Props = {
   position: number;
   player: {
     id: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     name: string;
   };
   statValue: number;
@@ -30,7 +30,7 @@ export default function SeasonTeamPlayerLeaderItem({
       </div>
       <div className="flex flex-1 flex-row items-center gap-3">
         <PlayerPhotoAvatar
-          photoUrl={player.avatarUrl}
+          photoUrl={player.avatarUrl ?? ''}
           size={avatarSize}
           name={player.name}
         />

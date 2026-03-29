@@ -1,6 +1,23 @@
 import { MATCH_STATUS } from '@/constants';
 import { MatchType } from '@/match/types';
 
+/** Partido a tratar como “en vivo” en `next dev` (pruebas del layout live en `/partidos/[id]`). */
+const DEV_FORCE_LIVE_MATCH_PROVIDER_ID =
+  '85fbab5a-11ad-11f1-a6fa-ffcdd9747cbf';
+
+/**
+ * `yarn dev` / `NODE_ENV=development`: este `providerId` usa siempre la vista en vivo
+ * (aunque el API diga finalizado o programado). No aplica en build de producción.
+ */
+export function isDevForcedLiveMatchPage(
+  providerId: string | undefined | null,
+): boolean {
+  return (
+    process.env.NODE_ENV === 'development' &&
+    (providerId ?? '') === DEV_FORCE_LIVE_MATCH_PROVIDER_ID
+  );
+}
+
 /*
  * Estados del fixture (Sportradar / Synergy Stats), según descripción operativa:
  *   SCHEDULED → PENDING: el estadístico empieza a configurar los equipos.
@@ -69,8 +86,11 @@ export function isLiveMatchPageStatus(
  * No usa `streamUrl`: el criterio es únicamente `status` + `providerFixtureStatus` (siempre hay stream en datos).
  */
 export function shouldUseLiveMatchPageLayout(
-  m: Pick<MatchType, 'status' | 'providerFixtureStatus'>,
+  m: Pick<MatchType, 'status' | 'providerFixtureStatus' | 'providerId'>,
 ): boolean {
+  if (isDevForcedLiveMatchPage(m.providerId)) {
+    return true;
+  }
   if (isScheduledMatchPageStatus(m.status, m.providerFixtureStatus)) {
     return false;
   }

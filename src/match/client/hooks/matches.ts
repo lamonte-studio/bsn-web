@@ -1,6 +1,7 @@
 import {
   RECENT_CALENDAR,
   MATCH_TEAM_PLAYERS_BOXSCORE,
+  MATCH_TEAMS_BOXSCORE,
   MATCH,
 } from '@/graphql/match';
 import { MatchType } from '@/match/types';
@@ -155,36 +156,87 @@ export function useRecentCalendar(
   };
 }
 
+export type MatchPlayerBoxscoreFields = {
+  minutes: number;
+  points: number;
+  reboundsTotal: number;
+  offensiveRebounds: number;
+  defensiveRebounds: number;
+  /** DataCore stream `persons.starter`; null/undefined if not received yet. */
+  isStarter?: boolean | null;
+  assists: number;
+  fieldGoalsMade: number;
+  fieldGoalsAttempted: number;
+  fieldGoalsPercentage: number;
+  threePointersMade: number;
+  threePointersAttempted: number;
+  threePointersPercentage: number;
+  twoPointersMade: number;
+  twoPointersAttempted: number;
+  twoPointersPercentage: number;
+  freeThrowsMade: number;
+  freeThrowsAttempted: number;
+  freeThrowsPercentage: number;
+  foulsPersonal: number;
+  foulsDrawn: number;
+  steals: number;
+  blocks: number;
+  turnovers: number;
+  plusMinusPoints: number;
+};
+
 type MatchTeamPlayersBoxScoreResponse = {
   matchPlayersBoxscore: {
     player: {
       providerId: string;
+      avatarUrl?: string | null;
       name: string;
       nickname: string;
       shirtNumber: string;
       playingPosition: string;
     };
-    boxscore: {
-      minutes: number;
-      points: number;
-      reboundsTotal: number;
-      assists: number;
-      fieldGoalsMade: number;
-      fieldGoalsAttempted: number;
-      fieldGoalsPercentage: number;
-      threePointersMade: number;
-      threePointersAttempted: number;
-      threePointersPercentage: number;
-      freeThrowsMade: number;
-      freeThrowsAttempted: number;
-      freeThrowsPercentage: number;
-      foulsPersonal: number;
-      steals: number;
-      blocks: number;
-      turnovers: number;
-      plusMinusPoints: number;
-    };
+    boxscore: MatchPlayerBoxscoreFields;
   }[];
+};
+
+export type MatchTeamAggregateBoxscore = {
+  fieldGoalsMade: number;
+  fieldGoalsAttempted: number;
+  fieldGoalsPercentage: number;
+  threePointersMade: number;
+  threePointersAttempted: number;
+  threePointersPercentage: number;
+  freeThrowsMade: number;
+  freeThrowsAttempted: number;
+  freeThrowsPercentage: number;
+  offensiveRebounds: number;
+  defensiveRebounds: number;
+  reboundsTotal: number;
+  assists: number;
+  turnovers: number;
+  steals: number;
+  blocks: number;
+  foulsPersonal: number;
+  points: number;
+  twoPointersMade: number;
+  twoPointersAttempted: number;
+  twoPointersPercentage: number;
+  pointsFromTurnover: number;
+  pointsInThePaint: number;
+  pointsSecondChance: number;
+  pointsFastBreak: number;
+  pointsFromBench: number;
+  biggestLead: number;
+  biggestScoringRun: number;
+};
+
+type MatchTeamsBoxscoreQueryResponse = {
+  matchTeamsBoxscore: {
+    homeTeam: { providerId?: string | null };
+    visitorTeam: { providerId?: string | null };
+    homeTeamBoxscore: MatchTeamAggregateBoxscore;
+    visitorTeamBoxscore: MatchTeamAggregateBoxscore;
+  } | null;
 };
 
 export function useMatchTeamPlayersBoxscore(
@@ -212,7 +264,46 @@ export function useMatchTeamPlayersBoxscore(
     console.error(error);
   }
 
-  return { data: data?.matchPlayersBoxscore ?? [], loading, error };
+  const rows = data?.matchPlayersBoxscore ?? [];
+  // Igual que `useMatch`: no tratar refetch/poll como “sin datos” (evita parpadeo tabla ↔ skeleton).
+  const showInitialLoading = rows.length === 0 && loading;
+
+  return { data: rows, loading: showInitialLoading, error };
+}
+
+export function useMatchTeamAggregateBoxscore(
+  providerMatchId: string,
+  teamProviderId: string,
+  usePolling = false,
+) {
+  const { data, loading, error } = useQuery<MatchTeamsBoxscoreQueryResponse>(
+    MATCH_TEAMS_BOXSCORE,
+    {
+      variables: { geniusMatchId: 0, providerMatchId },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+      pollInterval: usePolling ? LIVE_MATCH_POLL_MS : 0,
+      notifyOnNetworkStatusChange: true,
+    },
+  );
+
+  if (error) {
+    console.error(error);
+  }
+
+  const row = data?.matchTeamsBoxscore;
+  let teamBox: MatchTeamAggregateBoxscore | null = null;
+  if (row) {
+    if (row.homeTeam?.providerId === teamProviderId) {
+      teamBox = row.homeTeamBoxscore;
+    } else if (row.visitorTeam?.providerId === teamProviderId) {
+      teamBox = row.visitorTeamBoxscore;
+    }
+  }
+
+  const showInitialLoading = !teamBox && loading;
+
+  return { teamBox, loading: showInitialLoading, error };
 }
 
 type MatchResponse = {

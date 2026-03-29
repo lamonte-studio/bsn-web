@@ -11,7 +11,11 @@ import { getFirstWord } from '@/utils/text';
 import { useMatch } from '../hooks/matches';
 import ShimmerLine from '@/shared/client/components/ui/ShimmerLine';
 import { getLiveScoreboardCenterLine } from '@/match/client/utils/calendarView';
-import { isCompletedMatchForUi, normalizeMatchStatus } from '@/match/utils/matchStatus';
+import {
+  isCompletedMatchForUi,
+  isDevForcedLiveMatchPage,
+  normalizeMatchStatus,
+} from '@/match/utils/matchStatus';
 import { useTickingGameClock } from '../hooks/useTickingGameClock';
 
 type Props = {
@@ -22,8 +26,10 @@ export default function LiveMatchScoreBoardWidget({ matchProviderId }: Props) {
   const { data, loading, error } = useMatch(matchProviderId, true);
 
   const completedForScore = useMemo(
-    () => isCompletedMatchForUi(data?.status, data?.providerFixtureStatus),
-    [data?.status, data?.providerFixtureStatus],
+    () =>
+      !isDevForcedLiveMatchPage(matchProviderId) &&
+      isCompletedMatchForUi(data?.status, data?.providerFixtureStatus),
+    [matchProviderId, data?.status, data?.providerFixtureStatus],
   );
 
   const statusU = normalizeMatchStatus(data?.status);

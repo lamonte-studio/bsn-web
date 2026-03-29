@@ -11,7 +11,7 @@ export type MatchGameLeaderPlayerBoxScore = {
   player: {
     providerId: string;
     name: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     teamCode?: string;
     team?: {
       code: string;
@@ -59,7 +59,7 @@ export default function MatchGameLeadersSection({
             position: index + 1,
             player: {
               id: leader.player.providerId,
-              avatarUrl: leader.player.avatarUrl,
+              avatarUrl: leader.player.avatarUrl ?? '',
               name: leader.player.name,
               team: {
                 code: leader.player.teamCode ?? '',
@@ -75,7 +75,7 @@ export default function MatchGameLeadersSection({
             position: index + 1,
             player: {
               id: leader.player.providerId,
-              avatarUrl: leader.player.avatarUrl,
+              avatarUrl: leader.player.avatarUrl ?? '',
               name: leader.player.name,
               team: {
                 code: leader.player.teamCode ?? '',
@@ -91,7 +91,7 @@ export default function MatchGameLeadersSection({
             position: index + 1,
             player: {
               id: leader.player.providerId,
-              avatarUrl: leader.player.avatarUrl,
+              avatarUrl: leader.player.avatarUrl ?? '',
               name: leader.player.name,
               team: {
                 code: leader.player.teamCode ?? '',
@@ -107,7 +107,7 @@ export default function MatchGameLeadersSection({
             position: index + 1,
             player: {
               id: leader.player.providerId,
-              avatarUrl: leader.player.avatarUrl,
+              avatarUrl: leader.player.avatarUrl ?? '',
               name: leader.player.name,
               team: {
                 code: leader.player.teamCode ?? '',
@@ -123,7 +123,7 @@ export default function MatchGameLeadersSection({
             position: index + 1,
             player: {
               id: leader.player.providerId,
-              avatarUrl: leader.player.avatarUrl,
+              avatarUrl: leader.player.avatarUrl ?? '',
               name: leader.player.name,
               team: {
                 code: leader.player.teamCode ?? '',
@@ -139,7 +139,7 @@ export default function MatchGameLeadersSection({
             position: index + 1,
             player: {
               id: leader.player.providerId,
-              avatarUrl: leader.player.avatarUrl,
+              avatarUrl: leader.player.avatarUrl ?? '',
               name: leader.player.name,
               team: {
                 code: leader.player.teamCode ?? '',

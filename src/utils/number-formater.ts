@@ -1,3 +1,31 @@
+/**
+ * Fracción de victorias (0–1) desde ganados/perdidos.
+ * No usar `percentageWon` del backend para la UI: a veces viene mal escalado
+ * (p. ej. ya en 0–1 y se guardó /100 → ~0.01 y se muestra ".010").
+ */
+export function winFractionFromRecord(won: number, lost: number): number {
+  const w = Number(won);
+  const l = Number(lost);
+  const gp = w + l;
+  if (!Number.isFinite(w) || !Number.isFinite(l) || gp <= 0) {
+    return 0;
+  }
+  return w / gp;
+}
+
+/**
+ * Win % como en standings NBA/MLB: ".500", ".667", "1.000".
+ * numeral.js ".000" interpreta mal el 1 y muestra ".000" en lugar de "1.000".
+ */
+export function formatStandingsWinPct(pct: number): string {
+  if (!Number.isFinite(pct)) {
+    return '.000';
+  }
+  const x = Math.min(Math.max(pct, 0), 1);
+  const s = x.toFixed(3);
+  return s.startsWith('0.') ? s.slice(1) : s;
+}
+
 export const ordinalNumber = (num: number): string => {
   if (num == null) {
     return '';

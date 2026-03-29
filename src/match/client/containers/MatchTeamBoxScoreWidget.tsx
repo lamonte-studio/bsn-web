@@ -1,5 +1,10 @@
 import ShimmerLine from '@/shared/client/components/ui/ShimmerLine';
-import { useMatchTeamPlayersBoxscore } from '../hooks/matches';
+import {
+  useMatchTeamAggregateBoxscore,
+  useMatchTeamPlayersBoxscore,
+  type MatchPlayerBoxscoreFields,
+  type MatchTeamAggregateBoxscore,
+} from '../hooks/matches';
 import numeral from 'numeral';
 import Link from 'next/link';
 
@@ -9,274 +14,1020 @@ type Props = {
   usePolling?: boolean;
 };
 
-const BOXSCORE_HEADER = [
+/** # + jugador + 20 stats (Figma 1538:23603). */
+const COL_COUNT = 22;
+const STAT_COL_COUNT = 20;
+
+const STAT_HEADERS = [
   'MIN',
   'PTS',
   'FG',
   'FG%',
-  '3PT',
+  '2P',
+  '2P%',
+  '3P',
   '3P%',
   'FT',
   'FT%',
+  'OFF',
+  'DEF',
   'REB',
   'AST',
   'TO',
   'STL',
   'BLK',
   'PF',
+  'fls on',
   '+/-',
+] as const;
+
+// ---------------------------------------------------------------------------
+// TODO(remove): Placeholder box score — delete this block when done testing.
+// ---------------------------------------------------------------------------
+const USE_PLACEHOLDER_BOXSCORE_PLAYERS = false;
+
+type BoxscoreTableRow = {
+  player: {
+    providerId: string;
+    avatarUrl?: string | null;
+    name: string;
+    nickname: string;
+    shirtNumber: string;
+    playingPosition: string;
+  };
+  boxscore: MatchPlayerBoxscoreFields;
+};
+
+const _pbDefaults: MatchPlayerBoxscoreFields = {
+  minutes: 0,
+  points: 0,
+  reboundsTotal: 0,
+  offensiveRebounds: 0,
+  defensiveRebounds: 0,
+  assists: 0,
+  fieldGoalsMade: 0,
+  fieldGoalsAttempted: 0,
+  fieldGoalsPercentage: 0,
+  threePointersMade: 0,
+  threePointersAttempted: 0,
+  threePointersPercentage: 0,
+  twoPointersMade: 0,
+  twoPointersAttempted: 0,
+  twoPointersPercentage: 0,
+  freeThrowsMade: 0,
+  freeThrowsAttempted: 0,
+  freeThrowsPercentage: 0,
+  foulsPersonal: 0,
+  foulsDrawn: 0,
+  steals: 0,
+  blocks: 0,
+  turnovers: 0,
+  plusMinusPoints: 0,
+};
+
+function pb(over: Partial<MatchPlayerBoxscoreFields>): MatchPlayerBoxscoreFields {
+  return { ..._pbDefaults, ...over };
+}
+
+/** Team row + estadísticas equipo (coherent with placeholder jugadores). */
+const PLACEHOLDER_TEAM_AGGREGATE: MatchTeamAggregateBoxscore = {
+  fieldGoalsMade: 38,
+  fieldGoalsAttempted: 79,
+  fieldGoalsPercentage: 38 / 79,
+  threePointersMade: 11,
+  threePointersAttempted: 28,
+  threePointersPercentage: 11 / 28,
+  freeThrowsMade: 14,
+  freeThrowsAttempted: 18,
+  freeThrowsPercentage: 14 / 18,
+  offensiveRebounds: 12,
+  defensiveRebounds: 31,
+  reboundsTotal: 43,
+  assists: 24,
+  turnovers: 13,
+  steals: 8,
+  blocks: 5,
+  foulsPersonal: 18,
+  points: 101,
+  twoPointersMade: 27,
+  twoPointersAttempted: 51,
+  twoPointersPercentage: 27 / 51,
+  pointsFromTurnover: 15,
+  pointsInThePaint: 42,
+  pointsSecondChance: 11,
+  pointsFastBreak: 9,
+  pointsFromBench: 28,
+  biggestLead: 14,
+  biggestScoringRun: 10,
+};
+
+const PLACEHOLDER_PLAYER_ROWS: BoxscoreTableRow[] = [
+  {
+    player: {
+      providerId: '__placeholder_p01__',
+      avatarUrl: null,
+      name: 'Placeholder Base',
+      nickname: 'P.Base',
+      shirtNumber: '4',
+      playingPosition: 'G',
+    },
+    boxscore: pb({
+      minutes: 34.2,
+      points: 22,
+      fieldGoalsMade: 8,
+      fieldGoalsAttempted: 15,
+      fieldGoalsPercentage: 8 / 15,
+      twoPointersMade: 5,
+      twoPointersAttempted: 9,
+      twoPointersPercentage: 5 / 9,
+      threePointersMade: 3,
+      threePointersAttempted: 6,
+      threePointersPercentage: 3 / 6,
+      freeThrowsMade: 3,
+      freeThrowsAttempted: 4,
+      freeThrowsPercentage: 3 / 4,
+      offensiveRebounds: 1,
+      defensiveRebounds: 4,
+      reboundsTotal: 5,
+      assists: 7,
+      turnovers: 2,
+      steals: 1,
+      blocks: 0,
+      foulsPersonal: 2,
+      foulsDrawn: 4,
+      plusMinusPoints: 12,
+    }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p02__',
+      avatarUrl: null,
+      name: 'Placeholder Escolta',
+      nickname: 'P.Esc',
+      shirtNumber: '7',
+      playingPosition: 'G',
+    },
+    boxscore: pb({
+      minutes: 31.5,
+      points: 18,
+      fieldGoalsMade: 6,
+      fieldGoalsAttempted: 14,
+      fieldGoalsPercentage: 6 / 14,
+      twoPointersMade: 3,
+      twoPointersAttempted: 7,
+      twoPointersPercentage: 3 / 7,
+      threePointersMade: 3,
+      threePointersAttempted: 7,
+      threePointersPercentage: 3 / 7,
+      freeThrowsMade: 3,
+      freeThrowsAttempted: 3,
+      freeThrowsPercentage: 1,
+      offensiveRebounds: 0,
+      defensiveRebounds: 3,
+      reboundsTotal: 3,
+      assists: 4,
+      turnovers: 1,
+      steals: 2,
+      blocks: 0,
+      foulsPersonal: 3,
+      foulsDrawn: 2,
+      plusMinusPoints: 5,
+    }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p03__',
+      avatarUrl: null,
+      name: 'Placeholder Alero',
+      nickname: 'P.Ale',
+      shirtNumber: '23',
+      playingPosition: 'F',
+    },
+    boxscore: pb({
+      minutes: 29.8,
+      points: 14,
+      fieldGoalsMade: 5,
+      fieldGoalsAttempted: 11,
+      fieldGoalsPercentage: 5 / 11,
+      twoPointersMade: 4,
+      twoPointersAttempted: 8,
+      twoPointersPercentage: 4 / 8,
+      threePointersMade: 1,
+      threePointersAttempted: 3,
+      threePointersPercentage: 1 / 3,
+      freeThrowsMade: 3,
+      freeThrowsAttempted: 4,
+      freeThrowsPercentage: 3 / 4,
+      offensiveRebounds: 2,
+      defensiveRebounds: 6,
+      reboundsTotal: 8,
+      assists: 2,
+      turnovers: 2,
+      steals: 1,
+      blocks: 1,
+      foulsPersonal: 2,
+      foulsDrawn: 1,
+      plusMinusPoints: 3,
+    }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p04__',
+      avatarUrl: null,
+      name: 'Placeholder Ala-pívot',
+      nickname: 'P.AP',
+      shirtNumber: '11',
+      playingPosition: 'F',
+    },
+    boxscore: pb({
+      minutes: 27.1,
+      points: 11,
+      fieldGoalsMade: 4,
+      fieldGoalsAttempted: 9,
+      fieldGoalsPercentage: 4 / 9,
+      twoPointersMade: 3,
+      twoPointersAttempted: 6,
+      twoPointersPercentage: 3 / 6,
+      threePointersMade: 1,
+      threePointersAttempted: 3,
+      threePointersPercentage: 1 / 3,
+      freeThrowsMade: 2,
+      freeThrowsAttempted: 2,
+      freeThrowsPercentage: 1,
+      offensiveRebounds: 3,
+      defensiveRebounds: 5,
+      reboundsTotal: 8,
+      assists: 3,
+      turnovers: 1,
+      steals: 0,
+      blocks: 2,
+      foulsPersonal: 4,
+      foulsDrawn: 0,
+      plusMinusPoints: -2,
+    }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p05__',
+      avatarUrl: null,
+      name: 'Placeholder Pívot',
+      nickname: 'P.Pív',
+      shirtNumber: '33',
+      playingPosition: 'C',
+    },
+    boxscore: pb({
+      minutes: 24.6,
+      points: 9,
+      fieldGoalsMade: 4,
+      fieldGoalsAttempted: 7,
+      fieldGoalsPercentage: 4 / 7,
+      twoPointersMade: 4,
+      twoPointersAttempted: 7,
+      twoPointersPercentage: 4 / 7,
+      threePointersMade: 0,
+      threePointersAttempted: 0,
+      threePointersPercentage: 0,
+      freeThrowsMade: 1,
+      freeThrowsAttempted: 2,
+      freeThrowsPercentage: 1 / 2,
+      offensiveRebounds: 4,
+      defensiveRebounds: 7,
+      reboundsTotal: 11,
+      assists: 1,
+      turnovers: 2,
+      steals: 0,
+      blocks: 3,
+      foulsPersonal: 3,
+      foulsDrawn: 2,
+      plusMinusPoints: 1,
+    }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p06__',
+      avatarUrl: null,
+      name: 'Placeholder Banca 1',
+      nickname: 'P.B1',
+      shirtNumber: '2',
+      playingPosition: 'G',
+    },
+    boxscore: pb({
+      minutes: 16.4,
+      points: 10,
+      fieldGoalsMade: 4,
+      fieldGoalsAttempted: 8,
+      fieldGoalsPercentage: 4 / 8,
+      twoPointersMade: 2,
+      twoPointersAttempted: 4,
+      twoPointersPercentage: 2 / 4,
+      threePointersMade: 2,
+      threePointersAttempted: 4,
+      threePointersPercentage: 2 / 4,
+      freeThrowsMade: 0,
+      freeThrowsAttempted: 0,
+      freeThrowsPercentage: 0,
+      offensiveRebounds: 0,
+      defensiveRebounds: 2,
+      reboundsTotal: 2,
+      assists: 3,
+      turnovers: 1,
+      steals: 1,
+      blocks: 0,
+      foulsPersonal: 1,
+      foulsDrawn: 1,
+      plusMinusPoints: 4,
+    }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p07__',
+      avatarUrl: null,
+      name: 'Placeholder Banca 2',
+      nickname: 'P.B2',
+      shirtNumber: '15',
+      playingPosition: 'F',
+    },
+    boxscore: pb({
+      minutes: 12.8,
+      points: 6,
+      fieldGoalsMade: 2,
+      fieldGoalsAttempted: 5,
+      fieldGoalsPercentage: 2 / 5,
+      twoPointersMade: 1,
+      twoPointersAttempted: 2,
+      twoPointersPercentage: 1 / 2,
+      threePointersMade: 1,
+      threePointersAttempted: 3,
+      threePointersPercentage: 1 / 3,
+      freeThrowsMade: 1,
+      freeThrowsAttempted: 2,
+      freeThrowsPercentage: 1 / 2,
+      offensiveRebounds: 1,
+      defensiveRebounds: 1,
+      reboundsTotal: 2,
+      assists: 0,
+      turnovers: 0,
+      steals: 0,
+      blocks: 0,
+      foulsPersonal: 2,
+      foulsDrawn: 0,
+      plusMinusPoints: -1,
+    }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p08__',
+      avatarUrl: null,
+      name: 'Placeholder Banca 3',
+      nickname: 'P.B3',
+      shirtNumber: '21',
+      playingPosition: 'C',
+    },
+    boxscore: pb({
+      minutes: 8.2,
+      points: 4,
+      fieldGoalsMade: 2,
+      fieldGoalsAttempted: 3,
+      fieldGoalsPercentage: 2 / 3,
+      twoPointersMade: 2,
+      twoPointersAttempted: 3,
+      twoPointersPercentage: 2 / 3,
+      threePointersMade: 0,
+      threePointersAttempted: 0,
+      threePointersPercentage: 0,
+      freeThrowsMade: 0,
+      freeThrowsAttempted: 0,
+      freeThrowsPercentage: 0,
+      offensiveRebounds: 1,
+      defensiveRebounds: 3,
+      reboundsTotal: 4,
+      assists: 1,
+      turnovers: 1,
+      steals: 0,
+      blocks: 1,
+      foulsPersonal: 1,
+      foulsDrawn: 1,
+      plusMinusPoints: 0,
+    }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p09__',
+      avatarUrl: null,
+      name: 'Placeholder DNP 1',
+      nickname: 'P.D1',
+      shirtNumber: '9',
+      playingPosition: 'G',
+    },
+    boxscore: pb({ minutes: 0 }),
+  },
+  {
+    player: {
+      providerId: '__placeholder_p10__',
+      avatarUrl: null,
+      name: 'Placeholder DNP 2',
+      nickname: 'P.D2',
+      shirtNumber: '14',
+      playingPosition: 'F',
+    },
+    boxscore: pb({ minutes: 0 }),
+  },
 ];
+// ---------------------------------------------------------------------------
+// End TODO(remove) placeholder block
+// ---------------------------------------------------------------------------
+
+type BoxscoreTwoPointFields = Pick<
+  MatchPlayerBoxscoreFields,
+  | 'twoPointersMade'
+  | 'twoPointersAttempted'
+  | 'twoPointersPercentage'
+  | 'fieldGoalsMade'
+  | 'fieldGoalsAttempted'
+  | 'threePointersMade'
+  | 'threePointersAttempted'
+>;
+
+function effectiveTwoPointLine(b: BoxscoreTwoPointFields) {
+  const made =
+    b.twoPointersMade ||
+    Math.max(0, b.fieldGoalsMade - b.threePointersMade);
+  const att =
+    b.twoPointersAttempted ||
+    Math.max(0, b.fieldGoalsAttempted - b.threePointersAttempted);
+  const pct =
+    att > 0 ? made / att : b.twoPointersPercentage || 0;
+  return { made, att, pct };
+}
+
+/** Figma: minutos como `20:57` (decimal de minutos → mm:ss). */
+function fmtMinutesPlayed(minutes: number): string {
+  if (!Number.isFinite(minutes) || minutes <= 0) {
+    return '0:00';
+  }
+  const totalSec = Math.round(minutes * 60);
+  const mm = Math.floor(totalSec / 60);
+  const ss = totalSec % 60;
+  return `${mm}:${ss.toString().padStart(2, '0')}`;
+}
+
+/** Nombre corto tipo `D. Galinari` (misma línea que Figma). */
+function formatAbbrevPlayerName(fullName: string): string {
+  const t = fullName.trim();
+  if (!t) {
+    return '';
+  }
+  const parts = t.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) {
+    return parts[0];
+  }
+  const first = parts[0];
+  const last = parts[parts.length - 1];
+  const initial = first[0]?.toUpperCase() ?? '';
+  return `${initial}. ${last}`;
+}
+
+function fmtMadeAtt(made: number, att: number): string {
+  const m = Number.isFinite(made) ? made : 0;
+  const a = Number.isFinite(att) ? att : 0;
+  return `${numeral(m).format('0')}-${numeral(a).format('0')}`;
+}
+
+/** Porcentajes en celdas: solo entero (el `%` va solo en cabeceras; Figma). */
+function fmtPctInt(ratio: number, attempts: number): string {
+  if (!Number.isFinite(attempts) || attempts <= 0) {
+    return '0';
+  }
+  return String(Math.round((Number.isFinite(ratio) ? ratio : 0) * 100));
+}
+
+function fmtPlusMinus(n: number): string {
+  if (!Number.isFinite(n)) {
+    return '0';
+  }
+  if (n > 0) {
+    return `+${numeral(n).format('0')}`;
+  }
+  return numeral(n).format('0');
+}
+
+function jerseyDisplay(shirtNumber: string | undefined | null): string {
+  const s = shirtNumber?.trim();
+  return s && s.length > 0 ? s : '0';
+}
+
+/** Figma: filas de jugador sobre blanco; solo líneas horizontales. */
+function dataRowBg(): string {
+  return '#ffffff';
+}
+
+const TOTALS_ROW_BG = 'rgba(239, 239, 239, 0.9)';
+
+const tableBorder = 'border-[rgba(0,0,0,0.1)]';
+
+const statHeaderClass =
+  'font-special-gothic-condensed-one text-[13px] font-normal uppercase leading-[1.4] tracking-[1.17px] text-[rgba(0,0,0,0.8)]';
+
+const statBodyText =
+  'font-barlow text-[13px] font-normal leading-[1.4] tracking-[0.26px] text-black';
+
+/** Filas jugador: alto 42.5px (capa Figma); padding ~9px respecto al marco. */
+const rowCell = `h-[42.5px] min-h-[42.5px] align-middle border-b ${tableBorder} px-[9px] py-0 box-border bg-white`;
+
+const theadCell = `h-[42.5px] min-h-[42.5px] align-middle border-b ${tableBorder} bg-[rgba(247,247,247,0.9)] px-[9px] py-0`;
+
+const totalsRowCell = `h-[44px] min-h-[44px] align-middle border-b ${tableBorder} px-[9px] py-0 box-border`;
+
+const sectionLabelRow =
+  `border-b ${tableBorder} bg-white text-left align-bottom px-[9px] pt-5 pb-2`;
+
+function PlayerStatCells({
+  b,
+  bg,
+}: {
+  b: MatchPlayerBoxscoreFields;
+  bg: string;
+}) {
+  const two = effectiveTwoPointLine(b);
+  const cell = `${rowCell} text-center`;
+  const fgAtt = b.fieldGoalsAttempted ?? 0;
+  const tpAtt = b.threePointersAttempted ?? 0;
+  const ftAtt = b.freeThrowsAttempted ?? 0;
+  return (
+    <>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={`${statBodyText} tabular-nums whitespace-nowrap`}>
+          {fmtMinutesPlayed(b.minutes)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={`${statBodyText} tabular-nums`}>
+          {numeral(b.points ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {fmtMadeAtt(b.fieldGoalsMade, b.fieldGoalsAttempted)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {fmtPctInt(b.fieldGoalsPercentage, fgAtt)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {fmtMadeAtt(two.made, two.att)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {fmtPctInt(two.pct, two.att)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {fmtMadeAtt(b.threePointersMade, b.threePointersAttempted)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {fmtPctInt(b.threePointersPercentage, tpAtt)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {fmtMadeAtt(b.freeThrowsMade, b.freeThrowsAttempted)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {fmtPctInt(b.freeThrowsPercentage, ftAtt)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {numeral(b.offensiveRebounds ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {numeral(b.defensiveRebounds ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {numeral(b.reboundsTotal ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {numeral(b.assists ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {numeral(b.turnovers ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {numeral(b.steals ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {numeral(b.blocks ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={statBodyText}>
+          {numeral(b.foulsPersonal ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={`${statBodyText} text-[rgba(0,0,0,0.7)]`}>
+          {numeral(b.foulsDrawn ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={`${statBodyText} text-[rgba(0,0,0,0.7)] tabular-nums`}>
+          {fmtPlusMinus(b.plusMinusPoints ?? 0)}
+        </span>
+      </td>
+    </>
+  );
+}
+
+function TotalsStatCells({
+  t,
+  bg,
+}: {
+  t: MatchTeamAggregateBoxscore;
+  bg: string;
+}) {
+  const cell = `${totalsRowCell} text-center font-semibold`;
+  const totalsText = `${statBodyText} font-semibold`;
+  const two = effectiveTwoPointLine(t);
+  const fgAtt = t.fieldGoalsAttempted ?? 0;
+  const tpAtt = t.threePointersAttempted ?? 0;
+  const ftAtt = t.freeThrowsAttempted ?? 0;
+  return (
+    <>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>0</span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={`${totalsText} tabular-nums`}>
+          {numeral(t.points ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {fmtMadeAtt(t.fieldGoalsMade, t.fieldGoalsAttempted)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {fmtPctInt(t.fieldGoalsPercentage, fgAtt)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {fmtMadeAtt(two.made, two.att)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {fmtPctInt(two.pct, two.att)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {fmtMadeAtt(t.threePointersMade, t.threePointersAttempted)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {fmtPctInt(t.threePointersPercentage, tpAtt)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {fmtMadeAtt(t.freeThrowsMade, t.freeThrowsAttempted)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {fmtPctInt(t.freeThrowsPercentage, ftAtt)}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {numeral(t.offensiveRebounds ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {numeral(t.defensiveRebounds ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {numeral(t.reboundsTotal ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {numeral(t.assists ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {numeral(t.turnovers ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {numeral(t.steals ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {numeral(t.blocks ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={totalsText}>
+          {numeral(t.foulsPersonal ?? 0).format('0')}
+        </span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={`${totalsText} text-[rgba(0,0,0,0.7)]`}>0</span>
+      </td>
+      <td className={cell} style={{ backgroundColor: bg }}>
+        <span className={`${totalsText} text-[rgba(0,0,0,0.7)] tabular-nums`}>
+          0
+        </span>
+      </td>
+    </>
+  );
+}
+
+function TeamStatsStrip({ team }: { team: MatchTeamAggregateBoxscore }) {
+  const cards: { label: string; value: number }[] = [
+    { label: 'Puntos de pérdidas', value: team.pointsFromTurnover },
+    { label: 'Puntos en la pintura', value: team.pointsInThePaint },
+    { label: 'Second chance points', value: team.pointsSecondChance },
+    { label: 'Fast break points', value: team.pointsFastBreak },
+    { label: 'Puntos de la banca', value: team.pointsFromBench },
+    { label: 'Mayor ventaja', value: team.biggestLead },
+    { label: 'Mayor corrida', value: team.biggestScoringRun },
+  ];
+
+  return (
+    <div className="mt-8 px-1">
+      <h4 className="mb-4 text-left font-special-gothic-condensed-one text-[13px] font-normal uppercase leading-[1.4] tracking-[1.17px] text-[rgba(0,0,0,0.7)]">
+        Estadísticas equipo
+      </h4>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7">
+        {cards.map(({ label, value }) => (
+          <div
+            key={label}
+            className="rounded-[12px] border border-[rgba(0,0,0,0.1)] border-solid bg-[rgba(213,213,213,0.1)] px-4 py-4 text-left"
+          >
+            <p className="font-barlow-condensed text-[16px] font-normal leading-[1.2] tracking-[0.16px] text-[rgba(0,0,0,0.7)]">
+              {label}
+            </p>
+            <p className="mt-2 font-special-gothic-condensed-one text-[27px] font-normal leading-[25px] tracking-[0.27px] text-[rgba(0,0,0,0.8)] tabular-nums">
+              {numeral(value).format('0')}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function MatchTeamBoxScoreWidget({
   matchProviderId,
   teamProviderId,
   usePolling = false,
 }: Props) {
-  const { data, loading } = useMatchTeamPlayersBoxscore(
+  const { data, loading: playersLoading } = useMatchTeamPlayersBoxscore(
     matchProviderId,
     teamProviderId,
-    usePolling
+    usePolling,
   );
+  const { teamBox } = useMatchTeamAggregateBoxscore(
+    matchProviderId,
+    teamProviderId,
+    usePolling,
+  );
+
+  const tableRows: BoxscoreTableRow[] = USE_PLACEHOLDER_BOXSCORE_PLAYERS
+    ? PLACEHOLDER_PLAYER_ROWS
+    : data;
+  const aggregateForTotals: MatchTeamAggregateBoxscore | null =
+    USE_PLACEHOLDER_BOXSCORE_PLAYERS ? PLACEHOLDER_TEAM_AGGREGATE : teamBox;
+
+  const loading =
+    !USE_PLACEHOLDER_BOXSCORE_PLAYERS && playersLoading;
 
   if (loading) {
     return (
-      <div className="space-y-1">
-        <ShimmerLine height="40px" />
-        <ShimmerLine height="40px" />
-        <ShimmerLine height="40px" />
-        <ShimmerLine height="40px" />
-        <ShimmerLine height="40px" />
-        <ShimmerLine height="40px" />
+      <div className="space-y-0">
+        {Array.from({ length: 8 }, (_, i) => (
+          <ShimmerLine key={i} height="42.5px" />
+        ))}
       </div>
     );
   }
 
+  const sorted = [...tableRows].sort(
+    (a, b) => Number(b.boxscore.minutes) - Number(a.boxscore.minutes),
+  );
+  const played = sorted.filter((r) => Number(r.boxscore.minutes) > 0);
+  /** `persons` stream: iniciales en todo el roster (puede haber titular con 0 min). */
+  const streamMarkedStarters = tableRows.some(
+    (r) => r.boxscore.isStarter === true,
+  );
+  const starterIds = new Set<string>();
+  if (streamMarkedStarters) {
+    for (const r of tableRows) {
+      if (r.boxscore.isStarter === true) {
+        starterIds.add(r.player.providerId);
+      }
+    }
+  } else {
+    for (const r of played.slice(0, 5)) {
+      starterIds.add(r.player.providerId);
+    }
+  }
+  /** Iniciales y banca cubren el roster: banca = quien no es inicial. */
+  const starters = sorted.filter((r) => starterIds.has(r.player.providerId));
+  const bench = sorted.filter((r) => !starterIds.has(r.player.providerId));
+
+  let rowIndex = 0;
+
+  const renderSectionLabel = (title: string, tone: 'primary' | 'muted' = 'primary') => (
+    <tr key={`label-${title}`}>
+      <td
+        className={`${sectionLabelRow} w-[15px] max-w-[15px]`}
+        aria-hidden
+      />
+      <td colSpan={COL_COUNT - 1} className={sectionLabelRow}>
+        <span
+          className={`font-special-gothic-condensed-one text-[13px] font-normal uppercase leading-[1.4] tracking-[1.17px] ${
+            tone === 'muted' ? 'text-[rgba(0,0,0,0.7)]' : 'text-[rgba(0,0,0,0.8)]'
+          }`}
+        >
+          {title}
+        </span>
+      </td>
+    </tr>
+  );
+
+  const renderDnpRow = (item: BoxscoreTableRow, key: string) => {
+    const bg = dataRowBg();
+    rowIndex += 1;
+    const displayName = formatAbbrevPlayerName(item.player.name);
+    return (
+      <tr key={key}>
+        <td
+          className={`${rowCell} w-[15px] max-w-[15px] whitespace-nowrap text-left`}
+          style={{ backgroundColor: bg }}
+        >
+          <span className="inline-block font-barlow text-[13px] leading-none text-[rgba(0,0,0,0.6)]">
+            {jerseyDisplay(item.player.shirtNumber)}
+          </span>
+        </td>
+        <td className={`${rowCell} min-w-0 max-w-[220px] text-left`} style={{ backgroundColor: bg }}>
+          <div className="flex h-[22px] min-w-0 max-w-[200px] items-center">
+            <Link
+              href={`/jugadores/${item.player.providerId}`}
+              className="min-w-0 shrink truncate font-special-gothic-condensed-one text-[15px] font-semibold leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.8)]"
+              title={item.player.name}
+            >
+              {displayName}
+            </Link>
+          </div>
+        </td>
+        <td
+          colSpan={STAT_COL_COUNT}
+          className={`${rowCell} text-left`}
+          style={{ backgroundColor: bg }}
+        >
+          <span className="font-barlow text-[13px] font-normal leading-[1.4] tracking-[0.26px] text-[rgba(0,0,0,0.45)]">
+            DNP
+          </span>
+        </td>
+      </tr>
+    );
+  };
+
+  const renderPlayerRow = (item: BoxscoreTableRow, key: string) => {
+    const bg = dataRowBg();
+    rowIndex += 1;
+    const b = item.boxscore;
+    const pos = (item.player.playingPosition ?? '').trim();
+    const displayName = formatAbbrevPlayerName(item.player.name);
+    return (
+      <tr key={key}>
+        <td
+          className={`${rowCell} w-[15px] max-w-[15px] whitespace-nowrap text-left`}
+          style={{ backgroundColor: bg }}
+        >
+          <span className="inline-block font-barlow text-[13px] leading-none text-[rgba(0,0,0,0.6)]">
+            {jerseyDisplay(item.player.shirtNumber)}
+          </span>
+        </td>
+        <td className={`${rowCell} min-w-0 max-w-[220px] text-left`} style={{ backgroundColor: bg }}>
+          <div className="flex h-[22px] min-w-0 max-w-[200px] items-center gap-[7px]">
+            <Link
+              href={`/jugadores/${item.player.providerId}`}
+              className="min-w-0 shrink truncate font-special-gothic-condensed-one text-[15px] font-semibold leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.8)]"
+              title={item.player.name}
+            >
+              {displayName}
+            </Link>
+            {pos ? (
+              <span className="shrink-0 font-barlow text-[13px] font-normal leading-none text-[rgba(0,0,0,0.7)]">
+                {pos}
+              </span>
+            ) : null}
+          </div>
+        </td>
+        <PlayerStatCells b={b} bg={bg} />
+      </tr>
+    );
+  };
+
+  const totalsBg = TOTALS_ROW_BG;
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-left">
+      <table className="w-full min-w-[1100px] border-collapse text-left">
         <thead>
           <tr>
-            <th className="border-b border-b-[rgba(0,0,0,0.07)] px-3 py-2 text-center whitespace-nowrap w-[1%]">
-              <span className="text-[13px] text-[rgba(0,0,0,0.6)]">#</span>
+            <th className={`${theadCell} w-[15px] max-w-[15px] whitespace-nowrap text-left`}>
+              <span className={statHeaderClass}>#</span>
             </th>
-            <th className="border-b border-b-[rgba(0,0,0,0.07)] px-3 py-2">
-              <span className="font-normal text-[13px] text-[rgba(0,0,0,0.6)]">
-                JUGADOR
-              </span>
+            <th className={`${theadCell} text-left`}>
+              <span className={statHeaderClass}>Jugador</span>
             </th>
-            {BOXSCORE_HEADER.map((header) => (
-              <th
-                key={header}
-                className="border-b border-b-[rgba(0,0,0,0.07)] px-3 py-2 text-center"
-              >
-                <span className="font-normal text-[13px] text-[rgba(0,0,0,0.6)]">
-                  {header}
-                </span>
+            {STAT_HEADERS.map((header) => (
+              <th key={header} className={`${theadCell} whitespace-nowrap text-center`}>
+                <span className={statHeaderClass}>{header}</span>
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
-            <tr key={item.player.providerId}>
-              <td
-                className="px-3 py-2 text-center whitespace-nowrap w-[1%]"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                  borderTopLeftRadius: '8px',
-                  borderBottomLeftRadius: '8px',
-                }}
-              >
-                <span className="font-barlow text-[13px] text-[rgba(0,0,0,0.6)]">
-                  {item.player.shirtNumber || '-'}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <div className="w-[124px]">
-                  <Link href={`/jugadores/${item.player.providerId}`}>
-                    <span className="text-base">{item.player.name}</span>
-                    <span className="font-barlow text-[13px] text-[rgba(0,0,0,0.7)] ml-2">
-                      {item.player.playingPosition}
-                    </span>
-                  </Link>
-                </div>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">{numeral(item.boxscore.minutes).format('0.0')}</span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">{numeral(item.boxscore.points).format('0')}</span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.fieldGoalsMade).format('0')}/{numeral(item.boxscore.fieldGoalsAttempted).format('0')}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.fieldGoalsPercentage).format('0.0%')}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.threePointersMade).format('0')}/{numeral(item.boxscore.threePointersAttempted).format('0')}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.threePointersPercentage).format('0.0%')}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.freeThrowsMade).format('0')}/{numeral(item.boxscore.freeThrowsAttempted).format('0')}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.freeThrowsPercentage).format('0.0%')}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">{numeral(item.boxscore.reboundsTotal).format('0')}</span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">{numeral(item.boxscore.assists).format('0')}</span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.turnovers).format('0')}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">{numeral(item.boxscore.steals).format('0')}</span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">{numeral(item.boxscore.blocks).format('0')}</span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.foulsPersonal).format('0')}
-                </span>
-              </td>
-              <td
-                className="px-3 py-2 text-center"
-                style={{
-                  backgroundColor:
-                    index % 2 == 0 ? 'transparent' : 'rgba(247, 247, 247, 0.7)',
-                  borderTopRightRadius: '8px',
-                  borderBottomRightRadius: '8px',
-                }}
-              >
-                <span className="font-barlow text-[13px]">
-                  {numeral(item.boxscore.plusMinusPoints).format('0')}
-                </span>
-              </td>
-            </tr>
-          ))}
-          {data.length === 0 && (
+          {starters.length > 0 && (
+            <>
+              {renderSectionLabel('Iniciales')}
+              {starters.map((item) =>
+                Number(item.boxscore.minutes) <= 0
+                  ? renderDnpRow(item, `starter-dnp-${item.player.providerId}`)
+                  : renderPlayerRow(item, item.player.providerId),
+              )}
+            </>
+          )}
+          {bench.length > 0 && (
+            <>
+              {renderSectionLabel('Banca', 'muted')}
+              {bench.map((item) =>
+                Number(item.boxscore.minutes) <= 0
+                  ? renderDnpRow(item, `bench-dnp-${item.player.providerId}`)
+                  : renderPlayerRow(item, `bench-${item.player.providerId}`),
+              )}
+            </>
+          )}
+          {tableRows.length === 0 && (
             <tr>
-              <td
-                className="px-3 py-2 text-center"
-                colSpan={BOXSCORE_HEADER.length + 2}
-              >
+              <td className="px-3 py-4 text-center" colSpan={COL_COUNT}>
                 No hay datos disponibles.
               </td>
             </tr>
           )}
+          {aggregateForTotals && tableRows.length > 0 && (
+            <tr>
+              <td
+                className={`${totalsRowCell} text-left font-semibold`}
+                style={{ backgroundColor: totalsBg }}
+                colSpan={2}
+              >
+                <span className="font-special-gothic-condensed-one text-[13px] font-semibold uppercase leading-[1.4] tracking-[1.17px] text-[rgba(0,0,0,0.8)]">
+                  Totales equipo
+                </span>
+              </td>
+              <TotalsStatCells t={aggregateForTotals} bg={totalsBg} />
+            </tr>
+          )}
         </tbody>
       </table>
+      {aggregateForTotals ? <TeamStatsStrip team={aggregateForTotals} /> : null}
     </div>
   );
 }

@@ -10,17 +10,22 @@ import {
   MATCH_LEADERS_STATS,
   SEASON_TEAM_LEADER_PLAYER_STATS,
 } from '@/graphql/stats';
-import { TEAM_DETAIL } from '@/graphql/team';
+import { TEAM_DETAIL, TEAM_STATS } from '@/graphql/team';
 import CompletedMatchPage from '@/match/client/components/page/CompletedMatchPage';
 import LiveMatchPage from '@/match/client/components/page/LiveMatchPage';
 import ScheduledMatchPage from '@/match/client/components/page/ScheduledMatchPage';
 import { MatchType } from '@/match/types';
 import {
   isCompletedMatchForUi,
+  isDevForcedLiveMatchPage,
   isLiveMatchPageStatus,
   isScheduledMatchPageStatus,
   shouldUseLiveMatchPageLayout,
 } from '@/match/utils/matchStatus';
+import {
+  SEASON_TEAM_LEADERS_CONNECTION_FIRST,
+  SEASON_TEAM_LEADERS_DISPLAY_TOP,
+} from '@/constants';
 
 /*
  * Página de detalle de partido: el layout (live / finalizado / programado) y los datos extra
@@ -31,7 +36,7 @@ import {
 type LeadersCategoryStatsType = {
   player: {
     providerId: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     name: string;
   };
   value: number;
@@ -41,7 +46,7 @@ type MatchPlayerBoxScore = {
   player: {
     providerId: string;
     name: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     teamCode?: string;
     team?: {
       code: string;
@@ -58,24 +63,19 @@ type MatchPlayerBoxScore = {
   };
 };
 
+type MatchTeamComparisonBox = {
+  points: number;
+  rebounds: number;
+  assists: number;
+  steals: number;
+  blocks: number;
+  turnovers: number;
+};
+
 type MatchResponse = {
   match: MatchType;
-  homeTeamBoxScore: {
-    points: number;
-    rebounds: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    turnovers: number;
-  };
-  visitorTeamBoxScore: {
-    points: number;
-    rebounds: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    turnovers: number;
-  };
+  homeTeamBoxScore: MatchTeamComparisonBox;
+  visitorTeamBoxScore: MatchTeamComparisonBox;
   homeTeamPointsLeaders: LeadersCategoryStatsType[];
   homeTeamAssistsLeaders: LeadersCategoryStatsType[];
   homeTeamReboundsLeaders: LeadersCategoryStatsType[];
@@ -144,6 +144,34 @@ type TeamDetailStandingsResponse = {
   };
 };
 
+type TeamSeasonStatsPerGameForComparison = {
+  pointsAverage: number;
+  reboundsTotalAverage: number;
+  assistsAverage: number;
+  stealsAverage: number;
+  blocksAverage: number;
+  turnoversAverage: number;
+};
+
+type TeamStatsForComparisonResponse = {
+  team?: {
+    seasonStats?: TeamSeasonStatsPerGameForComparison;
+  };
+};
+
+function teamSeasonPerGameAveragesForScheduledComparison(
+  stats: TeamSeasonStatsPerGameForComparison | undefined,
+): MatchTeamComparisonBox {
+  return {
+    points: Number(stats?.pointsAverage ?? 0),
+    rebounds: Number(stats?.reboundsTotalAverage ?? 0),
+    assists: Number(stats?.assistsAverage ?? 0),
+    steals: Number(stats?.stealsAverage ?? 0),
+    blocks: Number(stats?.blocksAverage ?? 0),
+    turnovers: Number(stats?.turnoversAverage ?? 0),
+  };
+}
+
 type HeadToHeadMatchesResponse = {
   headToHeadMatchesConnection: {
     edges: {
@@ -188,6 +216,8 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
     throw new Error('Match not found');
   }
 
+  const devForceLive = isDevForcedLiveMatchPage(matchProviderId);
+
   const response: MatchResponse = {
     match,
     homeTeamBoxScore: {
@@ -224,7 +254,9 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
   };
 
   // Totales de equipo (boxscore agregado): aplica a en vivo, pre-partido y otros estados listados.
+  // `devForceLive`: fixture finalizado en API pero vista live local → también cargar agregados.
   if (
+    devForceLive ||
     [
       MATCH_STATUS.IN_PROGRESS,
       MATCH_STATUS.PERIOD_BREAK,
@@ -277,18 +309,40 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
   }
 
   // Programado o reprogramado: W–L desde `team`, cara a cara, líderes de TEMPORADA por equipo (no del juego).
-  if (isScheduledMatchPageStatus(match.status, match.providerFixtureStatus)) {
-    const [{ data: homeTeamDetail }, { data: visitorTeamDetail }] =
-      await Promise.all([
-        getClient().query<TeamDetailStandingsResponse>({
-          query: TEAM_DETAIL,
-          variables: { code: match.homeTeam.code },
-        }),
-        getClient().query<TeamDetailStandingsResponse>({
-          query: TEAM_DETAIL,
-          variables: { code: match.visitorTeam.code },
-        }),
-      ]);
+  if (
+    !devForceLive &&
+    isScheduledMatchPageStatus(match.status, match.providerFixtureStatus)
+  ) {
+    const [
+      { data: homeTeamDetail },
+      { data: visitorTeamDetail },
+      { data: homeTeamStatsData },
+      { data: visitorTeamStatsData },
+    ] = await Promise.all([
+      getClient().query<TeamDetailStandingsResponse>({
+        query: TEAM_DETAIL,
+        variables: { code: match.homeTeam.code },
+      }),
+      getClient().query<TeamDetailStandingsResponse>({
+        query: TEAM_DETAIL,
+        variables: { code: match.visitorTeam.code },
+      }),
+      getClient().query<TeamStatsForComparisonResponse>({
+        query: TEAM_STATS,
+        variables: { code: match.homeTeam.code },
+      }),
+      getClient().query<TeamStatsForComparisonResponse>({
+        query: TEAM_STATS,
+        variables: { code: match.visitorTeam.code },
+      }),
+    ]);
+
+    response.homeTeamBoxScore = teamSeasonPerGameAveragesForScheduledComparison(
+      homeTeamStatsData?.team?.seasonStats,
+    );
+    response.visitorTeamBoxScore = teamSeasonPerGameAveragesForScheduledComparison(
+      visitorTeamStatsData?.team?.seasonStats,
+    );
 
     const homeFromTeam = homeTeamDetail?.team?.competitionStandings;
     const visitorFromTeam = visitorTeamDetail?.team?.competitionStandings;
@@ -328,45 +382,64 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
         (edge) => edge.node,
       ) ?? [];
 
-    const { data: matchHomeTeamLeadersData } =
-      await getClient().query<MatchTeamLeadersResponse>({
-        query: SEASON_TEAM_LEADER_PLAYER_STATS,
-        variables: { teamCode: match.homeTeam.code, first: 3 },
-      });
+    const [{ data: matchHomeTeamLeadersData }, { data: matchVisitorTeamLeadersData }] =
+      await Promise.all([
+        getClient().query<MatchTeamLeadersResponse>({
+          query: SEASON_TEAM_LEADER_PLAYER_STATS,
+          variables: {
+            teamCode: match.homeTeam.code,
+            first: SEASON_TEAM_LEADERS_CONNECTION_FIRST,
+          },
+        }),
+        getClient().query<MatchTeamLeadersResponse>({
+          query: SEASON_TEAM_LEADER_PLAYER_STATS,
+          variables: {
+            teamCode: match.visitorTeam.code,
+            first: SEASON_TEAM_LEADERS_CONNECTION_FIRST,
+          },
+        }),
+      ]);
 
-    response.homeTeamPointsLeaders =
-      matchHomeTeamLeadersData?.pointsLeaders.edges.map((edge) => edge.node) ??
-      [];
-    response.homeTeamAssistsLeaders =
-      matchHomeTeamLeadersData?.assistsLeaders.edges.map((edge) => edge.node) ??
-      [];
-    response.homeTeamReboundsLeaders =
-      matchHomeTeamLeadersData?.reboundsLeaders.edges.map(
-        (edge) => edge.node,
-      ) ?? [];
+    const top = SEASON_TEAM_LEADERS_DISPLAY_TOP;
 
-    const { data: matchVisitorTeamLeadersData } =
-      await getClient().query<MatchTeamLeadersResponse>({
-        query: SEASON_TEAM_LEADER_PLAYER_STATS,
-        variables: { teamCode: match.visitorTeam.code, first: 3 },
-      });
+    response.homeTeamPointsLeaders = (
+      matchHomeTeamLeadersData?.pointsLeaders.edges ?? []
+    )
+      .slice(0, top)
+      .map((edge) => edge.node);
+    response.homeTeamAssistsLeaders = (
+      matchHomeTeamLeadersData?.assistsLeaders.edges ?? []
+    )
+      .slice(0, top)
+      .map((edge) => edge.node);
+    response.homeTeamReboundsLeaders = (
+      matchHomeTeamLeadersData?.reboundsLeaders.edges ?? []
+    )
+      .slice(0, top)
+      .map((edge) => edge.node);
 
-    response.visitorTeamPointsLeaders =
-      matchVisitorTeamLeadersData?.pointsLeaders.edges.map(
-        (edge) => edge.node,
-      ) ?? [];
-    response.visitorTeamAssistsLeaders =
-      matchVisitorTeamLeadersData?.assistsLeaders.edges.map(
-        (edge) => edge.node,
-      ) ?? [];
-    response.visitorTeamReboundsLeaders =
-      matchVisitorTeamLeadersData?.reboundsLeaders.edges.map(
-        (edge) => edge.node,
-      ) ?? [];
+    response.visitorTeamPointsLeaders = (
+      matchVisitorTeamLeadersData?.pointsLeaders.edges ?? []
+    )
+      .slice(0, top)
+      .map((edge) => edge.node);
+    response.visitorTeamAssistsLeaders = (
+      matchVisitorTeamLeadersData?.assistsLeaders.edges ?? []
+    )
+      .slice(0, top)
+      .map((edge) => edge.node);
+    response.visitorTeamReboundsLeaders = (
+      matchVisitorTeamLeadersData?.reboundsLeaders.edges ?? []
+    )
+      .slice(0, top)
+      .map((edge) => edge.node);
   }
 
   // Partido cerrado: parciales + líderes del JUEGO (`matchLeadersConnection` por `matchProviderId`).
-  if (isCompletedMatchForUi(match.status, match.providerFixtureStatus)) {
+  if (
+    !devForceLive &&
+    isCompletedMatchForUi(match.status, match.providerFixtureStatus)
+  ) {
     const { data: matchPeriodsBoxScoreData } =
       await getClient().query<MatchPeriodsBoxScoreResponse>({
         query: MATCH_PERIODS_BOXSCORE,
@@ -411,7 +484,10 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
       matchLeadersStatsData?.threePointersMadeLeaders.edges.map(
         (edge) => edge.node,
       ) ?? [];
-  } else if (isLiveMatchPageStatus(match.status, match.providerFixtureStatus)) {
+  } else if (
+    devForceLive ||
+    isLiveMatchPageStatus(match.status, match.providerFixtureStatus)
+  ) {
     // En vivo: mismos líderes con scope de partido que al finalizar (no líderes de liga ni solo un equipo).
     const { data: matchLeadersStatsData } =
       await getClient().query<MatchLeadersStatsResponse>({
@@ -464,10 +540,11 @@ export default async function PartidoPage({
         />
       )}
       {/* Partido cerrado: mismo criterio que `!shouldUseLiveMatchPageLayout` cuando no es programado. */}
-      {isCompletedMatchForUi(
-        data.match.status,
-        data.match.providerFixtureStatus,
-      ) && (
+      {!isDevForcedLiveMatchPage(data.match.providerId) &&
+        isCompletedMatchForUi(
+          data.match.status,
+          data.match.providerFixtureStatus,
+        ) && (
         <CompletedMatchPage
           match={data.match}
           pointsLeaders={data.pointsLeaders}
@@ -479,10 +556,11 @@ export default async function PartidoPage({
         />
       )}
       {/* SCHEDULED / RESCHEDULED y no cerrado: antes solo se cargaba preview si `status === SCHEDULED`. */}
-      {isScheduledMatchPageStatus(
-        data.match.status,
-        data.match.providerFixtureStatus,
-      ) && (
+      {!isDevForcedLiveMatchPage(data.match.providerId) &&
+        isScheduledMatchPageStatus(
+          data.match.status,
+          data.match.providerFixtureStatus,
+        ) && (
         <ScheduledMatchPage
           match={data.match}
           homeTeamBoxScore={data.homeTeamBoxScore}
