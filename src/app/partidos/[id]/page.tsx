@@ -297,7 +297,11 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
         data: MatchTeamsBoxScoreResponse | undefined;
         error: Error | undefined;
       }
-    | { kind: 'periods'; data: MatchPeriodsBoxScoreResponse | undefined }
+    | {
+        kind: 'periods';
+        data: MatchPeriodsBoxScoreResponse | undefined;
+        error: Error | undefined;
+      }
     | {
         kind: 'gameLeaders';
         data: MatchLeadersStatsResponse | undefined;
@@ -340,8 +344,25 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
         .query<MatchPeriodsBoxScoreResponse>({
           query: MATCH_PERIODS_BOXSCORE,
           variables: { geniusMatchId: 0, providerMatchId: matchProviderId },
+          errorPolicy: 'all',
         })
-        .then((r) => ({ kind: 'periods' as const, data: r.data })),
+        .then((r) => ({
+          kind: 'periods' as const,
+          data: r.data,
+          error: r.error,
+        }))
+        .catch((e) => {
+          console.error(
+            '[fetchMatch] MATCH_PERIODS_BOXSCORE request failed:',
+            matchProviderId,
+            e,
+          );
+          return {
+            kind: 'periods' as const,
+            data: undefined,
+            error: e instanceof Error ? e : new Error(String(e)),
+          };
+        }),
     );
     parallelPieces.push(
       getClient()
@@ -461,18 +482,30 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
   }
 
   if (completedUi && periodsPiece != null && periodsPiece.kind === 'periods') {
-    const matchPeriodsBoxScore = periodsPiece.data?.matchPeriods;
-    if (matchPeriodsBoxScore == null) {
+    if (periodsPiece.error) {
       console.error(
-        'No match periods boxscore data found for provider ID:',
+        '[fetchMatch] MATCH_PERIODS_BOXSCORE GraphQL error:',
+        matchProviderId,
+        periodsPiece.error,
+      );
+    }
+    const matchPeriodsBoxScore = periodsPiece.data?.matchPeriods;
+    const periods = matchPeriodsBoxScore?.periods;
+    if (periods != null && periods.length > 0) {
+      response.match = {
+        ...response.match,
+        periods,
+      };
+    } else {
+      console.warn(
+        '[fetchMatch] matchPeriods missing or empty; rendering completed match without quarter rows',
         matchProviderId,
       );
-      throw new Error('Match periods boxscore not found');
+      response.match = {
+        ...response.match,
+        periods: [],
+      };
     }
-    response.match = {
-      ...response.match,
-      periods: matchPeriodsBoxScore.periods,
-    };
   }
 
   if (
