@@ -922,6 +922,13 @@ function TeamStatsStrip({ team }: { team: MatchTeamAggregateBoxscore }) {
     { label: 'Mayor parcial', value: team.biggestScoringRun },
   ];
 
+  const hasExtendedStats = cards.some(
+    ({ value }) => Number.isFinite(value) && value !== 0,
+  );
+  if (!hasExtendedStats) {
+    return null;
+  }
+
   return (
     <div className="mt-8 px-1">
       <h4 className="mb-4 text-left font-special-gothic-condensed-one text-[13px] font-normal uppercase leading-[1.4] tracking-[1.17px] text-[rgba(0,0,0,0.7)]">
