@@ -3,6 +3,7 @@
 import { MatchType } from '@/match/types';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import MatchQuarterScoreBoard from '@/match/components/scoreboard/MatchQuarterScoreBoard';
+import { useMatchBothTeamsPlayersBoxscore } from '../hooks/matches';
 import MatchTeamBoxScoreWidget from './MatchTeamBoxScoreWidget';
 
 type Props = {
@@ -12,6 +13,14 @@ type Props = {
 };
 
 export default function MatchBoxScoreWidget({ match, usePolling = false }: Props) {
+  const { visitorPlayers, homePlayers, loading: batchedPlayersLoading } =
+    useMatchBothTeamsPlayersBoxscore(
+      match.providerId,
+      match.visitorTeam.providerId,
+      match.homeTeam.providerId,
+      usePolling,
+    );
+
   const periodQuarters =
     match.periods?.map((period) => ({
       periodNumber: period.periodNumber,
@@ -72,6 +81,8 @@ export default function MatchBoxScoreWidget({ match, usePolling = false }: Props
               matchProviderId={match.providerId}
               teamProviderId={match.visitorTeam.providerId}
               usePolling={usePolling}
+              batchedPlayers={visitorPlayers}
+              batchedPlayersLoading={batchedPlayersLoading}
             />
           </TabPanel>
           <TabPanel>
@@ -79,6 +90,8 @@ export default function MatchBoxScoreWidget({ match, usePolling = false }: Props
               matchProviderId={match.providerId}
               teamProviderId={match.homeTeam.providerId}
               usePolling={usePolling}
+              batchedPlayers={homePlayers}
+              batchedPlayersLoading={batchedPlayersLoading}
             />
           </TabPanel>
         </TabPanels>

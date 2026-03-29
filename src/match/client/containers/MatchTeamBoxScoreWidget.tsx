@@ -8,12 +8,6 @@ import {
 import numeral from 'numeral';
 import Link from 'next/link';
 
-type Props = {
-  matchProviderId: string;
-  teamProviderId: string;
-  usePolling?: boolean;
-};
-
 /** # + jugador + 20 stats (Figma 1538:23603). */
 const COL_COUNT = 22;
 const STAT_COL_COUNT = 20;
@@ -56,6 +50,15 @@ type BoxscoreTableRow = {
     playingPosition: string;
   };
   boxscore: MatchPlayerBoxscoreFields;
+};
+
+type Props = {
+  matchProviderId: string;
+  teamProviderId: string;
+  usePolling?: boolean;
+  /** Parent fetched both teams in one query; skips per-tab player `useQuery`. */
+  batchedPlayers?: BoxscoreTableRow[];
+  batchedPlayersLoading?: boolean;
 };
 
 const _pbDefaults: MatchPlayerBoxscoreFields = {
@@ -813,11 +816,15 @@ export default function MatchTeamBoxScoreWidget({
   matchProviderId,
   teamProviderId,
   usePolling = false,
+  batchedPlayers,
+  batchedPlayersLoading,
 }: Props) {
+  const useBatched = batchedPlayers !== undefined;
   const { data, loading: playersLoading } = useMatchTeamPlayersBoxscore(
     matchProviderId,
     teamProviderId,
-    usePolling,
+    useBatched ? false : usePolling,
+    { skip: useBatched },
   );
   const { teamBox } = useMatchTeamAggregateBoxscore(
     matchProviderId,
@@ -827,12 +834,15 @@ export default function MatchTeamBoxScoreWidget({
 
   const tableRows: BoxscoreTableRow[] = USE_PLACEHOLDER_BOXSCORE_PLAYERS
     ? PLACEHOLDER_PLAYER_ROWS
-    : data;
+    : useBatched
+      ? batchedPlayers
+      : data;
   const aggregateForTotals: MatchTeamAggregateBoxscore | null =
     USE_PLACEHOLDER_BOXSCORE_PLAYERS ? PLACEHOLDER_TEAM_AGGREGATE : teamBox;
 
   const loading =
-    !USE_PLACEHOLDER_BOXSCORE_PLAYERS && playersLoading;
+    !USE_PLACEHOLDER_BOXSCORE_PLAYERS &&
+    (useBatched ? (batchedPlayersLoading ?? false) : playersLoading);
 
   if (loading) {
     return (

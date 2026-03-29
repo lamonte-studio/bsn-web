@@ -197,6 +197,44 @@ export const MATCH = gql`
   }
 `;
 
+/** Smaller payload for live scoreboard polling (avoids standings / ticket fields; interval set in hooks). */
+export const MATCH_LIVE_SCOREBOARD = gql`
+  query findMatchLiveScoreboard(
+    $geniusMatchId: Int!
+    $providerMatchId: String
+  ) {
+    match(geniusMatchId: $geniusMatchId, providerMatchId: $providerMatchId) {
+      providerId
+      startAt
+      status
+      currentPeriod
+      currentTime
+      homeTeam {
+        providerId
+        code
+        name
+        nickname
+        city
+        color
+        score
+      }
+      visitorTeam {
+        providerId
+        code
+        name
+        nickname
+        city
+        color
+        score
+      }
+      venue {
+        name
+      }
+      overtimePeriods
+    }
+  }
+`;
+
 export const GET_PLAYOFFS = gql`
   query getPlayoffs {
     playoffs {
@@ -311,6 +349,101 @@ export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
       geniusTeamId: $geniusTeamId
       providerMatchId: $providerMatchId
       providerTeamId: $providerTeamId
+    ) {
+      player {
+        providerId
+        avatarUrl
+        name
+        nickname
+        shirtNumber
+        playingPosition
+      }
+      boxscore {
+        minutes
+        points
+        reboundsTotal
+        offensiveRebounds
+        defensiveRebounds
+        isStarter
+        assists
+        fieldGoalsMade
+        fieldGoalsAttempted
+        fieldGoalsPercentage
+        threePointersMade
+        threePointersAttempted
+        threePointersPercentage
+        twoPointersMade
+        twoPointersAttempted
+        twoPointersPercentage
+        freeThrowsMade
+        freeThrowsAttempted
+        freeThrowsPercentage
+        foulsPersonal
+        foulsDrawn
+        steals
+        blocks
+        turnovers
+        plusMinusPoints
+      }
+    }
+  }
+`;
+
+/** Same player/boxscore selection as `MATCH_TEAM_PLAYERS_BOXSCORE`, one HTTP round-trip for both teams. */
+export const MATCH_BOTH_TEAMS_PLAYERS_BOXSCORE = gql`
+  query findMatchBothTeamsPlayersBoxscore(
+    $geniusMatchId: Int!
+    $providerMatchId: String
+    $visitorProviderTeamId: String!
+    $homeProviderTeamId: String!
+  ) {
+    visitorPlayers: matchPlayersBoxscore(
+      geniusMatchId: $geniusMatchId
+      geniusTeamId: 0
+      providerMatchId: $providerMatchId
+      providerTeamId: $visitorProviderTeamId
+    ) {
+      player {
+        providerId
+        avatarUrl
+        name
+        nickname
+        shirtNumber
+        playingPosition
+      }
+      boxscore {
+        minutes
+        points
+        reboundsTotal
+        offensiveRebounds
+        defensiveRebounds
+        isStarter
+        assists
+        fieldGoalsMade
+        fieldGoalsAttempted
+        fieldGoalsPercentage
+        threePointersMade
+        threePointersAttempted
+        threePointersPercentage
+        twoPointersMade
+        twoPointersAttempted
+        twoPointersPercentage
+        freeThrowsMade
+        freeThrowsAttempted
+        freeThrowsPercentage
+        foulsPersonal
+        foulsDrawn
+        steals
+        blocks
+        turnovers
+        plusMinusPoints
+      }
+    }
+    homePlayers: matchPlayersBoxscore(
+      geniusMatchId: $geniusMatchId
+      geniusTeamId: 0
+      providerMatchId: $providerMatchId
+      providerTeamId: $homeProviderTeamId
     ) {
       player {
         providerId
