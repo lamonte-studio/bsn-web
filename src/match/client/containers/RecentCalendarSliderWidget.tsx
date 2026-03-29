@@ -29,9 +29,10 @@ type MatchItem = {
 type SliderItem = DateItem | MatchItem;
 
 export default function RecentCalendarSliderWidget() {
+  /** Home: ventana corta para aligerar getRecentCalendar (hoy ± 5 días). */
   const { data, loading } = useRecentCalendar({
-    daysBefore: 14,
-    daysAfter: 21,
+    daysBefore: 5,
+    daysAfter: 5,
   });
 
   const today = useMemo(() => moment().startOf('day'), []);
