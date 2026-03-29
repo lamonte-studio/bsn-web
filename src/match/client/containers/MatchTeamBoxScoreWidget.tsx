@@ -7,6 +7,7 @@ import {
 } from '../hooks/matches';
 import numeral from 'numeral';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 /** # + jugador + 20 stats (Figma 1538:23603). */
 const COL_COUNT = 22;
@@ -59,6 +60,10 @@ type Props = {
   /** Parent fetched both teams in one query; skips per-tab player `useQuery`. */
   batchedPlayers?: BoxscoreTableRow[];
   batchedPlayersLoading?: boolean;
+  /** Parent `MATCH_TABBED_BOXSCORE_PANEL`: skip aggregate `useQuery` for this tab. */
+  importSharedAggregate?: boolean;
+  /** Team totals + extended metrics from parent (nullable when match row exists but box empty). */
+  sharedTeamAggregate?: MatchTeamAggregateBoxscore | null;
 };
 
 const _pbDefaults: MatchPlayerBoxscoreFields = {
@@ -514,9 +519,128 @@ function fmtPlusMinus(n: number): string {
   return numeral(n).format('0');
 }
 
-function jerseyDisplay(shirtNumber: string | undefined | null): string {
-  const s = shirtNumber?.trim();
-  return s && s.length > 0 ? s : '0';
+function jerseyDisplay(shirtNumber: string | number | undefined | null): string {
+  if (shirtNumber == null) {
+    return '–';
+  }
+  const s = String(shirtNumber).trim();
+  return s.length > 0 ? s : '–';
+}
+
+/** Sum player lines into team totals; percentages from summed made/attempted. */
+function computeAggregateFromPlayerRows(
+  rows: BoxscoreTableRow[],
+): MatchTeamAggregateBoxscore | null {
+  if (rows.length === 0) {
+    return null;
+  }
+  let fgM = 0;
+  let fgA = 0;
+  let tpM = 0;
+  let tpA = 0;
+  let ftM = 0;
+  let ftA = 0;
+  let orb = 0;
+  let drb = 0;
+  let reb = 0;
+  let ast = 0;
+  let to = 0;
+  let stl = 0;
+  let blk = 0;
+  let pf = 0;
+  let pts = 0;
+  for (const { boxscore: b } of rows) {
+    fgM += b.fieldGoalsMade ?? 0;
+    fgA += b.fieldGoalsAttempted ?? 0;
+    tpM += b.threePointersMade ?? 0;
+    tpA += b.threePointersAttempted ?? 0;
+    ftM += b.freeThrowsMade ?? 0;
+    ftA += b.freeThrowsAttempted ?? 0;
+    orb += b.offensiveRebounds ?? 0;
+    drb += b.defensiveRebounds ?? 0;
+    reb += b.reboundsTotal ?? 0;
+    ast += b.assists ?? 0;
+    to += b.turnovers ?? 0;
+    stl += b.steals ?? 0;
+    blk += b.blocks ?? 0;
+    pf += b.foulsPersonal ?? 0;
+    pts += b.points ?? 0;
+  }
+  const twoM = Math.max(0, fgM - tpM);
+  const twoA = Math.max(0, fgA - tpA);
+  return {
+    fieldGoalsMade: fgM,
+    fieldGoalsAttempted: fgA,
+    fieldGoalsPercentage: fgA > 0 ? fgM / fgA : 0,
+    threePointersMade: tpM,
+    threePointersAttempted: tpA,
+    threePointersPercentage: tpA > 0 ? tpM / tpA : 0,
+    freeThrowsMade: ftM,
+    freeThrowsAttempted: ftA,
+    freeThrowsPercentage: ftA > 0 ? ftM / ftA : 0,
+    offensiveRebounds: orb,
+    defensiveRebounds: drb,
+    reboundsTotal: reb,
+    assists: ast,
+    turnovers: to,
+    steals: stl,
+    blocks: blk,
+    foulsPersonal: pf,
+    points: pts,
+    twoPointersMade: twoM,
+    twoPointersAttempted: twoA,
+    twoPointersPercentage: twoA > 0 ? twoM / twoA : 0,
+    pointsFromTurnover: 0,
+    pointsInThePaint: 0,
+    pointsSecondChance: 0,
+    pointsFastBreak: 0,
+    pointsFromBench: 0,
+    biggestLead: 0,
+    biggestScoringRun: 0,
+  };
+}
+
+function sumMinutesFoulsDrawnPlusMinus(rows: BoxscoreTableRow[]) {
+  let minutes = 0;
+  let foulsDrawn = 0;
+  let plusMinus = 0;
+  for (const r of rows) {
+    minutes += Number(r.boxscore.minutes) || 0;
+    foulsDrawn += r.boxscore.foulsDrawn ?? 0;
+    plusMinus += r.boxscore.plusMinusPoints ?? 0;
+  }
+  return { minutes, foulsDrawn, plusMinus };
+}
+
+function mergeTeamBoxWithPlayerComputed(
+  api: MatchTeamAggregateBoxscore | null,
+  computed: MatchTeamAggregateBoxscore | null,
+): MatchTeamAggregateBoxscore | null {
+  if (!computed && !api) {
+    return null;
+  }
+  if (!computed) {
+    return api;
+  }
+  if (!api) {
+    return computed;
+  }
+  const diffPts = Math.abs((api.points ?? 0) - (computed.points ?? 0));
+  const apiLooksEmpty =
+    (api.points ?? 0) === 0 && (computed.points ?? 0) > 0;
+  if (!apiLooksEmpty && diffPts <= 2) {
+    return api;
+  }
+  return {
+    ...computed,
+    pointsFromTurnover: api.pointsFromTurnover ?? 0,
+    pointsInThePaint: api.pointsInThePaint ?? 0,
+    pointsSecondChance: api.pointsSecondChance ?? 0,
+    pointsFastBreak: api.pointsFastBreak ?? 0,
+    pointsFromBench: api.pointsFromBench ?? 0,
+    biggestLead: api.biggestLead ?? 0,
+    biggestScoringRun: api.biggestScoringRun ?? 0,
+  };
 }
 
 /** Figma: filas de jugador sobre blanco; solo líneas horizontales. */
@@ -665,9 +789,15 @@ function PlayerStatCells({
 function TotalsStatCells({
   t,
   bg,
+  totalMinutes,
+  sumFoulsDrawn,
+  sumPlusMinus,
 }: {
   t: MatchTeamAggregateBoxscore;
   bg: string;
+  totalMinutes: number;
+  sumFoulsDrawn: number;
+  sumPlusMinus: number;
 }) {
   const cell = `${totalsRowCell} text-center font-semibold`;
   const totalsText = `${statBodyText} font-semibold`;
@@ -678,7 +808,9 @@ function TotalsStatCells({
   return (
     <>
       <td className={cell} style={{ backgroundColor: bg }}>
-        <span className={totalsText}>0</span>
+        <span className={`${totalsText} tabular-nums whitespace-nowrap`}>
+          {fmtMinutesPlayed(totalMinutes)}
+        </span>
       </td>
       <td className={cell} style={{ backgroundColor: bg }}>
         <span className={`${totalsText} tabular-nums`}>
@@ -766,11 +898,13 @@ function TotalsStatCells({
         </span>
       </td>
       <td className={cell} style={{ backgroundColor: bg }}>
-        <span className={`${totalsText} text-[rgba(0,0,0,0.7)]`}>0</span>
+        <span className={`${totalsText} text-[rgba(0,0,0,0.7)]`}>
+          {numeral(sumFoulsDrawn).format('0')}
+        </span>
       </td>
       <td className={cell} style={{ backgroundColor: bg }}>
         <span className={`${totalsText} text-[rgba(0,0,0,0.7)] tabular-nums`}>
-          0
+          {fmtPlusMinus(sumPlusMinus)}
         </span>
       </td>
     </>
@@ -781,11 +915,11 @@ function TeamStatsStrip({ team }: { team: MatchTeamAggregateBoxscore }) {
   const cards: { label: string; value: number }[] = [
     { label: 'Puntos de pérdidas', value: team.pointsFromTurnover },
     { label: 'Puntos en la pintura', value: team.pointsInThePaint },
-    { label: 'Second chance points', value: team.pointsSecondChance },
-    { label: 'Fast break points', value: team.pointsFastBreak },
+    { label: 'Puntos de segunda oportunidad', value: team.pointsSecondChance },
+    { label: 'Puntos en contraataque', value: team.pointsFastBreak },
     { label: 'Puntos de la banca', value: team.pointsFromBench },
     { label: 'Mayor ventaja', value: team.biggestLead },
-    { label: 'Mayor corrida', value: team.biggestScoringRun },
+    { label: 'Mayor parcial', value: team.biggestScoringRun },
   ];
 
   return (
@@ -818,6 +952,8 @@ export default function MatchTeamBoxScoreWidget({
   usePolling = false,
   batchedPlayers,
   batchedPlayersLoading,
+  importSharedAggregate = false,
+  sharedTeamAggregate,
 }: Props) {
   const useBatched = batchedPlayers !== undefined;
   const { data, loading: playersLoading } = useMatchTeamPlayersBoxscore(
@@ -826,19 +962,66 @@ export default function MatchTeamBoxScoreWidget({
     useBatched ? false : usePolling,
     { skip: useBatched },
   );
-  const { teamBox } = useMatchTeamAggregateBoxscore(
+  const { teamBox: fetchedTeamBox } = useMatchTeamAggregateBoxscore(
     matchProviderId,
     teamProviderId,
     usePolling,
+    { skip: importSharedAggregate },
   );
+  const teamBox = importSharedAggregate
+    ? (sharedTeamAggregate ?? null)
+    : fetchedTeamBox;
 
   const tableRows: BoxscoreTableRow[] = USE_PLACEHOLDER_BOXSCORE_PLAYERS
     ? PLACEHOLDER_PLAYER_ROWS
     : useBatched
       ? batchedPlayers
       : data;
-  const aggregateForTotals: MatchTeamAggregateBoxscore | null =
-    USE_PLACEHOLDER_BOXSCORE_PLAYERS ? PLACEHOLDER_TEAM_AGGREGATE : teamBox;
+
+  const computedFromPlayers = useMemo(
+    () =>
+      USE_PLACEHOLDER_BOXSCORE_PLAYERS
+        ? null
+        : computeAggregateFromPlayerRows(tableRows),
+    [tableRows],
+  );
+
+  const rollup = useMemo(
+    () => sumMinutesFoulsDrawnPlusMinus(tableRows),
+    [tableRows],
+  );
+
+  const aggregateForTotals: MatchTeamAggregateBoxscore | null = useMemo(() => {
+    if (USE_PLACEHOLDER_BOXSCORE_PLAYERS) {
+      return PLACEHOLDER_TEAM_AGGREGATE;
+    }
+    return mergeTeamBoxWithPlayerComputed(teamBox, computedFromPlayers);
+  }, [teamBox, computedFromPlayers]);
+
+  const { starters, bench } = useMemo(() => {
+    const sorted = [...tableRows].sort(
+      (a, b) => Number(b.boxscore.minutes) - Number(a.boxscore.minutes),
+    );
+    const played = sorted.filter((r) => Number(r.boxscore.minutes) > 0);
+    const streamMarkedStarters = tableRows.some(
+      (r) => r.boxscore.isStarter === true,
+    );
+    const starterIds = new Set<string>();
+    if (streamMarkedStarters) {
+      for (const r of tableRows) {
+        if (r.boxscore.isStarter === true) {
+          starterIds.add(r.player.providerId);
+        }
+      }
+    } else {
+      for (const r of played.slice(0, 5)) {
+        starterIds.add(r.player.providerId);
+      }
+    }
+    const startersList = sorted.filter((r) => starterIds.has(r.player.providerId));
+    const benchList = sorted.filter((r) => !starterIds.has(r.player.providerId));
+    return { starters: startersList, bench: benchList };
+  }, [tableRows]);
 
   const loading =
     !USE_PLACEHOLDER_BOXSCORE_PLAYERS &&
@@ -853,32 +1036,6 @@ export default function MatchTeamBoxScoreWidget({
       </div>
     );
   }
-
-  const sorted = [...tableRows].sort(
-    (a, b) => Number(b.boxscore.minutes) - Number(a.boxscore.minutes),
-  );
-  const played = sorted.filter((r) => Number(r.boxscore.minutes) > 0);
-  /** `persons` stream: iniciales en todo el roster (puede haber titular con 0 min). */
-  const streamMarkedStarters = tableRows.some(
-    (r) => r.boxscore.isStarter === true,
-  );
-  const starterIds = new Set<string>();
-  if (streamMarkedStarters) {
-    for (const r of tableRows) {
-      if (r.boxscore.isStarter === true) {
-        starterIds.add(r.player.providerId);
-      }
-    }
-  } else {
-    for (const r of played.slice(0, 5)) {
-      starterIds.add(r.player.providerId);
-    }
-  }
-  /** Iniciales y banca cubren el roster: banca = quien no es inicial. */
-  const starters = sorted.filter((r) => starterIds.has(r.player.providerId));
-  const bench = sorted.filter((r) => !starterIds.has(r.player.providerId));
-
-  let rowIndex = 0;
 
   const renderSectionLabel = (title: string, tone: 'primary' | 'muted' = 'primary') => (
     <tr key={`label-${title}`}>
@@ -900,7 +1057,6 @@ export default function MatchTeamBoxScoreWidget({
 
   const renderDnpRow = (item: BoxscoreTableRow, key: string) => {
     const bg = dataRowBg();
-    rowIndex += 1;
     const displayName = formatAbbrevPlayerName(item.player.name);
     return (
       <tr key={key}>
@@ -916,7 +1072,7 @@ export default function MatchTeamBoxScoreWidget({
           <div className="flex h-[22px] min-w-0 max-w-[200px] items-center">
             <Link
               href={`/jugadores/${item.player.providerId}`}
-              className="min-w-0 shrink truncate font-special-gothic-condensed-one text-[15px] font-semibold leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.8)]"
+              className="min-w-0 shrink truncate font-special-gothic-condensed-one text-[15px] font-normal leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.8)]"
               title={item.player.name}
             >
               {displayName}
@@ -938,7 +1094,6 @@ export default function MatchTeamBoxScoreWidget({
 
   const renderPlayerRow = (item: BoxscoreTableRow, key: string) => {
     const bg = dataRowBg();
-    rowIndex += 1;
     const b = item.boxscore;
     const pos = (item.player.playingPosition ?? '').trim();
     const displayName = formatAbbrevPlayerName(item.player.name);
@@ -956,7 +1111,7 @@ export default function MatchTeamBoxScoreWidget({
           <div className="flex h-[22px] min-w-0 max-w-[200px] items-center gap-[7px]">
             <Link
               href={`/jugadores/${item.player.providerId}`}
-              className="min-w-0 shrink truncate font-special-gothic-condensed-one text-[15px] font-semibold leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.8)]"
+              className="min-w-0 shrink truncate font-special-gothic-condensed-one text-[15px] font-normal leading-[1.4] tracking-[0.3px] text-[rgba(0,0,0,0.8)]"
               title={item.player.name}
             >
               {displayName}
@@ -1032,7 +1187,13 @@ export default function MatchTeamBoxScoreWidget({
                   Totales equipo
                 </span>
               </td>
-              <TotalsStatCells t={aggregateForTotals} bg={totalsBg} />
+              <TotalsStatCells
+                t={aggregateForTotals}
+                bg={totalsBg}
+                totalMinutes={rollup.minutes}
+                sumFoulsDrawn={rollup.foulsDrawn}
+                sumPlusMinus={rollup.plusMinus}
+              />
             </tr>
           )}
         </tbody>

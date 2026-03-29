@@ -245,7 +245,83 @@ export const GET_PLAYOFFS = gql`
   }
 `;
 
+/** Shared team totals + extended metrics (box score tabs, SSR). */
+export const MATCH_TEAM_AGGREGATE_BOXSCORE_FIELDS = gql`
+  fragment MatchTeamAggregateBoxscoreFields on MatchTeamBoxscoreType {
+    fieldGoalsMade
+    fieldGoalsAttempted
+    fieldGoalsPercentage
+    threePointersMade
+    threePointersAttempted
+    threePointersPercentage
+    freeThrowsMade
+    freeThrowsAttempted
+    freeThrowsPercentage
+    offensiveRebounds
+    defensiveRebounds
+    reboundsTotal
+    assists
+    turnovers
+    steals
+    blocks
+    foulsPersonal
+    points
+    twoPointersMade
+    twoPointersAttempted
+    twoPointersPercentage
+    pointsFromTurnover
+    pointsInThePaint
+    pointsSecondChance
+    pointsFastBreak
+    pointsFromBench
+    biggestLead
+    biggestScoringRun
+  }
+`;
+
+/** One player row (per-team box score list). */
+export const MATCH_PLAYER_BOXSCORE_ROW_FIELDS = gql`
+  fragment MatchPlayerBoxscoreRowFields on MatchPlayersBoxscoreType {
+    player {
+      providerId
+      avatarUrl
+      name
+      nickname
+      shirtNumber
+      playingPosition
+    }
+    boxscore {
+      minutes
+      points
+      reboundsTotal
+      offensiveRebounds
+      defensiveRebounds
+      isStarter
+      assists
+      fieldGoalsMade
+      fieldGoalsAttempted
+      fieldGoalsPercentage
+      threePointersMade
+      threePointersAttempted
+      threePointersPercentage
+      twoPointersMade
+      twoPointersAttempted
+      twoPointersPercentage
+      freeThrowsMade
+      freeThrowsAttempted
+      freeThrowsPercentage
+      foulsPersonal
+      foulsDrawn
+      steals
+      blocks
+      turnovers
+      plusMinusPoints
+    }
+  }
+`;
+
 export const MATCH_TEAMS_BOXSCORE = gql`
+  ${MATCH_TEAM_AGGREGATE_BOXSCORE_FIELDS}
   query findMatchTeamBoxscore($geniusMatchId: Int!, $providerMatchId: String) {
     matchTeamsBoxscore(
       geniusMatchId: $geniusMatchId
@@ -274,70 +350,17 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         }
       }
       homeTeamBoxscore {
-        fieldGoalsMade
-        fieldGoalsAttempted
-        fieldGoalsPercentage
-        threePointersMade
-        threePointersAttempted
-        threePointersPercentage
-        freeThrowsMade
-        freeThrowsAttempted
-        freeThrowsPercentage
-        offensiveRebounds
-        defensiveRebounds
-        reboundsTotal
-        assists
-        turnovers
-        steals
-        blocks
-        foulsPersonal
-        points
-        twoPointersMade
-        twoPointersAttempted
-        twoPointersPercentage
-        pointsFromTurnover
-        pointsInThePaint
-        pointsSecondChance
-        pointsFastBreak
-        pointsFromBench
-        biggestLead
-        biggestScoringRun
+        ...MatchTeamAggregateBoxscoreFields
       }
       visitorTeamBoxscore {
-        fieldGoalsMade
-        fieldGoalsAttempted
-        fieldGoalsPercentage
-        threePointersMade
-        threePointersAttempted
-        threePointersPercentage
-        freeThrowsMade
-        freeThrowsAttempted
-        freeThrowsPercentage
-        offensiveRebounds
-        defensiveRebounds
-        reboundsTotal
-        assists
-        turnovers
-        steals
-        blocks
-        foulsPersonal
-        points
-        twoPointersMade
-        twoPointersAttempted
-        twoPointersPercentage
-        pointsFromTurnover
-        pointsInThePaint
-        pointsSecondChance
-        pointsFastBreak
-        pointsFromBench
-        biggestLead
-        biggestScoringRun
+        ...MatchTeamAggregateBoxscoreFields
       }
     }
   }
 `;
 
 export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
+  ${MATCH_PLAYER_BOXSCORE_ROW_FIELDS}
   query findMatchTeamPlayersBoxscore(
     $geniusMatchId: Int!
     $geniusTeamId: Int!
@@ -350,47 +373,14 @@ export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
       providerMatchId: $providerMatchId
       providerTeamId: $providerTeamId
     ) {
-      player {
-        providerId
-        avatarUrl
-        name
-        nickname
-        shirtNumber
-        playingPosition
-      }
-      boxscore {
-        minutes
-        points
-        reboundsTotal
-        offensiveRebounds
-        defensiveRebounds
-        isStarter
-        assists
-        fieldGoalsMade
-        fieldGoalsAttempted
-        fieldGoalsPercentage
-        threePointersMade
-        threePointersAttempted
-        threePointersPercentage
-        twoPointersMade
-        twoPointersAttempted
-        twoPointersPercentage
-        freeThrowsMade
-        freeThrowsAttempted
-        freeThrowsPercentage
-        foulsPersonal
-        foulsDrawn
-        steals
-        blocks
-        turnovers
-        plusMinusPoints
-      }
+      ...MatchPlayerBoxscoreRowFields
     }
   }
 `;
 
 /** Same player/boxscore selection as `MATCH_TEAM_PLAYERS_BOXSCORE`, one HTTP round-trip for both teams. */
 export const MATCH_BOTH_TEAMS_PLAYERS_BOXSCORE = gql`
+  ${MATCH_PLAYER_BOXSCORE_ROW_FIELDS}
   query findMatchBothTeamsPlayersBoxscore(
     $geniusMatchId: Int!
     $providerMatchId: String
@@ -403,41 +393,7 @@ export const MATCH_BOTH_TEAMS_PLAYERS_BOXSCORE = gql`
       providerMatchId: $providerMatchId
       providerTeamId: $visitorProviderTeamId
     ) {
-      player {
-        providerId
-        avatarUrl
-        name
-        nickname
-        shirtNumber
-        playingPosition
-      }
-      boxscore {
-        minutes
-        points
-        reboundsTotal
-        offensiveRebounds
-        defensiveRebounds
-        isStarter
-        assists
-        fieldGoalsMade
-        fieldGoalsAttempted
-        fieldGoalsPercentage
-        threePointersMade
-        threePointersAttempted
-        threePointersPercentage
-        twoPointersMade
-        twoPointersAttempted
-        twoPointersPercentage
-        freeThrowsMade
-        freeThrowsAttempted
-        freeThrowsPercentage
-        foulsPersonal
-        foulsDrawn
-        steals
-        blocks
-        turnovers
-        plusMinusPoints
-      }
+      ...MatchPlayerBoxscoreRowFields
     }
     homePlayers: matchPlayersBoxscore(
       geniusMatchId: $geniusMatchId
@@ -445,41 +401,72 @@ export const MATCH_BOTH_TEAMS_PLAYERS_BOXSCORE = gql`
       providerMatchId: $providerMatchId
       providerTeamId: $homeProviderTeamId
     ) {
-      player {
+      ...MatchPlayerBoxscoreRowFields
+    }
+  }
+`;
+
+/**
+ * Single round-trip for extended tabbed box score: team aggregates + both rosters.
+ * Replaces 1× teams boxscore + 2× duplicate teams queries + 1× dual players query.
+ */
+export const MATCH_TABBED_BOXSCORE_PANEL = gql`
+  ${MATCH_TEAM_AGGREGATE_BOXSCORE_FIELDS}
+  ${MATCH_PLAYER_BOXSCORE_ROW_FIELDS}
+  query findMatchTabbedBoxscorePanel(
+    $geniusMatchId: Int!
+    $providerMatchId: String
+    $visitorProviderTeamId: String!
+    $homeProviderTeamId: String!
+  ) {
+    matchTeamsBoxscore(
+      geniusMatchId: $geniusMatchId
+      providerMatchId: $providerMatchId
+    ) {
+      id
+      providerId
+      homeTeam {
         providerId
-        avatarUrl
         name
         nickname
-        shirtNumber
-        playingPosition
+        code
+        competitionStandings {
+          won
+          lost
+        }
       }
-      boxscore {
-        minutes
-        points
-        reboundsTotal
-        offensiveRebounds
-        defensiveRebounds
-        isStarter
-        assists
-        fieldGoalsMade
-        fieldGoalsAttempted
-        fieldGoalsPercentage
-        threePointersMade
-        threePointersAttempted
-        threePointersPercentage
-        twoPointersMade
-        twoPointersAttempted
-        twoPointersPercentage
-        freeThrowsMade
-        freeThrowsAttempted
-        freeThrowsPercentage
-        foulsPersonal
-        foulsDrawn
-        steals
-        blocks
-        turnovers
-        plusMinusPoints
+      visitorTeam {
+        providerId
+        name
+        nickname
+        code
+        competitionStandings {
+          won
+          lost
+        }
       }
+      homeTeamBoxscore {
+        ...MatchTeamAggregateBoxscoreFields
+      }
+      visitorTeamBoxscore {
+        ...MatchTeamAggregateBoxscoreFields
+      }
+    }
+    visitorPlayers: matchPlayersBoxscore(
+      geniusMatchId: $geniusMatchId
+      geniusTeamId: 0
+      providerMatchId: $providerMatchId
+      providerTeamId: $visitorProviderTeamId
+    ) {
+      ...MatchPlayerBoxscoreRowFields
+    }
+    homePlayers: matchPlayersBoxscore(
+      geniusMatchId: $geniusMatchId
+      geniusTeamId: 0
+      providerMatchId: $providerMatchId
+      providerTeamId: $homeProviderTeamId
+    ) {
+      ...MatchPlayerBoxscoreRowFields
     }
   }
 `;

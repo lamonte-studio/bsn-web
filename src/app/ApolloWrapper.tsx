@@ -28,8 +28,12 @@ function makeClient() {
 
   // use the `ApolloClient` from "@apollo/client-integration-nextjs"
   return new ApolloClient({
-    // use the `InMemoryCache` from "@apollo/client-integration-nextjs"
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        MatchType: { keyFields: ['providerId'] },
+        MatchTeamType: { keyFields: ['providerId'] },
+      },
+    }),
     link: httpLink,
   });
 }

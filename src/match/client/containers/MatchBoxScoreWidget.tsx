@@ -3,7 +3,7 @@
 import { MatchType } from '@/match/types';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import MatchQuarterScoreBoard from '@/match/components/scoreboard/MatchQuarterScoreBoard';
-import { useMatchBothTeamsPlayersBoxscore } from '../hooks/matches';
+import { useMatchTabbedBoxscorePanel } from '../hooks/matches';
 import MatchTeamBoxScoreWidget from './MatchTeamBoxScoreWidget';
 
 type Props = {
@@ -13,13 +13,17 @@ type Props = {
 };
 
 export default function MatchBoxScoreWidget({ match, usePolling = false }: Props) {
-  const { visitorPlayers, homePlayers, loading: batchedPlayersLoading } =
-    useMatchBothTeamsPlayersBoxscore(
-      match.providerId,
-      match.visitorTeam.providerId,
-      match.homeTeam.providerId,
-      usePolling,
-    );
+  const {
+    matchTeamsBoxscore,
+    visitorPlayers,
+    homePlayers,
+    loading: batchedPlayersLoading,
+  } = useMatchTabbedBoxscorePanel(
+    match.providerId,
+    match.visitorTeam.providerId,
+    match.homeTeam.providerId,
+    usePolling,
+  );
 
   const periodQuarters =
     match.periods?.map((period) => ({
@@ -83,6 +87,10 @@ export default function MatchBoxScoreWidget({ match, usePolling = false }: Props
               usePolling={usePolling}
               batchedPlayers={visitorPlayers}
               batchedPlayersLoading={batchedPlayersLoading}
+              importSharedAggregate
+              sharedTeamAggregate={
+                matchTeamsBoxscore?.visitorTeamBoxscore ?? null
+              }
             />
           </TabPanel>
           <TabPanel>
@@ -92,6 +100,8 @@ export default function MatchBoxScoreWidget({ match, usePolling = false }: Props
               usePolling={usePolling}
               batchedPlayers={homePlayers}
               batchedPlayersLoading={batchedPlayersLoading}
+              importSharedAggregate
+              sharedTeamAggregate={matchTeamsBoxscore?.homeTeamBoxscore ?? null}
             />
           </TabPanel>
         </TabPanels>
