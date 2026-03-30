@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { MatchType } from '@/match/types';
-import LiveMatchScoreBoardWidget from '../../containers/LiveMatchScoreBoardWidget';
+import LiveMatchScoreBoardWidget from '../scoreboard/LiveMatchScoreBoardWidget';
 // import LiveMatchBasicBoxScoreBasicWidget from '../../containers/LiveMatchBoxScoreBasicWidget';
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
@@ -10,14 +12,49 @@ import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import { LiveMatchStream } from '../media/LiveMatchStream';
-import WSCMoments from '@/highlights/client/components/WSCMoments';
+import MatchWscStoriesWidget from '../MatchWscStoriesWidget';
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
+import MatchTeamStatsComparisonWidget from '../../widgets/MatchTeamStatsComparisonWidget';
+import { useMatch } from '../../hooks/matches';
+import { isCompletedMatch } from '@/match/utils/matchStatus';
+import MatchQuarterScoreBoardWidget from '../../widgets/MatchQuarterScoreBoardWidget';
 
 type Props = {
   match: MatchType;
+  homeTeamBoxScore?: {
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+  };
+  visitorTeamBoxScore?: {
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+  };
 };
 
 export default function LiveMatchPage({ match }: Props) {
+  const router = useRouter();
+  const { data, loading, stopPolling } = useMatch(match.providerId, true);
+
+  useEffect(() => {
+    if (isCompletedMatch(data?.status)) {
+      router.refresh();
+    }
+  }, [data, router]);
+
+  useEffect(() => {
+    return () => {
+      stopPolling();
+    };
+  }, [stopPolling]);
+
   return (
     <FullWidthLayout
       divider
@@ -25,7 +62,7 @@ export default function LiveMatchPage({ match }: Props) {
         <section className="pb-[170px] md:pb-[310px]">
           <div className="container">
             <div className="mx-auto py-[32px] md:py-[42px] xl:py-[52px] lg:w-9/12 xl:w-8/12">
-              <LiveMatchScoreBoardWidget matchProviderId={match.providerId} />
+              <LiveMatchScoreBoardWidget match={data} loading={loading} />
             </div>
           </div>
         </section>
@@ -54,6 +91,9 @@ export default function LiveMatchPage({ match }: Props) {
             <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(0,0,0,0.5)] text-base md:text-[22px] data-selected:text-black data-selected:border-b-2 data-selected:border-b-black">
               Box Score
             </Tab>
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(0,0,0,0.5)] text-base md:text-[22px] data-selected:text-black data-selected:border-b-2 data-selected:border-b-black">
+              Equipos
+            </Tab>
           </div>
         </TabList>
         <TabPanels>
@@ -61,6 +101,9 @@ export default function LiveMatchPage({ match }: Props) {
             <div className="container">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-6 md:mt-[30px] lg:mt-[40px]">
                 <div className="lg:col-span-8 lg:pr-16">
+                  <div className="mb-6 md:mb-10 lg:mb-15">
+                    <MatchQuarterScoreBoardWidget matchProviderId={match.providerId} />
+                  </div>
                   <div className="mb-6 md:mb-10 lg:mb-15">
                     <div className="flex flex-row justify-between items-center mb-[30px]">
                       <div>
@@ -70,7 +113,9 @@ export default function LiveMatchPage({ match }: Props) {
                       </div>
                     </div>
                     <div>
-                      <WSCMoments />
+                      <MatchWscStoriesWidget
+                        matchProviderId={match.providerId}
+                      />
                     </div>
                   </div>
                   {/* <div className="mb-6 md:mb-10 lg:mb-15">
@@ -111,6 +156,11 @@ export default function LiveMatchPage({ match }: Props) {
           <TabPanel>
             <div className="container">
               <MatchBoxScoreWidget match={match} usePolling />
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="container">
+              <MatchTeamStatsComparisonWidget matchProviderId={match.providerId} />
             </div>
           </TabPanel>
         </TabPanels>

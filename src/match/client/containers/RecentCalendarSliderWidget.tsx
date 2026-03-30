@@ -24,15 +24,6 @@ type MatchItem = {
 
 type SliderItem = DateItem | MatchItem;
 
-/** Misma lógica que el render: partido que no es final ni programado → tarjeta “en vivo”. */
-function isLiveStyleMatch(status: string | undefined): boolean {
-  return ![
-    MATCH_STATUS.COMPLETE,
-    MATCH_STATUS.FINISHED,
-    MATCH_STATUS.SCHEDULED,
-  ].includes(status ?? '');
-}
-
 export default function RecentCalendarSliderWidget() {
   const { data, loading } = useRecentCalendar({
     daysBefore: 14,
@@ -74,41 +65,24 @@ export default function RecentCalendarSliderWidget() {
     return groupedItems;
   }, [data]);
 
-  // Si hay un partido “en vivo”, colocar el slider al inicio de ese día (cabecera + partidos del día).
-  // Si no, la cabecera de fecha más cercana a hoy.
+  // Siempre iniciar en hoy o la próxima fecha disponible (no fechas pasadas primero).
+  // Si no hay fechas futuras, caer al último día disponible.
   const initialSlide = useMemo(() => {
-    const firstLiveIdx = sortedMatches.findIndex(
-      (item) =>
-        item.type === 'match' && isLiveStyleMatch(item.data.status),
+    const dateItemIndices = sortedMatches
+      .map((item, idx) => ({ item, idx }))
+      .filter((entry): entry is { item: DateItem; idx: number } => entry.item.type === 'date-item');
+
+    if (dateItemIndices.length === 0) return 0;
+
+    const firstTodayOrFuture = dateItemIndices.find(({ item }) =>
+      moment(item.date).startOf('day').isSameOrAfter(today),
     );
 
-    if (firstLiveIdx >= 0) {
-      const matchItem = sortedMatches[firstLiveIdx] as MatchItem;
-      const day = moment(matchItem.data.startAt).format('YYYY-MM-DD');
-      for (let i = firstLiveIdx; i >= 0; i--) {
-        const it = sortedMatches[i];
-        if (it.type === 'date-item') {
-          const d = moment(it.date).format('YYYY-MM-DD');
-          if (d === day) {
-            return i;
-          }
-        }
-      }
-      return firstLiveIdx;
+    if (firstTodayOrFuture) {
+      return firstTodayOrFuture.idx;
     }
 
-    let closestIdx = 0;
-    let closestDiff = Infinity;
-    sortedMatches.forEach((item, idx) => {
-      if (item.type === 'date-item') {
-        const diff = Math.abs(moment(item.date).diff(today, 'days'));
-        if (diff < closestDiff) {
-          closestDiff = diff;
-          closestIdx = idx;
-        }
-      }
-    });
-    return closestIdx;
+    return dateItemIndices[dateItemIndices.length - 1].idx;
   }, [sortedMatches, today]);
 
   if (loading) {

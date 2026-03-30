@@ -8,16 +8,29 @@ import WSCBlazeWidget, {
 import { useWscBlazeSDK } from '@/shared/client/components/wsc/hooks/useWscBlazeSDK';
 import { useScreenDetector } from '@/shared/client/components/wsc/hooks/useScreenDetector';
 
-export default function WSCMoments() {
+type Props = {
+  /** DOM id for the Blaze container (use a unique id per page for Blaze plugin / debugging). */
+  id?: string;
+  /** Blaze label(s) for the widget; defaults to global moments UI. */
+  labels?: string | string[];
+  /** `story` for WSC Stories; `moment` for Moments (default elsewhere). */
+  contentType?: 'story' | 'moment';
+};
+
+export default function WSCMoments({
+  id = 'home-moments-container-row-rectangle',
+  labels = 'moments-ui',
+  contentType = 'moment',
+}: Props) {
   const widgetRowRectangleRef = useRef<IWSCWidgetActions>(null);
   const { isMobile, isTablet, isDesktop } = useScreenDetector();
   const { isBlazeSDKReady } = useWscBlazeSDK();
 
   const widgetRowRectangleProps: WSCBlazeWidgetProps = {
-    id: 'home-moments-container-row-rectangle',
-    labels: 'moments-ui',
+    id,
+    labels,
     orderType: 'RecentlyUpdatedFirst',
-    contentType: 'moment',
+    contentType,
     theme: 'row-rectangle',
     width: '100%',
   };

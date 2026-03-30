@@ -23,14 +23,12 @@ function RecentCalendarSliderInner<T>({
   onSlideChange,
 }: Props<T>, _ref: any) {
   const sliderRef = useRef<Slider>(null);
-  const initialSlideAppliedRef = useRef(false);
 
   useEffect(() => {
-    if (!initialSlideAppliedRef.current && initialSlide > 0) {
+    if (data.length > 0) {
       sliderRef.current?.slickGoTo(initialSlide, true);
-      initialSlideAppliedRef.current = true;
     }
-  }, [initialSlide]);
+  }, [initialSlide, data.length]);
 
   const settings = {
     dots: false,
@@ -38,6 +36,7 @@ function RecentCalendarSliderInner<T>({
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 2,
+    initialSlide,
     variableWidth: true,
     adaptiveHeight: true,
     responsive: [

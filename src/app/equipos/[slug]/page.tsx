@@ -6,7 +6,7 @@ import {
   TEAM_RECENT_CALENDAR,
   TEAM_UPCOMING_CALENDAR,
 } from '@/graphql/team';
-import WSCMoments from '@/highlights/client/components/WSCMoments';
+import TeamWscStoriesWidget from '@/team/client/widgets/TeamWscStoriesWidget';
 import ScheduledMatchCardInline from '@/match/components/calendar/ScheduledMatchCardInline';
 import CompletedMatchCardBasic from '@/match/components/card/CompletedMatchCardBasic';
 import { MatchType } from '@/match/types';
@@ -314,7 +314,7 @@ export default async function DetalleEquipoPage({
                       </div>
                     </div>
                     <div>
-                      <WSCMoments />
+                      <TeamWscStoriesWidget teamProviderId={data.team.providerId} />
                     </div>
                   </div>
                 </div>

@@ -6,7 +6,10 @@ import {
   MATCH_PERIODS_BOXSCORE,
   MATCH_TEAMS_BOXSCORE,
 } from '@/graphql/match';
-import { MATCH_LEADERS_STATS, SEASON_TEAM_LEADER_PLAYER_STATS } from '@/graphql/stats';
+import {
+  MATCH_LEADERS_STATS,
+  SEASON_TEAM_LEADER_PLAYER_STATS,
+} from '@/graphql/stats';
 import { TEAM_DETAIL } from '@/graphql/team';
 import CompletedMatchPage from '@/match/client/components/page/CompletedMatchPage';
 import LiveMatchPage from '@/match/client/components/page/LiveMatchPage';
@@ -289,8 +292,9 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
         },
       });
     response.headToHeadMatches =
-      headToHeadMatchesData?.headToHeadMatchesConnection.edges.map((edge) => edge.node) ??
-      [];
+      headToHeadMatchesData?.headToHeadMatchesConnection.edges.map(
+        (edge) => edge.node,
+      ) ?? [];
 
     const { data: matchHomeTeamLeadersData } =
       await getClient().query<MatchTeamLeadersResponse>({
@@ -358,21 +362,18 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
         fetchPolicy: 'network-only',
       });
 
-    response.pointsLeaders = matchLeadersStatsData?.pointsLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
-    response.reboundsLeaders = matchLeadersStatsData?.reboundsLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
-    response.assistsLeaders = matchLeadersStatsData?.assistsLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
-    response.stealsLeaders = matchLeadersStatsData?.stealsLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
-    response.blocksLeaders = matchLeadersStatsData?.blocksLeaders.edges.map(
-      (edge) => edge.node,
-    ) ?? [];
+    response.pointsLeaders =
+      matchLeadersStatsData?.pointsLeaders.edges.map((edge) => edge.node) ?? [];
+    response.reboundsLeaders =
+      matchLeadersStatsData?.reboundsLeaders.edges.map((edge) => edge.node) ??
+      [];
+    response.assistsLeaders =
+      matchLeadersStatsData?.assistsLeaders.edges.map((edge) => edge.node) ??
+      [];
+    response.stealsLeaders =
+      matchLeadersStatsData?.stealsLeaders.edges.map((edge) => edge.node) ?? [];
+    response.blocksLeaders =
+      matchLeadersStatsData?.blocksLeaders.edges.map((edge) => edge.node) ?? [];
     response.threePointersMadeLeaders =
       matchLeadersStatsData?.threePointersMadeLeaders.edges.map(
         (edge) => edge.node,

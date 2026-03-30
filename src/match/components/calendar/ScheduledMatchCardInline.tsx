@@ -79,7 +79,7 @@ export default function ScheduledMatchCardInline({
                     <p className="text-base/6 tracking-[2%]">
                       {getFirstWord(visitorTeam.nickname)}&nbsp;&nbsp;
                       <span className="font-barlow text-xs text-[#717171]">
-                        {visitorTeam.competitionStandings?.won ?? 0}-{visitorTeam.competitionStandings?.lost ?? 0}
+                        {`${visitorTeam.competitionStandings?.won ?? 0}-${visitorTeam.competitionStandings?.lost ?? 0}`}
                       </span>
                     </p>
                     <p className="font-barlow text-xs text-[#717171]">
@@ -102,7 +102,7 @@ export default function ScheduledMatchCardInline({
                     <p className="text-base/6 tracking-[2%]">
                       {getFirstWord(homeTeam.nickname)}&nbsp;&nbsp;
                       <span className="font-barlow text-xs text-[#717171]">
-                        {homeTeam.competitionStandings?.won ?? 0}-{homeTeam.competitionStandings?.lost ?? 0}
+                        {`${homeTeam.competitionStandings?.won ?? 0}-${homeTeam.competitionStandings?.lost ?? 0}`}
                       </span>
                     </p>
                     <p className="font-barlow text-xs text-[#717171]">
