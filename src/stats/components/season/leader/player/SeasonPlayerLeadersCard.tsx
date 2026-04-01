@@ -29,7 +29,7 @@ export default function SeasonPlayerLeadersCard({ title, subtitle, data }: Props
         </h2>
         <h4 className="font-barlow text-xs text-[rgba(0,0,0,0.6)]">{subtitle}</h4>
       </div>
-      <div className="pl-[20px] pr-[25px]">
+      <div className="pl-[20px] pr-[25px] pb-[14px]">
         <ul>
           {data.map((row, index) => (
             <li key={index} className={index < data.length - 1 ? 'border-b-[0.5px] border-[rgba(0,0,0,0.05)]' : ''}>
