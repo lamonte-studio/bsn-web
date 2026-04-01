@@ -72,7 +72,7 @@ export default function CalendarFinishedMatchRow({
     >
       {/* Mobile — Figma 553:35717 / 553:35720 */}
       <div className="sm:hidden">
-        <div className="flex flex-row items-center justify-between border-b border-b-[rgba(125,125,125,0.1)] mx-[20px] py-[12px]">
+        <div className="flex flex-row items-center justify-between border-b border-b-[rgba(125,125,125,0.1)] mx-[20px] py-[8px]">
           <p className="font-special-gothic-condensed-one text-[18px] font-normal leading-normal tracking-[0.18px] text-black">
             {finalLabel}
           </p>
@@ -172,19 +172,21 @@ function MobileTeamRowFinished({
           <p className="font-barlow text-xs text-[#717171]">{team.city}</p>
         </div>
       </div>
-      <div className="flex min-w-[52px] shrink-0 items-center justify-end gap-1">
-        <span className={`text-[27px] leading-[36px] tabular-nums ${scoreColor}`}>
+      <div className="flex shrink-0 items-center">
+        <span className={`w-[56px] text-right text-[27px] leading-[36px] ${scoreColor}`}>
           {score}
         </span>
-        {isWinner && (
-          <img
-            src="/assets/images/icons/icon-caret-winner.png"
-            alt=""
-            width={7}
-            height={9}
-            className="mt-[2px] shrink-0"
-          />
-        )}
+        <div className="w-[11px] ml-[4px] flex items-center">
+          {isWinner && (
+            <img
+              src="/assets/images/icons/icon-caret-winner.png"
+              alt=""
+              width={7}
+              height={9}
+              className="mt-[2px] shrink-0"
+            />
+          )}
+        </div>
       </div>
     </div>
   );
