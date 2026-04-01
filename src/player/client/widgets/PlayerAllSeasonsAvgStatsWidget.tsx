@@ -87,7 +87,7 @@ export default function PlayerAllSeasonsAvgStatsWidget({
                 </span>
               </td>
               <td className="px-2 py-2 text-center">
-                <div className="flex flex-row items-center gap-2 w-[200px]">
+                <div className="flex flex-row items-center gap-2 whitespace-nowrap">
                   <TeamLogoAvatar teamCode={item.team?.code ?? ''} size={20} />
                   <span className="font-special-gothic-condensed-one text-[16px] leading-[1.4] tracking-[0.32px] text-black">
                     {getFirstWord(item.team?.nickname ?? '')}

@@ -146,7 +146,7 @@ export default async function DetalleJugadorPage({
               </div>
               <div className="col-span-1 md:col-span-12 lg:col-span-7">
                 <div className="mb-3">
-                  <h4 className="text-[16px] tracking-[1px] text-[rgba(255,255,255,0.5)] uppercase">{currentSeason?.name}</h4>
+                  <h4 className="text-[14px] md:text-[16px] tracking-[1px] text-[rgba(255,255,255,0.5)] uppercase">{currentSeason?.name}</h4>
                 </div>
                 <div className="grid grid-cols-2 gap-[10px] sm:grid-cols-2 md:grid-cols-4">
                   <div className="border border-[rgba(255,255,255,0.2)] rounded-[12px] px-[14px] py-[12px]">
