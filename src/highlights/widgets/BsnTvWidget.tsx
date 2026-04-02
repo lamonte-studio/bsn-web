@@ -62,6 +62,16 @@ export default async function BsnTvWidget() {
           </div>
         </div>
         <BsnTvPlayer items={items} />
+        <div className="mt-[20px] md:hidden">
+          <a
+            href="https://www.youtube.com/@BaloncestoSuperiorNacionalPR"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white block text-center py-[16px] rounded-[12px] w-full"
+          >
+            <span className="text-base text-black font-medium">Ver canal en YouTube</span>
+          </a>
+        </div>
       </div>
     </div>
   );
