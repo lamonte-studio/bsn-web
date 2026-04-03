@@ -115,6 +115,7 @@ export const MATCH_LEADERS_STATS = gql`
         node {
           player {
             providerId
+            avatarUrl
             name
             shirtNumber
             playingPosition
@@ -136,6 +137,7 @@ export const MATCH_LEADERS_STATS = gql`
         node {
           player {
             providerId
+            avatarUrl
             name
             shirtNumber
             playingPosition
@@ -157,6 +159,7 @@ export const MATCH_LEADERS_STATS = gql`
         node {
           player {
             providerId
+            avatarUrl
             name
             shirtNumber
             playingPosition
@@ -178,6 +181,7 @@ export const MATCH_LEADERS_STATS = gql`
         node {
           player {
             providerId
+            avatarUrl
             name
             shirtNumber
             playingPosition
@@ -199,6 +203,7 @@ export const MATCH_LEADERS_STATS = gql`
         node {
           player {
             providerId
+            avatarUrl
             name
             shirtNumber
             playingPosition
@@ -220,6 +225,7 @@ export const MATCH_LEADERS_STATS = gql`
         node {
           player {
             providerId
+            avatarUrl
             name
             shirtNumber
             playingPosition

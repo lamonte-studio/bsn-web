@@ -10,7 +10,6 @@ type Row = {
   };
   pg: number;
   pp: number;
-  pct: number;
 };
 
 type Group = {

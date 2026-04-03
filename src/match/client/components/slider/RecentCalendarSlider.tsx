@@ -23,23 +23,26 @@ function RecentCalendarSliderInner<T>({
   onSlideChange,
 }: Props<T>, _ref: any) {
   const sliderRef = useRef<Slider>(null);
-  const initialSlideAppliedRef = useRef(false);
 
   useEffect(() => {
-    if (!initialSlideAppliedRef.current && initialSlide > 0) {
+    if (data.length > 0) {
       sliderRef.current?.slickGoTo(initialSlide, true);
-      initialSlideAppliedRef.current = true;
     }
-  }, [initialSlide]);
+  }, [initialSlide, data.length]);
 
+  // Menos columnas visibles que slidesToScroll evita un hueco vacío al final del carrusel
+  // (fecha + partidos) cuando slick reserva sitio para 3 slides y solo quedan 2.
   const settings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 2,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    initialSlide,
     variableWidth: true,
-    adaptiveHeight: true,
+    // adaptiveHeight causes bad layout on iOS Safari with variableWidth (track height explodes → dark header fills the viewport).
+    adaptiveHeight: false,
+    swipeToSlide: true,
     responsive: [
       {
         breakpoint: 640,
@@ -47,6 +50,7 @@ function RecentCalendarSliderInner<T>({
           slidesToShow: 2,
           slidesToScroll: 1,
           variableWidth: true,
+          swipeToSlide: true,
         },
       },
     ],

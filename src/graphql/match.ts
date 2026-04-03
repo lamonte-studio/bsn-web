@@ -1,5 +1,10 @@
 import { gql } from '@apollo/client';
 
+/**
+ * Donde el partido expone `status`, varias queries también piden `providerFixtureStatus`
+ * (estado crudo Sportradar/DataCore en el backend) para calendarios y `/partidos/[id]`
+ * sin depender solo del `status` interno mapeado.
+ */
 export const COMPLETED_MATCHES = gql`
   query findCompletedMatches($fromDate: String!, $toDate: String!) {
     matches(fromDate: $fromDate, toDate: $toDate) {
@@ -8,6 +13,7 @@ export const COMPLETED_MATCHES = gql`
       startAt
       endAt
       status
+      providerFixtureStatus
       homeTeam {
         code
         name
@@ -81,6 +87,8 @@ export const SCHEDULED_MATCHES = gql`
       phaseName
       gameNumber
       finalsDescription
+      status
+      providerFixtureStatus
     }
   }
 `;
@@ -91,6 +99,7 @@ export const RECENT_CALENDAR = gql`
       providerId
       startAt
       status
+      providerFixtureStatus
       currentPeriod
       currentTime
       homeTeam {
@@ -141,6 +150,7 @@ export const MATCH = gql`
       providerId
       startAt
       status
+      providerFixtureStatus
       currentPeriod
       currentTime
       homeTeam {
@@ -187,6 +197,44 @@ export const MATCH = gql`
   }
 `;
 
+/** Smaller payload for live scoreboard polling (avoids standings / ticket fields; interval set in hooks). */
+export const MATCH_LIVE_SCOREBOARD = gql`
+  query findMatchLiveScoreboard(
+    $geniusMatchId: Int!
+    $providerMatchId: String
+  ) {
+    match(geniusMatchId: $geniusMatchId, providerMatchId: $providerMatchId) {
+      providerId
+      startAt
+      status
+      currentPeriod
+      currentTime
+      homeTeam {
+        providerId
+        code
+        name
+        nickname
+        city
+        color
+        score
+      }
+      visitorTeam {
+        providerId
+        code
+        name
+        nickname
+        city
+        color
+        score
+      }
+      venue {
+        name
+      }
+      overtimePeriods
+    }
+  }
+`;
+
 export const GET_PLAYOFFS = gql`
   query getPlayoffs {
     playoffs {
@@ -197,7 +245,82 @@ export const GET_PLAYOFFS = gql`
   }
 `;
 
+/**
+ * Totales de equipo en `matchTeamsBoxscore` / panel tabbed.
+ * Mantener alineado con el schema GraphQL desplegado: APIs antiguas no exponían
+ * `defensiveRebounds` ni las métricas extendidas en `MatchTeamBoxscoreType` (Heroku 500).
+ * Tras desplegar `bsn-main` actual, se pueden volver a añadir esos campos aquí.
+ */
+export const MATCH_TEAM_AGGREGATE_BOXSCORE_FIELDS = gql`
+  fragment MatchTeamAggregateBoxscoreFields on MatchTeamBoxscoreType {
+    fieldGoalsMade
+    fieldGoalsAttempted
+    fieldGoalsPercentage
+    threePointersMade
+    threePointersAttempted
+    threePointersPercentage
+    freeThrowsMade
+    freeThrowsAttempted
+    freeThrowsPercentage
+    offensiveRebounds
+    reboundsTotal
+    assists
+    turnovers
+    steals
+    blocks
+    foulsPersonal
+    points
+    twoPointersMade
+    twoPointersAttempted
+    twoPointersPercentage
+  }
+`;
+
+/**
+ * Filas jugador en box score. Omitimos `avatarUrl` y `defensiveRebounds` en jugador
+ * hasta que producción exponga el mismo schema que bsn-main actual (evita GraphQL
+ * "Cannot query field" en Heroku). El UI ya tolera null/undefined.
+ */
+export const MATCH_PLAYER_BOXSCORE_ROW_FIELDS = gql`
+  fragment MatchPlayerBoxscoreRowFields on MatchPlayersBoxscoreType {
+    player {
+      providerId
+      name
+      nickname
+      shirtNumber
+      playingPosition
+    }
+    boxscore {
+      minutes
+      points
+      reboundsTotal
+      offensiveRebounds
+      isStarter
+      assists
+      fieldGoalsMade
+      fieldGoalsAttempted
+      fieldGoalsPercentage
+      threePointersMade
+      threePointersAttempted
+      threePointersPercentage
+      twoPointersMade
+      twoPointersAttempted
+      twoPointersPercentage
+      freeThrowsMade
+      freeThrowsAttempted
+      freeThrowsPercentage
+      foulsPersonal
+      foulsDrawn
+      steals
+      blocks
+      turnovers
+      plusMinusPoints
+    }
+  }
+`;
+
 export const MATCH_TEAMS_BOXSCORE = gql`
+  ${MATCH_TEAM_AGGREGATE_BOXSCORE_FIELDS}
   query findMatchTeamBoxscore($geniusMatchId: Int!, $providerMatchId: String) {
     matchTeamsBoxscore(
       geniusMatchId: $geniusMatchId
@@ -206,6 +329,7 @@ export const MATCH_TEAMS_BOXSCORE = gql`
       id
       providerId
       homeTeam {
+        providerId
         name
         nickname
         code
@@ -215,6 +339,7 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         }
       }
       visitorTeam {
+        providerId
         name
         nickname
         code
@@ -224,48 +349,17 @@ export const MATCH_TEAMS_BOXSCORE = gql`
         }
       }
       homeTeamBoxscore {
-        fieldGoalsMade
-        fieldGoalsAttempted
-        fieldGoalsPercentage
-        threePointersMade
-        threePointersAttempted
-        threePointersPercentage
-        freeThrowsMade
-        freeThrowsAttempted
-        freeThrowsPercentage
-        offensiveRebounds
-        reboundsTotal
-        assists
-        turnovers
-        steals
-        blocks
-        foulsPersonal
-        points
+        ...MatchTeamAggregateBoxscoreFields
       }
       visitorTeamBoxscore {
-        fieldGoalsMade
-        fieldGoalsAttempted
-        fieldGoalsPercentage
-        threePointersMade
-        threePointersAttempted
-        threePointersPercentage
-        freeThrowsMade
-        freeThrowsAttempted
-        freeThrowsPercentage
-        offensiveRebounds
-        reboundsTotal
-        assists
-        turnovers
-        steals
-        blocks
-        foulsPersonal
-        points
+        ...MatchTeamAggregateBoxscoreFields
       }
     }
   }
 `;
 
 export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
+  ${MATCH_PLAYER_BOXSCORE_ROW_FIELDS}
   query findMatchTeamPlayersBoxscore(
     $geniusMatchId: Int!
     $geniusTeamId: Int!
@@ -278,33 +372,100 @@ export const MATCH_TEAM_PLAYERS_BOXSCORE = gql`
       providerMatchId: $providerMatchId
       providerTeamId: $providerTeamId
     ) {
-      player {
+      ...MatchPlayerBoxscoreRowFields
+    }
+  }
+`;
+
+/** Same player/boxscore selection as `MATCH_TEAM_PLAYERS_BOXSCORE`, one HTTP round-trip for both teams. */
+export const MATCH_BOTH_TEAMS_PLAYERS_BOXSCORE = gql`
+  ${MATCH_PLAYER_BOXSCORE_ROW_FIELDS}
+  query findMatchBothTeamsPlayersBoxscore(
+    $geniusMatchId: Int!
+    $providerMatchId: String
+    $visitorProviderTeamId: String!
+    $homeProviderTeamId: String!
+  ) {
+    visitorPlayers: matchPlayersBoxscore(
+      geniusMatchId: $geniusMatchId
+      geniusTeamId: 0
+      providerMatchId: $providerMatchId
+      providerTeamId: $visitorProviderTeamId
+    ) {
+      ...MatchPlayerBoxscoreRowFields
+    }
+    homePlayers: matchPlayersBoxscore(
+      geniusMatchId: $geniusMatchId
+      geniusTeamId: 0
+      providerMatchId: $providerMatchId
+      providerTeamId: $homeProviderTeamId
+    ) {
+      ...MatchPlayerBoxscoreRowFields
+    }
+  }
+`;
+
+/**
+ * Single round-trip for extended tabbed box score: team aggregates + both rosters.
+ * Replaces 1× teams boxscore + 2× duplicate teams queries + 1× dual players query.
+ */
+export const MATCH_TABBED_BOXSCORE_PANEL = gql`
+  ${MATCH_TEAM_AGGREGATE_BOXSCORE_FIELDS}
+  ${MATCH_PLAYER_BOXSCORE_ROW_FIELDS}
+  query findMatchTabbedBoxscorePanel(
+    $geniusMatchId: Int!
+    $providerMatchId: String
+    $visitorProviderTeamId: String!
+    $homeProviderTeamId: String!
+  ) {
+    matchTeamsBoxscore(
+      geniusMatchId: $geniusMatchId
+      providerMatchId: $providerMatchId
+    ) {
+      id
+      providerId
+      homeTeam {
         providerId
         name
         nickname
-        shirtNumber
-        playingPosition
+        code
+        competitionStandings {
+          won
+          lost
+        }
       }
-      boxscore {
-        minutes
-        points
-        reboundsTotal
-        assists
-        fieldGoalsMade
-        fieldGoalsAttempted
-        fieldGoalsPercentage
-        threePointersMade
-        threePointersAttempted
-        threePointersPercentage
-        freeThrowsMade
-        freeThrowsAttempted
-        freeThrowsPercentage
-        foulsPersonal
-        steals
-        blocks
-        turnovers
-        plusMinusPoints
+      visitorTeam {
+        providerId
+        name
+        nickname
+        code
+        competitionStandings {
+          won
+          lost
+        }
       }
+      homeTeamBoxscore {
+        ...MatchTeamAggregateBoxscoreFields
+      }
+      visitorTeamBoxscore {
+        ...MatchTeamAggregateBoxscoreFields
+      }
+    }
+    visitorPlayers: matchPlayersBoxscore(
+      geniusMatchId: $geniusMatchId
+      geniusTeamId: 0
+      providerMatchId: $providerMatchId
+      providerTeamId: $visitorProviderTeamId
+    ) {
+      ...MatchPlayerBoxscoreRowFields
+    }
+    homePlayers: matchPlayersBoxscore(
+      geniusMatchId: $geniusMatchId
+      geniusTeamId: 0
+      providerMatchId: $providerMatchId
+      providerTeamId: $homeProviderTeamId
+    ) {
+      ...MatchPlayerBoxscoreRowFields
     }
   }
 `;
@@ -379,6 +540,7 @@ export const NEXT_SCHEDULED_MATCH_FOR_TEAM = gql`
             }
           }
           status
+          providerFixtureStatus
           channel
           ticketUrl
         }
@@ -407,6 +569,7 @@ export const TEAM_CALENDAR = gql`
             score
           }
           status
+          providerFixtureStatus
           overtimePeriods
           youtube
         }
@@ -422,6 +585,7 @@ export const TEAM_LIVE_MATCH = gql`
       providerId
       startAt
       status
+      providerFixtureStatus
       currentPeriod
       currentTime
       homeTeam {
@@ -457,6 +621,7 @@ export const TEAM_LIVE_MATCH = gql`
 `;
 
 export const HEAD_TO_HEAD_MATCHES = gql`
+  # Antes el nodo repetía el campo status dos veces; quedó una sola y se añadió providerFixtureStatus.
   query getHeadToHeadMatches(
     $teamCodeA: String!
     $teamCodeB: String!
@@ -475,6 +640,7 @@ export const HEAD_TO_HEAD_MATCHES = gql`
           providerId
           startAt
           status
+          providerFixtureStatus
           homeTeam {
             code
             score
@@ -483,7 +649,6 @@ export const HEAD_TO_HEAD_MATCHES = gql`
             code
             score
           }
-          status
         }
       }
     }

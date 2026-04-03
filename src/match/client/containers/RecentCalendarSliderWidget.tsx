@@ -1,9 +1,12 @@
 'use client';
 
-import { DEFAULT_MEDIA_PROVIDER, MATCH_STATUS } from '@/constants';
+import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import { MatchType } from '@/match/types';
-import RecentCalendarSlider from '@/match/client/components/slider/RecentCalendarSlider';
-import { useMemo } from 'react';
+import {
+  isCompletedMatchForUi,
+  isScheduledMatchPageStatus,
+} from '@/match/utils/matchStatus';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 import moment from 'moment';
 import LiveMatchCard from '../components/card/LiveMatchCard';
 import CompletedMatchCard from '../components/card/CompletedMatchCard';
@@ -24,20 +27,14 @@ type MatchItem = {
 
 type SliderItem = DateItem | MatchItem;
 
-/** Misma lógica que el render: partido que no es final ni programado → tarjeta “en vivo”. */
-function isLiveStyleMatch(status: string | undefined): boolean {
-  return ![
-    MATCH_STATUS.COMPLETE,
-    MATCH_STATUS.FINISHED,
-    MATCH_STATUS.SCHEDULED,
-  ].includes(status ?? '');
-}
-
 export default function RecentCalendarSliderWidget() {
+  /** Home: ventana corta para aligerar getRecentCalendar (hoy ± 5 días). */
   const { data, loading } = useRecentCalendar({
-    daysBefore: 14,
-    daysAfter: 21,
+    daysBefore: 5,
+    daysAfter: 5,
   });
+
+  const stripRef = useRef<HTMLDivElement>(null);
 
   const today = useMemo(() => moment().startOf('day'), []);
 
@@ -74,42 +71,34 @@ export default function RecentCalendarSliderWidget() {
     return groupedItems;
   }, [data]);
 
-  // Si hay un partido “en vivo”, colocar el slider al inicio de ese día (cabecera + partidos del día).
-  // Si no, la cabecera de fecha más cercana a hoy.
+  // Siempre iniciar en hoy o la próxima fecha disponible (no fechas pasadas primero).
+  // Si no hay fechas futuras, caer al último día disponible.
   const initialSlide = useMemo(() => {
-    const firstLiveIdx = sortedMatches.findIndex(
-      (item) =>
-        item.type === 'match' && isLiveStyleMatch(item.data.status),
+    const dateItemIndices = sortedMatches
+      .map((item, idx) => ({ item, idx }))
+      .filter((entry): entry is { item: DateItem; idx: number } => entry.item.type === 'date-item');
+
+    if (dateItemIndices.length === 0) return 0;
+
+    const firstTodayOrFuture = dateItemIndices.find(({ item }) =>
+      moment(item.date).startOf('day').isSameOrAfter(today),
     );
 
-    if (firstLiveIdx >= 0) {
-      const matchItem = sortedMatches[firstLiveIdx] as MatchItem;
-      const day = moment(matchItem.data.startAt).format('YYYY-MM-DD');
-      for (let i = firstLiveIdx; i >= 0; i--) {
-        const it = sortedMatches[i];
-        if (it.type === 'date-item') {
-          const d = moment(it.date).format('YYYY-MM-DD');
-          if (d === day) {
-            return i;
-          }
-        }
-      }
-      return firstLiveIdx;
+    if (firstTodayOrFuture) {
+      return firstTodayOrFuture.idx;
     }
 
-    let closestIdx = 0;
-    let closestDiff = Infinity;
-    sortedMatches.forEach((item, idx) => {
-      if (item.type === 'date-item') {
-        const diff = Math.abs(moment(item.date).diff(today, 'days'));
-        if (diff < closestDiff) {
-          closestDiff = diff;
-          closestIdx = idx;
-        }
-      }
-    });
-    return closestIdx;
+    return dateItemIndices[dateItemIndices.length - 1].idx;
   }, [sortedMatches, today]);
+
+  useLayoutEffect(() => {
+    const root = stripRef.current;
+    if (!root || sortedMatches.length === 0) return;
+    const target = root.querySelector(
+      `[data-cal-strip-idx="${initialSlide}"]`,
+    ) as HTMLElement | null;
+    target?.scrollIntoView({ inline: 'start', block: 'nearest', behavior: 'auto' });
+  }, [initialSlide, sortedMatches.length]);
 
   if (loading) {
     return (
@@ -121,30 +110,52 @@ export default function RecentCalendarSliderWidget() {
     );
   }
 
-  return (
-    <>
-      <RecentCalendarSlider
-        data={sortedMatches}
-        initialSlide={initialSlide}
-        render={(item: SliderItem) => {
-          // Renderizar header de fecha
-          if (item.type === 'date-item') {
-            return (
-              <div key={item.id} className="px-[5px]">
-                <RecentCalendarDateItem date={item.date} />
-              </div>
-            );
-          }
+  if (sortedMatches.length === 0) {
+    return (
+      <div className="flex h-[180px] items-center justify-center text-center px-4">
+        <p className="font-barlow text-sm text-[rgba(255,255,255,0.8)] md:text-base">
+          No hay partidos en esta fecha.
+        </p>
+      </div>
+    );
+  }
 
-          // Renderizar partido
-          const match = item.data;
+  return (
+    <div
+      ref={stripRef}
+      className="home-calendar-strip flex w-full flex-nowrap gap-0 overflow-x-auto overflow-y-visible pb-2 [-webkit-overflow-scrolling:touch] snap-x snap-mandatory md:snap-none"
+    >
+      {sortedMatches.map((item, index) => {
+        const key =
+          item.type === 'date-item' ? item.id : `match-${item.data.providerId}`;
+
+        if (item.type === 'date-item') {
           return (
-            <div key={`match-${match.providerId}`} className="px-[5px]">
-              {![
-                MATCH_STATUS.COMPLETE,
-                MATCH_STATUS.FINISHED,
-                MATCH_STATUS.SCHEDULED,
-              ].includes(match.status ?? '') && (
+            <div
+              key={key}
+              data-cal-strip-idx={index}
+              className="shrink-0 snap-start px-[5px]"
+            >
+              <RecentCalendarDateItem date={item.date} />
+            </div>
+          );
+        }
+
+        const match = item.data;
+        return (
+          <div
+            key={key}
+            data-cal-strip-idx={index}
+            className="shrink-0 snap-start px-[5px]"
+          >
+            {!isCompletedMatchForUi(
+              match.status,
+              match.providerFixtureStatus,
+            ) &&
+              !isScheduledMatchPageStatus(
+                match.status,
+                match.providerFixtureStatus,
+              ) && (
                 <LiveMatchCard
                   matchProviderId={match.providerId}
                   homeTeam={match.homeTeam}
@@ -153,40 +164,44 @@ export default function RecentCalendarSliderWidget() {
                   currentTime={match.currentTime}
                   mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
                   status={match.status}
+                  providerFixtureStatus={match.providerFixtureStatus}
                   overtimePeriods={match.overtimePeriods}
                   isFinals={match.isFinals}
                   finalsDescription={match.finalsDescription}
                 />
               )}
-              {[MATCH_STATUS.COMPLETE, MATCH_STATUS.FINISHED].includes(
-                match.status,
-              ) && (
-                <CompletedMatchCard
-                  matchProviderId={match.providerId}
-                  startAt={match.startAt}
-                  homeTeam={match.homeTeam}
-                  visitorTeam={match.visitorTeam}
-                  overtimePeriods={match.overtimePeriods}
-                  isFinals={match.isFinals}
-                  finalsDescription={match.finalsDescription}
-                />
-              )}
-              {[MATCH_STATUS.SCHEDULED].includes(match.status) && (
-                <ScheduledMatchCard
-                  matchProviderId={match.providerId}
-                  startAt={match.startAt}
-                  homeTeam={match.homeTeam}
-                  visitorTeam={match.visitorTeam}
-                  mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
-                  ticketUrl={match.homeTeam.ticketUrl}
-                  isFinals={match.isFinals}
-                  finalsDescription={match.finalsDescription}
-                />
-              )}
-            </div>
-          );
-        }}
-      />
-    </>
+            {isCompletedMatchForUi(
+              match.status,
+              match.providerFixtureStatus,
+            ) && (
+              <CompletedMatchCard
+                matchProviderId={match.providerId}
+                startAt={match.startAt}
+                homeTeam={match.homeTeam}
+                visitorTeam={match.visitorTeam}
+                overtimePeriods={match.overtimePeriods}
+                isFinals={match.isFinals}
+                finalsDescription={match.finalsDescription}
+              />
+            )}
+            {isScheduledMatchPageStatus(
+              match.status,
+              match.providerFixtureStatus,
+            ) && (
+              <ScheduledMatchCard
+                matchProviderId={match.providerId}
+                startAt={match.startAt}
+                homeTeam={match.homeTeam}
+                visitorTeam={match.visitorTeam}
+                mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
+                ticketUrl={match.homeTeam.ticketUrl}
+                isFinals={match.isFinals}
+                finalsDescription={match.finalsDescription}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }

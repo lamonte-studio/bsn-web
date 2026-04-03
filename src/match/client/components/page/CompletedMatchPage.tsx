@@ -4,7 +4,9 @@ import MatchInfoCard from '@/match/components/MatchInfoCard';
 import CompletedMatchScoreBoard from '@/match/components/scoreboard/CompletedMatchScoreBoard';
 import MatchQuarterScoreBoard from '@/match/components/scoreboard/MatchQuarterScoreBoard';
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
-import MatchPlayerLeadersCard from '@/stats/components/season/leader/player/MatchPlayerLeadersCard';
+import MatchGameLeadersSection, {
+  type MatchGameLeaderPlayerBoxScore,
+} from '@/match/components/stats/MatchGameLeadersSection';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 
 import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
@@ -12,37 +14,21 @@ import { MatchType } from '@/match/types';
 import MatchYoutubeVideoCard from '../card/MatchYoutubeVideoCard';
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
-import WSCMoments from '@/highlights/client/components/WSCMoments';
+import MatchWscStoriesWidget from '../MatchWscStoriesWidget';
 
-type MatchPlayerBoxScore = {
-  player: {
-    providerId: string;
-    name: string;
-    avatarUrl: string;
-    teamCode?: string;
-    team?: {
-      code: string;
-      name: string;
-    };
-  };
-  boxscore: {
-    points: number;
-    reboundsTotal: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    threePointersMade: number;
-  };
-};
-
+/**
+ * Partido finalizado: parciales Q1–Q4 / OT desde `match.periods` (cargados en el servidor
+ * con `MATCH_PERIODS_BOXSCORE` en `/partidos/[id]`).
+ */
 type Props = {
   match: MatchType;
-  pointsLeaders?: MatchPlayerBoxScore[];
-  reboundsLeaders?: MatchPlayerBoxScore[];
-  assistsLeaders?: MatchPlayerBoxScore[];
-  stealsLeaders?: MatchPlayerBoxScore[];
-  blocksLeaders?: MatchPlayerBoxScore[];
-  threePointersMadeLeaders?: MatchPlayerBoxScore[];
+  /** Todas las listas: líderes de este partido (`matchLeadersConnection`), no de liga ni un solo equipo. */
+  pointsLeaders?: MatchGameLeaderPlayerBoxScore[];
+  reboundsLeaders?: MatchGameLeaderPlayerBoxScore[];
+  assistsLeaders?: MatchGameLeaderPlayerBoxScore[];
+  stealsLeaders?: MatchGameLeaderPlayerBoxScore[];
+  blocksLeaders?: MatchGameLeaderPlayerBoxScore[];
+  threePointersMadeLeaders?: MatchGameLeaderPlayerBoxScore[];
 };
 
 export default function CompletedMatchPage({
@@ -54,6 +40,14 @@ export default function CompletedMatchPage({
   blocksLeaders = [],
   threePointersMadeLeaders = [],
 }: Props) {
+  const periodQuarters =
+    match.periods?.map((period) => ({
+      periodNumber: period.periodNumber,
+      periodType: period.periodType,
+      homeTeam: { score: period.homeTeam.score },
+      visitorTeam: { score: period.visitorTeam.score },
+    })) ?? [];
+
   return (
     <FullWidthLayout
       divider
@@ -110,42 +104,40 @@ export default function CompletedMatchPage({
                       ticketUrl={match.homeTeam.ticketUrl}
                     />
                   </div>
-                  <div className="mb-6 md:mb-10 lg:mb-15">
-                    <div className="flex flex-row justify-between items-center">
-                      <div>
-                        <h3 className="text-[22px] text-black md:text-[24px]">
-                          Resultado
-                        </h3>
+                  {periodQuarters.length > 0 && (
+                    <div className="mb-6 md:mb-10 lg:mb-15">
+                      <div className="flex flex-row justify-between items-center mb-[12px] md:mb-[16px]">
+                        <div>
+                          <h3 className="text-[22px] text-black md:text-[24px]">
+                            Resultado por periodo
+                          </h3>
+                        </div>
                       </div>
+                      <MatchQuarterScoreBoard
+                        homeTeam={{
+                          code: match.homeTeam.code,
+                          nickname: match.homeTeam.nickname,
+                          competitionStandings: {
+                            won: match.homeTeam.competitionStandings?.won ?? 0,
+                            lost:
+                              match.homeTeam.competitionStandings?.lost ?? 0,
+                          },
+                        }}
+                        visitorTeam={{
+                          code: match.visitorTeam.code,
+                          nickname: match.visitorTeam.nickname,
+                          competitionStandings: {
+                            won:
+                              match.visitorTeam.competitionStandings?.won ?? 0,
+                            lost:
+                              match.visitorTeam.competitionStandings?.lost ??
+                              0,
+                          },
+                        }}
+                        quarters={periodQuarters}
+                      />
                     </div>
-                    <MatchQuarterScoreBoard
-                      homeTeam={{
-                        code: match.homeTeam.code,
-                        nickname: match.homeTeam.nickname,
-                        competitionStandings: {
-                          won: match.homeTeam.competitionStandings?.won ?? 0,
-                          lost: match.homeTeam.competitionStandings?.lost ?? 0,
-                        },
-                      }}
-                      visitorTeam={{
-                        code: match.visitorTeam.code,
-                        nickname: match.visitorTeam.nickname,
-                        competitionStandings: {
-                          won: match.visitorTeam.competitionStandings?.won ?? 0,
-                          lost:
-                            match.visitorTeam.competitionStandings?.lost ?? 0,
-                        },
-                      }}
-                      quarters={
-                        match.periods?.map((period) => ({
-                          periodNumber: period.periodNumber,
-                          periodType: period.periodType,
-                          homeTeam: { score: period.homeTeam.score },
-                          visitorTeam: { score: period.visitorTeam.score },
-                        })) ?? []
-                      }
-                    />
-                  </div>
+                  )}
                   <div className="mb-6 md:mb-10 lg:mb-15">
                     <div className="flex flex-row justify-between items-center mb-[30px]">
                       <div>
@@ -155,116 +147,18 @@ export default function CompletedMatchPage({
                       </div>
                     </div>
                     <div>
-                      <WSCMoments />
+                      <MatchWscStoriesWidget matchProviderId={match.providerId} />
                     </div>
                   </div>
-                  <div className="mb-6 md:mb-10 lg:mb-15">
-                    <div className="flex flex-row justify-between items-center mb-6 md:mb-[28px]">
-                      <div>
-                        <h3 className="text-[22px] text-black md:text-[24px]">
-                          Líderes del juego
-                        </h3>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <MatchPlayerLeadersCard
-                        title="Puntos"
-                        data={pointsLeaders.map((leader, index) => ({
-                          position: index + 1,
-                          player: {
-                            id: leader.player.providerId,
-                            avatarUrl: leader.player.avatarUrl,
-                            name: leader.player.name,
-                            team: {
-                              code: leader.player.teamCode ?? '',
-                              name: leader.player.teamCode ?? '',
-                            },
-                          },
-                          statValue: leader.boxscore.points,
-                        }))}
-                      />
-                      <MatchPlayerLeadersCard
-                        title="Rebotes"
-                        data={reboundsLeaders.map((leader, index) => ({
-                          position: index + 1,
-                          player: {
-                            id: leader.player.providerId,
-                            avatarUrl: leader.player.avatarUrl,
-                            name: leader.player.name,
-                            team: {
-                              code: leader.player.teamCode ?? '',
-                              name: leader.player.teamCode ?? '',
-                            },
-                          },
-                          statValue: leader.boxscore.reboundsTotal,
-                        }))}
-                      />
-                      <MatchPlayerLeadersCard
-                        title="Asistencias"
-                        data={assistsLeaders.map((leader, index) => ({
-                          position: index + 1,
-                          player: {
-                            id: leader.player.providerId,
-                            avatarUrl: leader.player.avatarUrl,
-                            name: leader.player.name,
-                            team: {
-                              code: leader.player.teamCode ?? '',
-                              name: leader.player.teamCode ?? '',
-                            },
-                          },
-                          statValue: leader.boxscore.assists,
-                        }))}
-                      />
-                      <MatchPlayerLeadersCard
-                        title="Robos"
-                        data={stealsLeaders.map((leader, index) => ({
-                          position: index + 1,
-                          player: {
-                            id: leader.player.providerId,
-                            avatarUrl: leader.player.avatarUrl,
-                            name: leader.player.name,
-                            team: {
-                              code: leader.player.teamCode ?? '',
-                              name: leader.player.teamCode ?? '',
-                            },
-                          },
-                          statValue: leader.boxscore.steals,
-                        }))}
-                      />
-                      <MatchPlayerLeadersCard
-                        title="Tapones"
-                        data={blocksLeaders.map((leader, index) => ({
-                          position: index + 1,
-                          player: {
-                            id: leader.player.providerId,
-                            avatarUrl: leader.player.avatarUrl,
-                            name: leader.player.name,
-                            team: {
-                              code: leader.player.teamCode ?? '',
-                              name: leader.player.teamCode ?? '',
-                            },
-                          },
-                          statValue: leader.boxscore.blocks,
-                        }))}
-                      />
-                      <MatchPlayerLeadersCard
-                        title="3PTM"
-                        data={threePointersMadeLeaders.map((leader, index) => ({
-                          position: index + 1,
-                          player: {
-                            id: leader.player.providerId,
-                            avatarUrl: leader.player.avatarUrl,
-                            name: leader.player.name,
-                            team: {
-                              code: leader.player.teamCode ?? '',
-                              name: leader.player.teamCode ?? '',
-                            },
-                          },
-                          statValue: leader.boxscore.threePointersMade,
-                        }))}
-                      />
-                    </div>
-                  </div>
+                  {/* Datos de `MATCH_LEADERS_STATS` en el servidor (por `matchProviderId`). */}
+                  <MatchGameLeadersSection
+                    pointsLeaders={pointsLeaders}
+                    reboundsLeaders={reboundsLeaders}
+                    assistsLeaders={assistsLeaders}
+                    stealsLeaders={stealsLeaders}
+                    blocksLeaders={blocksLeaders}
+                    threePointersMadeLeaders={threePointersMadeLeaders}
+                  />
                 </div>
                 <div className="lg:col-span-4">
                   {match.youtube && (

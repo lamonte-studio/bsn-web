@@ -4,7 +4,7 @@ type Row = {
   position: number;
   player: {
     id: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     name: string;
     team?: {
       code: string;

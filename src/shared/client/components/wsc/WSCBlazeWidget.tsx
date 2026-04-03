@@ -149,6 +149,19 @@ const WSCBlazeWidget = forwardRef<
 
         setIsWidgetRendered(true);
         setWidgetView(widgetRowView);
+
+        if (process.env.NEXT_PUBLIC_WSC_DEBUG === 'true') {
+          // eslint-disable-next-line no-console
+          console.debug('[WSC Blaze] WidgetRowView created', {
+            widgetId: widgetProps.id,
+            labels: widgetProps.labels,
+            contentType: widgetProps.contentType,
+            orderType: widgetProps.orderType,
+            theme: widgetProps.theme,
+            feedNote:
+              'Blaze Feed /v1/stories uses a different ApiKey than NEXT_PUBLIC_WSC_API_KEY; validate labels via WSC dashboard or Feed API key.',
+          });
+        }
       }
     };
 

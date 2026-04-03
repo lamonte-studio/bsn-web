@@ -1,7 +1,7 @@
 export type TopPlayerLeaderStatsType = {
   player: {
     providerId: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     name: string;
     playingPosition: string;
     teamCode: string;

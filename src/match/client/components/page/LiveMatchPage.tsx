@@ -1,7 +1,12 @@
 'use client';
 
+/**
+ * Partido en vivo: se añadieron props de líderes del juego (misma fuente que partido finalizado)
+ * y el bloque UI en `MatchGameLeadersSection`.
+ */
 import { MatchType } from '@/match/types';
 import LiveMatchScoreBoardWidget from '../../containers/LiveMatchScoreBoardWidget';
+// Widget de box score básico en vivo desactivado (sustituido en parte por comparación de equipos + líderes).
 // import LiveMatchBasicBoxScoreBasicWidget from '../../containers/LiveMatchBoxScoreBasicWidget';
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
@@ -10,14 +15,52 @@ import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import { LiveMatchStream } from '../media/LiveMatchStream';
-import WSCMoments from '@/highlights/client/components/WSCMoments';
+import MatchWscStoriesWidget from '../MatchWscStoriesWidget';
 import MatchBoxScoreWidget from '../../containers/MatchBoxScoreWidget';
+import MatchTeamStatsComparison from '@/match/components/stats/MatchTeamStatsComparison';
+import MatchGameLeadersSection, {
+  type MatchGameLeaderPlayerBoxScore,
+} from '@/match/components/stats/MatchGameLeadersSection';
+import LiveMatchSectionErrorBoundary from '../LiveMatchSectionErrorBoundary';
 
 type Props = {
   match: MatchType;
+  homeTeamBoxScore?: {
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+  };
+  visitorTeamBoxScore?: {
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+  };
+  /** Líderes del encuentro en curso (`matchLeadersConnection`); vacíos hasta que haya box por jugador. */
+  pointsLeaders?: MatchGameLeaderPlayerBoxScore[];
+  reboundsLeaders?: MatchGameLeaderPlayerBoxScore[];
+  assistsLeaders?: MatchGameLeaderPlayerBoxScore[];
+  stealsLeaders?: MatchGameLeaderPlayerBoxScore[];
+  blocksLeaders?: MatchGameLeaderPlayerBoxScore[];
+  threePointersMadeLeaders?: MatchGameLeaderPlayerBoxScore[];
 };
 
-export default function LiveMatchPage({ match }: Props) {
+export default function LiveMatchPage({
+  match,
+  homeTeamBoxScore,
+  visitorTeamBoxScore,
+  pointsLeaders = [],
+  reboundsLeaders = [],
+  assistsLeaders = [],
+  stealsLeaders = [],
+  blocksLeaders = [],
+  threePointersMadeLeaders = [],
+}: Props) {
   return (
     <FullWidthLayout
       divider
@@ -25,7 +68,13 @@ export default function LiveMatchPage({ match }: Props) {
         <section className="pb-[170px] md:pb-[310px]">
           <div className="container">
             <div className="mx-auto py-[32px] md:py-[42px] xl:py-[52px] lg:w-9/12 xl:w-8/12">
-              <LiveMatchScoreBoardWidget matchProviderId={match.providerId} />
+              <LiveMatchSectionErrorBoundary
+                resetKey={match.providerId}
+                tone="dark"
+                fallbackTitle="No se pudo mostrar el marcador. Actualiza en unos segundos."
+              >
+                <LiveMatchScoreBoardWidget matchProviderId={match.providerId} />
+              </LiveMatchSectionErrorBoundary>
             </div>
           </div>
         </section>
@@ -45,7 +94,7 @@ export default function LiveMatchPage({ match }: Props) {
           </div>
         </div>
       </div>
-      <TabGroup>
+      <TabGroup defaultIndex={1}>
         <TabList>
           <div className="container text-center space-x-[30px]">
             <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(0,0,0,0.5)] text-base md:text-[22px] data-selected:text-black data-selected:border-b-2 data-selected:border-b-black">
@@ -70,9 +119,10 @@ export default function LiveMatchPage({ match }: Props) {
                       </div>
                     </div>
                     <div>
-                      <WSCMoments />
+                      <MatchWscStoriesWidget matchProviderId={match.providerId} />
                     </div>
                   </div>
+                  {/* Bloque antiguo de box score básico comentado (ver import arriba). */}
                   {/* <div className="mb-6 md:mb-10 lg:mb-15">
                     <LiveMatchBasicBoxScoreBasicWidget />
                   </div> */}
@@ -87,6 +137,37 @@ export default function LiveMatchPage({ match }: Props) {
                         ticketUrl={match.homeTeam.ticketUrl}
                       />
                     </div>
+                    <div className="mb-6 md:mb-10 lg:mb-15">
+                      <MatchTeamStatsComparison
+                        homeTeam={{ code: match.homeTeam.code }}
+                        visitorTeam={{ code: match.visitorTeam.code }}
+                        homeTeamBoxScore={{
+                          points: homeTeamBoxScore?.points ?? 0,
+                          rebounds: homeTeamBoxScore?.rebounds ?? 0,
+                          assists: homeTeamBoxScore?.assists ?? 0,
+                          steals: homeTeamBoxScore?.steals ?? 0,
+                          blocks: homeTeamBoxScore?.blocks ?? 0,
+                          turnovers: homeTeamBoxScore?.turnovers ?? 0,
+                        }}
+                        visitorTeamBoxScore={{
+                          points: visitorTeamBoxScore?.points ?? 0,
+                          rebounds: visitorTeamBoxScore?.rebounds ?? 0,
+                          assists: visitorTeamBoxScore?.assists ?? 0,
+                          steals: visitorTeamBoxScore?.steals ?? 0,
+                          blocks: visitorTeamBoxScore?.blocks ?? 0,
+                          turnovers: visitorTeamBoxScore?.turnovers ?? 0,
+                        }}
+                      />
+                    </div>
+                    {/* Misma sección que en partido finalizado: estadísticas acumuladas en este juego. */}
+                    <MatchGameLeadersSection
+                      pointsLeaders={pointsLeaders}
+                      reboundsLeaders={reboundsLeaders}
+                      assistsLeaders={assistsLeaders}
+                      stealsLeaders={stealsLeaders}
+                      blocksLeaders={blocksLeaders}
+                      threePointersMadeLeaders={threePointersMadeLeaders}
+                    />
                     <div className="mb-[30px] md:mb-[40px]">
                       <div className="hidden justify-center xl:flex">
                         <AdSlot
@@ -110,7 +191,12 @@ export default function LiveMatchPage({ match }: Props) {
           </TabPanel>
           <TabPanel>
             <div className="container">
-              <MatchBoxScoreWidget match={match} usePolling />
+              <LiveMatchSectionErrorBoundary
+                resetKey={match.providerId}
+                fallbackTitle="No se pudo cargar el box score. Intenta de nuevo en unos segundos."
+              >
+                <MatchBoxScoreWidget match={match} usePolling />
+              </LiveMatchSectionErrorBoundary>
             </div>
           </TabPanel>
         </TabPanels>

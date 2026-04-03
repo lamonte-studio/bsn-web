@@ -12,6 +12,8 @@ export const MATCH_STATUS = {
   CANCELLED: 'CANCELLED',
   RESCHEDULED: 'RESCHEDULED',
   FINISHED: 'FINISHED',
+  /** Sportradar/DataCore: juego oficialmente cerrado (también en `providerFixtureStatus`). */
+  CONFIRMED: 'CONFIRMED',
   PROTESTED: 'PROTESTED',
   COMPLETE: 'COMPLETE',
   DRAFT: 'DRAFT',
@@ -25,8 +27,13 @@ export const MATCH_STATUS = {
   ONCOURT: 'ONCOURT',
   STANDBY: 'STANDBY',
   COUNTDOWN: 'COUNTDOWN',
-  /** Pre-live / waiting — treat like live for match page UI */
+  /** Pre-en vivo / en espera: en la UI de partido se trata como tramo “live” (ver `isLiveMatchPageStatus`). */
   PENDING: 'PENDING',
+  /** Synergy/Django; en UI se normaliza a `WARMUP` (ver `normalizeMatchStatus`). */
+  WARM_UP: 'WARM_UP',
+  ABOUT_TO_START: 'ABOUT_TO_START',
+  ON_PITCH: 'ON_PITCH',
+  IF_NEEDED: 'IF_NEEDED',
 };
 
 export const DATE_ISO_FORMAT = 'YYYY-MM-DD';
@@ -42,3 +49,11 @@ export const MATCH_TIME_FORMAT = 'h:mm A';
 export const PLAYER_BIRTHDAY_FORMAT = 'D/M/YYYY';
 export const PLAYER_MATCH_DATE_FORMAT = 'D MMM, YYYY';
 export const BSN_TV_DATE_FORMAT = 'MMMM D, YYYY';
+
+/**
+ * `seasonPlayerStatsConnection` / `TEAM_LEADERS_STATS_CONNECTION`.
+ * Coherente con `SEASON_LEADER_COMPETITION_STATS_SYNC_LIMIT` en bsn-main (sync Synergy).
+ */
+export const SEASON_TEAM_LEADERS_CONNECTION_FIRST = 100;
+/** Filas visibles por categoría en cajas de líderes (partido programado, ficha equipo). */
+export const SEASON_TEAM_LEADERS_DISPLAY_TOP = 3;

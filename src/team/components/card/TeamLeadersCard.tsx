@@ -117,7 +117,7 @@ export default async function TeamLeadersCard({ teamCode }: Props) {
                   position: index + 1,
                   player: {
                     id: leader.player.providerId,
-                    avatarUrl: leader.player.avatarUrl,
+                    avatarUrl: leader.player.avatarUrl ?? '',
                     name: leader.player.name,
                   },
                   statValue: leader.value,
@@ -131,7 +131,7 @@ export default async function TeamLeadersCard({ teamCode }: Props) {
                   position: index + 1,
                   player: {
                     id: leader.player.providerId,
-                    avatarUrl: leader.player.avatarUrl,
+                    avatarUrl: leader.player.avatarUrl ?? '',
                     name: leader.player.name,
                   },
                   statValue: leader.value,
@@ -145,7 +145,7 @@ export default async function TeamLeadersCard({ teamCode }: Props) {
                   position: index + 1,
                   player: {
                     id: leader.player.providerId,
-                    avatarUrl: leader.player.avatarUrl,
+                    avatarUrl: leader.player.avatarUrl ?? '',
                     name: leader.player.name,
                   },
                   statValue: leader.value,

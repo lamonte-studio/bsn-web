@@ -1,6 +1,10 @@
 import numeral from 'numeral';
 import Link from 'next/link';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
+import {
+  formatStandingsWinPct,
+  winFractionFromRecord,
+} from '@/utils/number-formater';
 import { getFirstWord } from '@/utils/text';
 
 type Row = {
@@ -10,7 +14,6 @@ type Row = {
   };
   pg: number;
   pp: number;
-  pct: number;
 };
 
 type Props = {
@@ -79,7 +82,9 @@ export default function SeasonStandingsGroupTableBasic({ data }: Props) {
             </div>
             <div className="flex-none pl-2 pr-3 py-1 text-center w-12">
               <span className="font-barlow text-sm text-[rgba(0,0,0,0.9)]">
-                {numeral(row.pct).format('.000')}
+                {formatStandingsWinPct(
+                  winFractionFromRecord(row.pg, row.pp),
+                )}
               </span>
             </div>
           </div>

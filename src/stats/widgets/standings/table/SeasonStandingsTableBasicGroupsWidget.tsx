@@ -85,7 +85,6 @@ const mapGroup = (group: StandingsGroup) => ({
     team: { code: team.code, nickname: team.nickname },
     pg: team.competitionStandings.won,
     pp: team.competitionStandings.lost,
-    pct: team.competitionStandings.percentageWon,
   })),
 });
 

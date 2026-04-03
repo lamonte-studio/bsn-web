@@ -1,5 +1,6 @@
 'use client';
 
+import { SEASON_TEAM_LEADERS_DISPLAY_TOP } from '@/constants';
 import MatchPlayerLeadersCard from '@/stats/components/season/leader/player/MatchPlayerLeadersCard';
 import { useTeamLeadersConnection } from '../hooks/teams';
 import ShimmerLine from '@/shared/client/components/ui/ShimmerLine';
@@ -10,6 +11,7 @@ type Props = {
 
 export default function TeamLeadersWidget({ teamCode }: Props) {
   const { data, loading } = useTeamLeadersConnection(teamCode);
+  const top = SEASON_TEAM_LEADERS_DISPLAY_TOP;
 
   if (loading) {
     return (
@@ -29,7 +31,7 @@ export default function TeamLeadersWidget({ teamCode }: Props) {
       <MatchPlayerLeadersCard
         title="Puntos por juego"
         subtitle="PPG"
-        data={data.pointsLeaders.edges.map(({ node }, index) => ({
+        data={data.pointsLeaders.edges.slice(0, top).map(({ node }, index) => ({
           position: index + 1,
           player: {
             id: node.player.providerId,
@@ -46,7 +48,7 @@ export default function TeamLeadersWidget({ teamCode }: Props) {
       <MatchPlayerLeadersCard
         title="Rebotes por juego"
         subtitle="RPG"
-        data={data.reboundsLeaders.edges.map(({ node }, index) => ({
+        data={data.reboundsLeaders.edges.slice(0, top).map(({ node }, index) => ({
           position: index + 1,
           player: {
             id: node.player.providerId,
@@ -63,7 +65,7 @@ export default function TeamLeadersWidget({ teamCode }: Props) {
       <MatchPlayerLeadersCard
         title="Asistencias por juego"
         subtitle="APG"
-        data={data.assistsLeaders.edges.map(({ node }, index) => ({
+        data={data.assistsLeaders.edges.slice(0, top).map(({ node }, index) => ({
           position: index + 1,
           player: {
             id: node.player.providerId,
@@ -80,7 +82,7 @@ export default function TeamLeadersWidget({ teamCode }: Props) {
       <MatchPlayerLeadersCard
         title="Tapones por juego"
         subtitle="BPG"
-        data={data.blocksLeaders.edges.map(({ node }, index) => ({
+        data={data.blocksLeaders.edges.slice(0, top).map(({ node }, index) => ({
           position: index + 1,
           player: {
             id: node.player.providerId,
@@ -97,7 +99,7 @@ export default function TeamLeadersWidget({ teamCode }: Props) {
       <MatchPlayerLeadersCard
         title="Robos por juego"
         subtitle="SPG"
-        data={data.stealsLeaders.edges.map(({ node }, index) => ({
+        data={data.stealsLeaders.edges.slice(0, top).map(({ node }, index) => ({
           position: index + 1,
           player: {
             id: node.player.providerId,
@@ -114,7 +116,7 @@ export default function TeamLeadersWidget({ teamCode }: Props) {
       <MatchPlayerLeadersCard
         title="% Tiros de campo"
         subtitle="FG%"
-        data={data.fieldGoalsLeaders.edges.map(({ node }, index) => ({
+        data={data.fieldGoalsLeaders.edges.slice(0, top).map(({ node }, index) => ({
           position: index + 1,
           player: {
             id: node.player.providerId,

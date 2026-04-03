@@ -5,8 +5,8 @@ import { HttpLink } from "@apollo/client";
 import {
   ApolloNextAppProvider,
   ApolloClient,
-  InMemoryCache,
 } from "@apollo/client-integration-nextjs";
+import { createBsnInMemoryCache } from "@/apollo/createInMemoryCache";
 
 // have a function to create a client for you
 function makeClient() {
@@ -26,10 +26,8 @@ function makeClient() {
     // const { data } = useSuspenseQuery(MY_QUERY, { context: { fetchOptions: { ... }}});
   });
 
-  // use the `ApolloClient` from "@apollo/client-integration-nextjs"
   return new ApolloClient({
-    // use the `InMemoryCache` from "@apollo/client-integration-nextjs"
-    cache: new InMemoryCache(),
+    cache: createBsnInMemoryCache(),
     link: httpLink,
   });
 }

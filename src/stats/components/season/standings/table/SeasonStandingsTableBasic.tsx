@@ -1,4 +1,8 @@
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
+import {
+  formatStandingsWinPct,
+  winFractionFromRecord,
+} from '@/utils/number-formater';
 
 type Row = {
   team: {
@@ -7,7 +11,6 @@ type Row = {
   };
   pg: number;
   pp: number;
-  pct: number;
   loc: string;
   vis: string;
 };
@@ -81,7 +84,9 @@ export default function SeasonStandingsTableBasic({ group, data }: Props) {
             </div>
             <div className="w-[12%]">
               <p className="font-barlow text-sm text-right">
-                {row.pct.toFixed(3)}
+                {formatStandingsWinPct(
+                  winFractionFromRecord(row.pg, row.pp),
+                )}
               </p>
             </div>
             <div className="w-[12%]">

@@ -10,27 +10,38 @@ import { formatDate } from '@/utils/date-formatter';
 import { getFirstWord } from '@/utils/text';
 import { useMatch } from '../hooks/matches';
 import ShimmerLine from '@/shared/client/components/ui/ShimmerLine';
-import { formatGameClockDisplay } from '@/utils/game-clock';
+import { getLiveScoreboardCenterLine } from '@/match/client/utils/calendarView';
+import {
+  isCompletedMatchForUi,
+  isDevForcedLiveMatchPage,
+} from '@/match/utils/matchStatus';
 
 type Props = {
   matchProviderId: string;
 };
 
 export default function LiveMatchScoreBoardWidget({ matchProviderId }: Props) {
-  const { data, loading } = useMatch(matchProviderId, true);
+  const { data, loading, error } = useMatch(matchProviderId, true);
 
-  const periodLabel = useMemo(() => {
-    if (!data) {
-      return '';
-    }
+  const completedForScore = useMemo(
+    () =>
+      !isDevForcedLiveMatchPage(matchProviderId) &&
+      isCompletedMatchForUi(data?.status, data?.providerFixtureStatus),
+    [matchProviderId, data?.status, data?.providerFixtureStatus],
+  );
 
-    let label =
-      (data?.overtimePeriods ?? 0) > 0 ? 'OT' : `Q${data?.currentPeriod ?? 1}`;
-    if ((data?.overtimePeriods ?? 0) > 1) {
-      label += `${data?.overtimePeriods ?? 0}`;
-    }
-    return label;
+  const centerLine = useMemo(() => {
+    if (!data) return '';
+    return getLiveScoreboardCenterLine(
+      data.status,
+      data.providerFixtureStatus,
+      data.currentPeriod,
+      data.currentTime,
+      data.overtimePeriods,
+    );
   }, [data]);
+
+  const badgeLabel = completedForScore ? 'POSTPARTIDO' : 'EN VIVO';
 
   if (loading) {
     return (
@@ -67,6 +78,16 @@ export default function LiveMatchScoreBoardWidget({ matchProviderId }: Props) {
         <div className="scale-[0.6] md:scale-[1]">
           <TeamLogoAvatar teamCode="ZZZ" size={100} />
         </div>
+      </div>
+    );
+  }
+
+  if (error && !data) {
+    return (
+      <div className="px-2 text-center">
+        <p className="font-barlow text-sm text-white/90 md:text-base">
+          No se pudo cargar el marcador. Reintenta en unos segundos.
+        </p>
       </div>
     );
   }
@@ -117,7 +138,7 @@ export default function LiveMatchScoreBoardWidget({ matchProviderId }: Props) {
               style={{ width: '16px', height: '16px' }}
             />
             <p className="font-barlow-condensed font-semibold text-center text-lg text-[#FF4747]">
-              EN VIVO
+              {badgeLabel}
             </p>
           </div>
           <div className="flex flex-row items-center justify-between gap-2">
@@ -126,7 +147,7 @@ export default function LiveMatchScoreBoardWidget({ matchProviderId }: Props) {
                 {data?.visitorTeam.score ?? 0}
               </h4>
             </div>
-            <div className="flex flex-row items-center justify-center gap-1">
+            <div className="flex flex-row items-center justify-center gap-1 min-w-0 px-1">
               <div className="md:hidden">
                 <Lottie
                   animationData={animationLiveStreamData}
@@ -135,8 +156,8 @@ export default function LiveMatchScoreBoardWidget({ matchProviderId }: Props) {
                   style={{ width: '16px', height: '16px' }}
                 />
               </div>
-              <p className="barlow-condensed font-semibold text-base text-white text-center md:text-[25px]">
-                {periodLabel} - {formatGameClockDisplay(data?.currentTime)}
+              <p className="barlow-condensed font-semibold text-base text-white text-center md:text-[25px] whitespace-normal text-balance">
+                {centerLine}
               </p>
             </div>
             <div className="flex flex-row items-center justify-end gap-2 w-[54px] md:w-[100px]">

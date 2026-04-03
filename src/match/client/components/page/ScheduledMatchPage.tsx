@@ -6,7 +6,9 @@ import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import CompletedMatchCardBasic from '@/match/components/card/CompletedMatchCardBasic';
 import MatchInfoCard from '@/match/components/MatchInfoCard';
 import ScheduledMatchScoreBoard from '@/match/components/scoreboard/ScheduledMatchScoreBoard';
-import MatchTeamStatsComparison from '@/match/components/stats/MatchTeamStatsComparison';
+import MatchTeamStatsComparison, {
+  MATCH_TEAM_COMPARISON_SEASON_PER_GAME_ROWS,
+} from '@/match/components/stats/MatchTeamStatsComparison';
 import { MatchType } from '@/match/types';
 import MatchFeaturedPlayers from '../MatchFeaturedPlayers';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
@@ -16,30 +18,25 @@ import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayou
 type LeadersCategoryStatsType = {
   player: {
     providerId: string;
-    avatarUrl: string;
+    avatarUrl?: string | null;
     name: string;
   };
   value: number;
 };
 
+type ScheduledMatchTeamBoxProps = {
+  points: number;
+  rebounds: number;
+  assists: number;
+  steals: number;
+  blocks: number;
+  turnovers: number;
+};
+
 type Props = {
   match: MatchType;
-  homeTeamBoxScore: {
-    points: number;
-    rebounds: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    turnovers: number;
-  };
-  visitorTeamBoxScore: {
-    points: number;
-    rebounds: number;
-    assists: number;
-    steals: number;
-    blocks: number;
-    turnovers: number;
-  };
+  homeTeamBoxScore: ScheduledMatchTeamBoxProps;
+  visitorTeamBoxScore: ScheduledMatchTeamBoxProps;
   headToHeadMatches: MatchType[];
   homeTeamPointsLeaders: LeadersCategoryStatsType[];
   homeTeamAssistsLeaders: LeadersCategoryStatsType[];
@@ -232,24 +229,12 @@ export default function ScheduledMatchPage({
               </div>
               <div className="mb-6 md:mb-10 lg:mb-15">
                 <MatchTeamStatsComparison
+                  subtitle="Promedios por juego (temporada)"
+                  rows={MATCH_TEAM_COMPARISON_SEASON_PER_GAME_ROWS}
                   homeTeam={{ code: match.homeTeam.code }}
                   visitorTeam={{ code: match.visitorTeam.code }}
-                  homeTeamBoxScore={{
-                    points: homeTeamBoxScore.points,
-                    rebounds: homeTeamBoxScore.rebounds,
-                    assists: homeTeamBoxScore.assists,
-                    steals: homeTeamBoxScore.steals,
-                    blocks: homeTeamBoxScore.blocks,
-                    turnovers: homeTeamBoxScore.turnovers,
-                  }}
-                  visitorTeamBoxScore={{
-                    points: visitorTeamBoxScore.points,
-                    rebounds: visitorTeamBoxScore.rebounds,
-                    assists: visitorTeamBoxScore.assists,
-                    steals: visitorTeamBoxScore.steals,
-                    blocks: visitorTeamBoxScore.blocks,
-                    turnovers: visitorTeamBoxScore.turnovers,
-                  }}
+                  homeTeamBoxScore={{ ...homeTeamBoxScore }}
+                  visitorTeamBoxScore={{ ...visitorTeamBoxScore }}
                 />
               </div>
             </div>

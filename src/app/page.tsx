@@ -1,16 +1,21 @@
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
 import SeasonLeadersSection from '@/stats/widgets/season/SeasonLeadersSection';
-import LatestNewsWidget from '@/news/widgets/LatestNewsWidget';
+import LatestNewsSidebar from '@/news/widgets/LatestNewsSidebar';
 import RecentCalendarSliderWidget from '@/match/client/containers/RecentCalendarSliderWidget';
 import SeasonStandingsTableBasicGroupsWidget from '@/stats/widgets/standings/table/SeasonStandingsTableBasicGroupsWidget';
-import TopNewsWidget from '@/news/widgets/TopNewsWidget';
+import TopNewsHero from '@/news/widgets/TopNewsHero';
+import { loadLatestNewsForHome } from '@/news/server/loadLatestNews';
 import WSCBlazeSDK from '@/shared/client/components/wsc/WSCBlazeSDK';
 import WSCHomeStories from '@/highlights/client/components/WSCHomeStories';
 import WSCMoments from '@/highlights/client/components/WSCMoments';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import BsnTvWidget from '@/highlights/widgets/BsnTvWidget';
 
-export default function Home() {
+export default async function Home() {
+  const homeNews = await loadLatestNewsForHome();
+  const heroArticle = homeNews[0];
+  const sidebarArticles = homeNews.slice(1);
+
   return (
     <FullWidthLayout
       subheader={
@@ -27,7 +32,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-8">
             <div className="mb-4 md:mb-8 lg:mb-10">
-              <TopNewsWidget />
+              <TopNewsHero article={heroArticle} />
             </div>
             <div className="mb-8 lg:mb-10">
               <div className="hidden justify-center xl:flex">
@@ -46,7 +51,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mb-15 lg:hidden">
-              <LatestNewsWidget />
+              <LatestNewsSidebar articles={sidebarArticles} />
             </div>
             <div className="mb-4 md:mb-8 lg:mb-17">
               <div className="flex flex-row justify-between items-center mb-4 md:mb-[26px]">
@@ -75,7 +80,7 @@ export default function Home() {
           </div>
           <div className="lg:col-span-4">
             <div className="hidden mb-15 md:mb-5 lg:block">
-              <LatestNewsWidget />
+              <LatestNewsSidebar articles={sidebarArticles} />
             </div>
             <div className="mb-15 md:mb-10">
               <SeasonStandingsTableBasicGroupsWidget />

@@ -95,7 +95,7 @@ export type PlayerType = {
   providerId: string;
   name: string;
   nickname: string;
-  avatarUrl: string;
+  avatarUrl?: string | null;
   playingPosition: string;
   height: number;
   weight: number;
