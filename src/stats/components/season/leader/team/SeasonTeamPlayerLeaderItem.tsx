@@ -8,7 +8,7 @@ type Props = {
     avatarUrl?: string | null;
     name: string;
   };
-  statValue: number;
+  statValue: number | string;
   avatarSize?: number;
 };
 

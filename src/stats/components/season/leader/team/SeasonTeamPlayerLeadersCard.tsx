@@ -8,7 +8,7 @@ type Row = {
     avatarUrl?: string | null;
     name: string;
   };
-  statValue: number;
+  statValue: number | string;
 };
 
 type Props = {
