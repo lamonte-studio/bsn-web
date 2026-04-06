@@ -39,7 +39,7 @@ export default function SeasonPlayerLeaderItem({
       <div className="flex flex-1 flex-row items-center gap-3">
         <div className="rounded-full border border-[#E5E5E5] overflow-hidden shrink-0">
           <PlayerPhotoAvatar
-            photoUrl={player.avatarUrl}
+            photoUrl={player.avatarUrl ?? ''}
             size={avatarSize}
             name={player.name}
           />

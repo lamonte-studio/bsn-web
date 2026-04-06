@@ -734,8 +734,8 @@ export default async function PartidoPage({
       {shouldUseLiveMatchPageLayout(data.match) && (
         <LiveMatchPage
           match={data.match}
-          homeTeamBoxScore={data.homeTeamBoxScore}
-          visitorTeamBoxScore={data.visitorTeamBoxScore}
+          homeTeamBoxScore={data.homeTeamBoxScore as MatchTeamComparisonBoxScore}
+          visitorTeamBoxScore={data.visitorTeamBoxScore as MatchTeamComparisonBoxScore}
           pointsLeaders={data.pointsLeaders}
           reboundsLeaders={data.reboundsLeaders}
           assistsLeaders={data.assistsLeaders}
@@ -752,8 +752,8 @@ export default async function PartidoPage({
         ) && (
         <CompletedMatchPage
           match={data.match}
-          homeTeamBoxScore={data.homeTeamBoxScore}
-          visitorTeamBoxScore={data.visitorTeamBoxScore}
+          homeTeamBoxScore={data.homeTeamBoxScore as MatchTeamComparisonBoxScore}
+          visitorTeamBoxScore={data.visitorTeamBoxScore as MatchTeamComparisonBoxScore}
           pointsLeaders={data.pointsLeaders}
           reboundsLeaders={data.reboundsLeaders}
           assistsLeaders={data.assistsLeaders}
@@ -770,8 +770,8 @@ export default async function PartidoPage({
         ) && (
         <ScheduledMatchPage
           match={data.match}
-          homeTeamBoxScore={data.homeTeamBoxScore}
-          visitorTeamBoxScore={data.visitorTeamBoxScore}
+          homeTeamBoxScore={data.homeTeamBoxScore as { points: number; rebounds: number; assists: number; steals: number; blocks: number; turnovers: number }}
+          visitorTeamBoxScore={data.visitorTeamBoxScore as { points: number; rebounds: number; assists: number; steals: number; blocks: number; turnovers: number }}
           headToHeadMatches={data.headToHeadMatches}
           homeTeamPointsLeaders={data.homeTeamPointsLeaders}
           homeTeamAssistsLeaders={data.homeTeamAssistsLeaders}
