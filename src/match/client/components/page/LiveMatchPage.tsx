@@ -23,6 +23,7 @@ import MatchGameLeadersSection, {
 } from '@/match/components/stats/MatchGameLeadersSection';
 import LiveMatchSectionErrorBoundary from '../LiveMatchSectionErrorBoundary';
 import type { MatchTeamComparisonBoxScore } from '@/match/components/stats/MatchTeamStatsComparison';
+import MatchTeamStatsComparisonWidget from '../../widgets/MatchTeamStatsComparisonWidget';
 
 type Props = {
   match: MatchType;
@@ -89,6 +90,9 @@ export default function LiveMatchPage({
             </Tab>
             <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(0,0,0,0.5)] text-base md:text-[22px] data-selected:text-black data-selected:border-b-2 data-selected:border-b-black">
               Box Score
+            </Tab>
+            <Tab className="cursor-pointer outline-none py-[8px] text-[rgba(0,0,0,0.5)] text-base md:text-[22px] data-selected:text-black data-selected:border-b-2 data-selected:border-b-black">
+              Equipos
             </Tab>
           </div>
         </TabList>
@@ -170,6 +174,13 @@ export default function LiveMatchPage({
               >
                 <MatchBoxScoreWidget match={match} usePolling />
               </LiveMatchSectionErrorBoundary>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className="container">
+              <div className="my-[40px] md:my-[50px] md:w-8/12 lg:w-6/12 mx-auto">
+                <MatchTeamStatsComparisonWidget matchProviderId={match.providerId} />
+              </div>
             </div>
           </TabPanel>
         </TabPanels>
