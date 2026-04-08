@@ -734,7 +734,14 @@ export default async function PartidoPage({
     <>
       {/* Layout “En vivo” solo según estado del partido (no según streamUrl). */}
       {shouldUseLiveMatchPageLayout(data.match) && (
-        <SportsRadarMatchPage matchProviderId={id} />
+        <SportsRadarMatchPage
+          matchProviderId={id}
+          matchStreamUrl={
+            data.match.streamUrl ??
+            data.match.homeTeam.streamUrl ??
+            data.match.visitorTeam.streamUrl
+          }
+        />
       )}
       {/* Partido cerrado: mismo criterio que `!shouldUseLiveMatchPageLayout` cuando no es programado. */}
       {!isDevForcedLiveMatchPage(data.match.providerId) &&
