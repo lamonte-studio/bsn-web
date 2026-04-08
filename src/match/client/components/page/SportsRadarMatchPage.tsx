@@ -19,7 +19,7 @@ export default function SportsRadarMatchPage({ matchProviderId }: Props) {
     script.dataset.type = 'fixtures';
     script.dataset.websiteId = '312';
     script.dataset.isStandalone = 'false';
-    script.dataset.useNativeStyles = 'true';
+    script.dataset.useNativeStyles = 'false';
     script.dataset.fixtureId = matchProviderId;
 
     container.appendChild(script);
@@ -31,9 +31,7 @@ export default function SportsRadarMatchPage({ matchProviderId }: Props) {
 
   return (
     <FullWidthLayout>
-      <div className="container mx-auto">
-        <div ref={widgetRef} className="widget" />
-      </div>
+      <div ref={widgetRef} className="widget" />
     </FullWidthLayout>
   );
 }
