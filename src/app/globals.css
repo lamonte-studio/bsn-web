@@ -173,6 +173,10 @@ body {
   color: #fff;
 }
 
+#synergy-widget-fixture_detail .sw-fixture-banner-container-expand-area-button {
+  display: none;
+}
+
 #synergy-widget-fixture_detail .sw-fixture-banner-status-state-label {
   color: rgba(255, 255, 255, 0.72);
 }
