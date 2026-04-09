@@ -170,8 +170,14 @@ body {
 #synergy-widget-fixture_detail .sw-fixture-banner-main-score-box-secondary table td,
 #synergy-widget-fixture_detail .sw-fixture-banner-match-venue,
 #synergy-widget-fixture_detail .sw-fixture-banner-main-score-box-date,
-#synergy-widget-fixture_detail .sw-fixture-banner-main-score-competitor-name {
+#synergy-widget-fixture_detail .sw-fixture-banner-main-score-competitor-name,
+#synergy-widget-fixture_detail .sw-fixture-banner-status-active-period,
+#synergy-widget-fixture_detail .sw-fixture-banner-status-time-value {
   color: #fff;
+}
+
+#synergy-widget-fixture_detail .sw-fixture-banner-status-live-indicator {
+  line-height: 5px;
 }
 
 #synergy-widget-fixture_detail .sw-fixture-banner-container-expand-area-button,
