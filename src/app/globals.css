@@ -247,13 +247,18 @@ span.sw-fixture-banner-status-time-value {
 
 /* Content sections: container width matching site layout */
 .sw-widget-fixture-box-score,
-.sw-fixture-pbp,
 .sw-shot-chart-base,
 .sw-season-leaders {
   margin: auto !important;
   padding-left: 1rem !important;
   padding-right: 1rem !important;
   max-width: 79rem !important;
+}
+
+.sw-fixture-pbp {
+  margin: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
 /* Competitor name */
@@ -502,16 +507,8 @@ span.sw-box-score-additional-persons-role {
 
 .sw-fixture-pbp-event-score {
   font-family: var(--font-special-gothic-condensed-one), 'Special Gothic Condensed One', Arial, Helvetica, sans-serif !important;
-  grid-area: 3 / 2 !important;
   font-size: 18px !important;
   text-align: center !important;
-}
-
-@container (min-width: 1382px) {
-  .sw-fixture-pbp-event-score {
-    grid-column: 3 !important;
-    grid-row: 2 !important;
-  }
 }
 
 /* Shot chart */
@@ -663,10 +660,6 @@ a.sw-link.sw-leaders-non-leader-person-name {
     font-size: 14px;
     line-height: 125%;
     letter-spacing: 0.5px !important;
-  }
-
-  .sw-fixture-pbp-period {
-    width: 70% !important;
   }
 
   ul.sw-shot-chart-roster {
