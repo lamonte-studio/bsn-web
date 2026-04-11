@@ -897,16 +897,6 @@ button:not([disabled]):active {
   opacity: 0.8;
 }
 
-/* Slider arrows: bg change on hover, opacity dip on click — no transform */
-.recent-calendar-slider .slick-arrow {
-  transition: background-color 0.1s ease, opacity 0.1s ease;
-}
-.recent-calendar-slider .slick-arrow:hover {
-  background-color: rgba(70, 70, 70, 0.98) !important;
-}
-.recent-calendar-slider .slick-arrow:active {
-  opacity: 0.5;
-}
 
 /* Sportradar primary tabs */
 button.sw-sub-tabs-tab {
