@@ -856,6 +856,61 @@ a.sw-link.sw-leaders-top-person-entity.sw-link-active {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────────── */
+/* Site-wide hover & active states
+ * Only covers gaps not already handled by Tailwind hover: utilities in components.
+ * ─────────────────────────────────────────────────────────────────────────────────── */
+
+/* Footer links: opacity fade on dark background */
+footer a {
+  transition: opacity 0.15s ease;
+}
+footer a:hover {
+  opacity: 0.65;
+}
+footer a:active {
+  opacity: 0.45;
+}
+
+/* Photo / image links: subtle fade regardless of context */
+a:has(img) {
+  transition: opacity 0.15s ease;
+}
+a:has(img):hover {
+  opacity: 0.85;
+}
+a:has(img):active {
+  opacity: 0.7;
+}
+
+/* Glass match cards: ensure smooth transition for the existing bg hover */
+.glass-match-card {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Sportradar primary tabs: smooth transition + hover on inactive tab */
+button.sw-sub-tabs-tab {
+  transition: opacity 0.15s ease, color 0.15s ease !important;
+}
+button.sw-sub-tabs-tab:not(.is-active):hover {
+  opacity: 0.72 !important;
+}
+button.sw-sub-tabs-tab:not(.is-active):active {
+  opacity: 0.5 !important;
+}
+
+/* Sportradar period/category pills: hover on inactive pill */
+.sw-multi-switch-item {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+}
+.sw-multi-switch-item:not([data-sw-multiswitch-item-active="true"]):hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.3) !important;
+}
+.sw-multi-switch-item:not([data-sw-multiswitch-item-active="true"]):active {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────────── */
 
 /* Home calendar: native horizontal scroll (no react-slick / translate3d on iOS WebKit) */
 .home-calendar-strip {
