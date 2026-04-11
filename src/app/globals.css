@@ -131,7 +131,7 @@ body {
 /* Base background */
 .sw-bg,
 #synergy-widget-fixture_detail .sw-widget-fixture {
-  background-color: #ffffff !important;
+  background-color: #fdfdfd !important;
 }
 
 /* Font-weight resets */
@@ -514,7 +514,7 @@ span.sw-box-score-additional-persons-role {
 }
 
 /* ── Líderes tab: card styling matches SeasonTeamPlayerLeadersCard ── */
-#synergy-widget-fixture_detail .sw-leaders-card {
+.sw-leaders-card {
   border: 1px solid #E5E5E5 !important;
   border-radius: 12px !important;
   background-color: #fdfdfd !important;

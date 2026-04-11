@@ -13,7 +13,7 @@ export default function SportRadarLeadersWidget() {
     script.src = 'https://widget.eui.connect.sportradar.com/widget.js';
     script.dataset.type = 'statistics_leaders';
     script.dataset.websiteId = '312';
-    script.dataset.useNativeStyles = 'true';
+    script.dataset.useNativeStyles = 'false';
     container.appendChild(script);
 
     return () => {
