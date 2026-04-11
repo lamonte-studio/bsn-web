@@ -131,7 +131,7 @@ body {
 /* Base background */
 .sw-bg,
 #synergy-widget-fixture_detail .sw-widget-fixture {
-  background-color: #fdfdfd !important;
+  background-color: #ffffff !important;
 }
 
 /* Font-weight resets */
@@ -762,6 +762,22 @@ a.sw-link.sw-leaders-non-leader-person-name {
     font-size: 15px !important;
   }
 
+  /* Banner match info: no top padding on mobile */
+  .sw-fixture-banner-main-score-box-match-info {
+    padding-top: 0 !important;
+  }
+
+  /* Banner mobile main grid: remove top/side padding */
+  .sw-fixture-banner-mobile-main {
+    padding: 0px 0px 10px 0px !important;
+  }
+
+  /* Shot chart period pills: centered on mobile */
+  .sw-shot-chart-period-selector .sw-multi-switch-buttons {
+    display: flex !important;
+    justify-content: center !important;
+  }
+
   /* Shot chart */
   .sw-multi-switch.sw-shot-chart-competitor-selector {
     margin-bottom: 15px !important;
@@ -827,31 +843,7 @@ a.sw-link.sw-leaders-non-leader-person-name {
 /* Sportsradar widget */
 #synergy-widget-fixture_detail .sw-bg,
 #synergy-widget-fixture_detail .sw-widget-fixture {
-  background-color: #fdfdfd;
-}
-#synergy-widget-fixture_detail .sw-font,
-#synergy-widget-fixture_detail .sw-fixture-banner-main-team-name,
-#synergy-widget-fixture_detail .sw-fixture-banner-main-score-box-value,
-#synergy-widget-fixture_detail .sw-fixture-banner-main-score-competitor-name,
-#synergy-widget-fixture_detail .sw-fixture-banner-status-state-label,
-#synergy-widget-fixture_detail .sw-box-score-total-team-stats-entry-label,
-#synergy-widget-fixture_detail .sw-box-score-total-team-stats-entry-value,
-#synergy-widget-fixture_detail .sw-fixture-banner-main-score-box-secondary table th,
-#synergy-widget-fixture_detail .sw-sub-tabs-tab,
-#synergy-widget-fixture_detail .box-score-sorting,
-#synergy-widget-fixture_detail .sw-glossary-item dt,
-#synergy-widget-fixture_detail .sw-glossary-item dd,
-#synergy-widget-fixture_detail .box-score .sw-grid th,
-#synergy-widget-fixture_detail .sw-grid table tbody td,
-#synergy-widget-fixture_detail .sw-grid table tbody th,
-#synergy-widget-fixture_detail .sw-leaders-card-category,
-#synergy-widget-fixture_detail .sw-leaders-top-person-name,
-#synergy-widget-fixture_detail .sw-leaders-non-leader-person-name,
-#synergy-widget-fixture_detail .sw-leaders-non-leader-result,
-#synergy-widget-fixture_detail .sw-multi-switch-item,
-#synergy-widget-fixture_detail .sw-shot-chart-roster,
-#synergy-widget-fixture_detail .sw-shot-chart-roster:before {
-  font-family: var(--font-special-gothic-condensed-one), Arial, Helvetica, sans-serif !important;
+  background-color: #ffffff;
 }
 
 #synergy-widget-fixture_detail .box-score-person-cell,
