@@ -30,15 +30,14 @@ export default function MatchCompetitor({
       </div>
       <div className="flex-1">
         <p
-          className="text-base md:text-lg/5"
+          className="flex items-baseline gap-[2px] text-base md:text-lg/5"
           style={{
             color: disabled ? 'rgba(255, 255, 255, 0.5)' : '#fff',
           }}
         >
-          {name}{' '}
+          <span>{name}</span>
           {ranking && (
             <span className="font-barlow text-xs text-[rgba(255,255,255,0.6)] hidden md:inline">
-              {' '}
               {ranking}
             </span>
           )}

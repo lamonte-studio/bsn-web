@@ -897,6 +897,15 @@ button:not([disabled]):active {
   opacity: 0.8;
 }
 
+/* Slider arrows: override general button scale — transform breaks Slick click handling */
+.recent-calendar-slider .slick-arrow {
+  transition: opacity 0.1s ease !important;
+}
+.recent-calendar-slider .slick-arrow:active {
+  transform: none !important;
+  opacity: 0.55 !important;
+}
+
 
 /* Sportradar primary tabs */
 button.sw-sub-tabs-tab {
