@@ -897,12 +897,11 @@ button:not([disabled]):active {
   opacity: 0.8;
 }
 
-/* Slider arrows: no effects at all */
-.recent-calendar-slider .slick-arrow,
-.recent-calendar-slider .slick-arrow:hover,
-.recent-calendar-slider .slick-arrow:active {
+/* Slider arrows: no hover/active effects — preserve Slick's transform for positioning */
+.recent-calendar-slider .slick-arrow {
   transition: none !important;
-  transform: none !important;
+}
+.recent-calendar-slider .slick-arrow:active {
   opacity: 1 !important;
 }
 
