@@ -529,11 +529,12 @@ span.sw-box-score-additional-persons-role {
 .sw-leaders-card-category {
   color: #0f171fb3 !important;
   font-family: var(--font-special-gothic-condensed-one), 'Special Gothic Condensed One', Arial, sans-serif !important;
-  font-size: 18px !important;
+  font-size: 20px !important;
   text-transform: capitalize !important;
   grid-area: 1 / span 1 !important;
   padding: 5px 10px !important;
   text-align: left !important;
+  letter-spacing: 0.2px;
 }
 
 .sw-leaders-top-person-name {
