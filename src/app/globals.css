@@ -897,12 +897,24 @@ button:not([disabled]):active {
   opacity: 0.8;
 }
 
-/* Slider arrows: no transform, no transition — keep clicks clean */
-.recent-calendar-slider .slick-arrow {
-  transition: none !important;
-}
+/* Slider arrows: no effects at all */
+.recent-calendar-slider .slick-arrow,
+.recent-calendar-slider .slick-arrow:hover,
 .recent-calendar-slider .slick-arrow:active {
+  transition: none !important;
   transform: none !important;
+  opacity: 1 !important;
+}
+
+/* News hero: image zoom on hover, no opacity fade on the link */
+a:has(.news-hero-img):hover {
+  opacity: 1 !important;
+}
+.news-hero-img {
+  transition: transform 0.4s ease;
+}
+a:hover .news-hero-img {
+  transform: scale(1.06);
 }
 
 
