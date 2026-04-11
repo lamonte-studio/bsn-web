@@ -614,9 +614,9 @@ span.sw-box-score-additional-persons-role {
 }
 
 .sw-leaders-non-leader-person-name {
-  position: relative !important;
-  top: 10px;
+  top: 10px !important;
   font-size: 14px !important;
+  position: relative !important;
 }
 
 a.sw-link.sw-leaders-non-leader-person-name {
@@ -972,6 +972,11 @@ button.sw-sub-tabs-tab:not(.is-active):active {
 
 #synergy-widget-fixture_detail .sw-widget-fixture {
   padding: 0;
+  margin-bottom: 60px;
+}
+
+#synergy-widget-fixture_detail .sw-fixture-leaders {
+  margin-top: 30px !important;
 }
 
 #synergy-widget-fixture_detail .sw-fixture-banner {
@@ -990,6 +995,10 @@ button.sw-sub-tabs-tab:not(.is-active):active {
 #synergy-widget-fixture_detail .sw-fixture-banner-status-active-period,
 #synergy-widget-fixture_detail .sw-fixture-banner-status-time-value {
   color: #fff;
+}
+
+#synergy-widget-fixture_detail .sw-fixture-banner-main-score-box-secondary table th {
+  color: #ddd !important;
 }
 
 #synergy-widget-fixture_detail .sw-fixture-banner-status-live-indicator {
