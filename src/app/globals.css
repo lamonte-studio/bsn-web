@@ -242,13 +242,16 @@ span.sw-fixture-banner-status-time-value {
 
 /* Content sections: container width matching site layout */
 .sw-widget-fixture-box-score,
-.sw-shot-chart-base,
-.sw-season-leaders {
+.sw-shot-chart-base {
   margin: auto !important;
   padding-left: 1rem !important;
   padding-right: 1rem !important;
   max-width: 79rem !important;
-  margin-bottom: 60px !important;
+}
+
+.sw-season-leaders {
+  margin: auto auto 60px !important;
+  max-width: 79rem !important;
 }
 
 .sw-fixture-pbp {
@@ -513,6 +516,12 @@ span.sw-box-score-additional-persons-role {
   padding: 30px 20px 20px 20px !important;
 }
 
+/* Disable all links in the leaders widget */
+.sw-season-leaders a {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
 /* ── Líderes tab: card styling matches SeasonTeamPlayerLeadersCard ── */
 .sw-leaders-card {
   border: 1px solid #E5E5E5 !important;
@@ -661,6 +670,10 @@ a.sw-link.sw-leaders-non-leader-person-name {
 
   ul.sw-shot-chart-roster {
     margin-top: 55px !important;
+  }
+
+  .sw-season-leaders {
+    padding: 0 !important;
   }
 }
 
