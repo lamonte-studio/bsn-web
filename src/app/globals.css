@@ -614,7 +614,7 @@ span.sw-box-score-additional-persons-role {
 }
 
 .sw-leaders-non-leader-person-name {
-  top: 10px !important;
+  top: 10px;
   font-size: 14px !important;
   position: relative !important;
 }
@@ -625,6 +625,10 @@ a.sw-link.sw-leaders-non-leader-person-name {
 
 .sw-season-leaders .sw-leaders-non-leader-person-name {
   top: 4px;
+}
+
+#synergy-widget-fixture_detail .sw-leaders-non-leader-person-name {
+  top: 10px !important;
 }
 
 a.sw-link.sw-leaders-non-leader-entity-name.sw-link-active {
@@ -815,10 +819,15 @@ a.sw-link.sw-leaders-top-person-entity.sw-link-active {
     gap: 10px 8px !important;
   }
 
-  /* Leaders: padding on mobile */
+  /* Leaders: no horizontal padding on mobile (home component only) */
   .sw-season-leaders {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #synergy-widget-fixture_detail .sw-season-leaders {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 
   .sw-fixture-leaders {
