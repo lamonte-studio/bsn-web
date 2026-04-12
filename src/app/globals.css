@@ -847,6 +847,14 @@ a.sw-link.sw-leaders-top-person-entity.sw-link-active {
   .sw-sub-tabs {
     justify-content: center !important;
   }
+
+  .sw-grid table thead th {
+    border-bottom-width: 1px !important;
+  }
+
+  .sw-grid table tbody tr {
+    border-bottom-width: 1px !important;
+  }
 }
 
 @container (max-width: 480px) {
