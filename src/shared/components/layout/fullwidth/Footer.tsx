@@ -85,6 +85,14 @@ export default function FooterBoxLayout() {
             <ul className="mb-6 space-y-1">
               <li className="text-center md:text-right lg:text-left">
                 <Link
+                  href="/"
+                  className="font-special-gothic-condensed-one text-white text-[26px]"
+                >
+                  Inicio
+                </Link>
+              </li>
+              <li className="text-center md:text-right lg:text-left">
+                <Link
                   href="/calendario"
                   className="font-special-gothic-condensed-one text-white text-[26px]"
                 >
@@ -99,13 +107,13 @@ export default function FooterBoxLayout() {
                   Noticias
                 </Link>
               </li>
-              <li className="text-center md:text-right lg:text-left hidden">
-                <a
-                  href="#"
+              <li className="text-center md:text-right lg:text-left">
+                <Link
+                  href="/jugadores"
                   className="font-special-gothic-condensed-one text-white text-[26px]"
                 >
                   Jugadores
-                </a>
+                </Link>
               </li>
               <li className="text-center md:text-right lg:text-left hidden">
                 <a
