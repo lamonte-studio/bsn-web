@@ -905,13 +905,16 @@ a:has(img):not(:has(.glass-match-card)):hover {
   opacity: 0.8;
 }
 
-/* All buttons: pressed feel on active */
+/* All buttons: hover lift + pressed feel on active */
 button {
-  transition: transform 0.1s ease, opacity 0.1s ease;
+  transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
+}
+button:not([disabled]):hover {
+  opacity: 0.82;
 }
 button:not([disabled]):active {
   transform: scale(0.95);
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 /* Slider arrows: exempt from button press effect */
@@ -937,25 +940,26 @@ a:hover .news-hero-img {
 
 /* Sportradar primary tabs */
 button.sw-sub-tabs-tab {
-  transition: opacity 0.12s ease !important;
+  transition: opacity 0.15s ease !important;
 }
 button.sw-sub-tabs-tab:not(.is-active):hover {
-  opacity: 0.6 !important;
+  opacity: 0.75 !important;
 }
 button.sw-sub-tabs-tab:not(.is-active):active {
-  opacity: 0.4 !important;
+  opacity: 0.5 !important;
 }
 
 /* Sportradar period/category pills */
 .sw-multi-switch-item {
-  transition: background-color 0.12s ease, border-color 0.12s ease !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
 }
 .sw-multi-switch-item:not([data-sw-multiswitch-item-active="true"]):hover {
-  background-color: rgba(0, 0, 0, 0.06) !important;
-  border-color: rgba(0, 0, 0, 0.35) !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(0, 0, 0, 0.5) !important;
+  color: #111 !important;
 }
 .sw-multi-switch-item:not([data-sw-multiswitch-item-active="true"]):active {
-  background-color: rgba(0, 0, 0, 0.12) !important;
+  background-color: rgba(0, 0, 0, 0.18) !important;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────────── */
