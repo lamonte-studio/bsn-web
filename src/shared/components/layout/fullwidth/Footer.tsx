@@ -1,7 +1,11 @@
 import TeamLinkCard from '@/team/components/card/TeamLinkCard';
 import Link from 'next/link';
 
-export default function FooterBoxLayout() {
+type Props = {
+  hideStoreAppLinks?: boolean;
+};
+
+export default function FooterBoxLayout({ hideStoreAppLinks = false }: Props) {
   return (
     <footer className="bg-[#0F171F] pt-[50px] pb-[34px]">
       <div className="container">
@@ -161,24 +165,26 @@ export default function FooterBoxLayout() {
               .
             </p>
           </div>
-          <div className="flex flex-row gap-[10px] items-center">
-            <a href="https://apps.apple.com/us/app/baloncesto-superior-nacional/id6479825880" target="_blank" rel="noopener noreferrer">
-              <img
-                src="/assets/images/downlad-appstore.png"
-                alt=""
-                srcSet="/assets/images/downlad-appstore.png, /assets/images/downlad-appstore@2x.png 2x"
-                width={120}
-              />
-            </a>
-            <a href="https://play.google.com/store/apps/details?id=io.genius.bsnpr&hl=en" target="_blank" rel="noopener noreferrer">
-              <img
-                src="/assets/images/download-playstore.png"
-                alt=""
-                srcSet="/assets/images/download-playstore.png, /assets/images/download-playstore@2x.png 2x"
-                width={120}
-              />
-            </a>
-          </div>
+          {!hideStoreAppLinks && (
+            <div className="flex flex-row gap-[10px] items-center">
+              <a href="https://apps.apple.com/us/app/baloncesto-superior-nacional/id6479825880" target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/assets/images/downlad-appstore.png"
+                  alt=""
+                  srcSet="/assets/images/downlad-appstore.png, /assets/images/downlad-appstore@2x.png 2x"
+                  width={120}
+                />
+              </a>
+              <a href="https://play.google.com/store/apps/details?id=io.genius.bsnpr&hl=en" target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/assets/images/download-playstore.png"
+                  alt=""
+                  srcSet="/assets/images/download-playstore.png, /assets/images/download-playstore@2x.png 2x"
+                  width={120}
+                />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </footer>
