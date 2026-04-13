@@ -14,7 +14,8 @@ export default async function FullWidthLayout({
   subheader,
   divider = false,
 }: Props) {
-  const { device } = userAgent({ headers: await headers() });
+  const headersList = await headers();
+  const { device } = userAgent({ headers: headersList });
 
   return (
     <div className="min-h-screen bg-[#fdfdfd]">
