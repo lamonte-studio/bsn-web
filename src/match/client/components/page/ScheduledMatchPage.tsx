@@ -1,6 +1,3 @@
-'use client';
-
-import { useMemo } from 'react';
 import Link from 'next/link';
 import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import CompletedMatchCardBasic from '@/match/components/card/CompletedMatchCardBasic';
@@ -10,10 +7,10 @@ import MatchTeamStatsComparison, {
   MATCH_TEAM_COMPARISON_SEASON_PER_GAME_ROWS,
 } from '@/match/components/stats/MatchTeamStatsComparison';
 import { MatchType } from '@/match/types';
-import MatchFeaturedPlayers from '../MatchFeaturedPlayers';
 import TeamLogoAvatar from '@/team/components/avatar/TeamLogoAvatar';
 import AdSlot from '@/shared/client/components/gtm/AdSlot';
 import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
+import MatchFeaturedPlayers from '../MatchFeaturedPlayers';
 
 type LeadersCategoryStatsType = {
   player: {
@@ -38,6 +35,8 @@ type Props = {
   homeTeamBoxScore?: ScheduledMatchTeamBoxProps;
   visitorTeamBoxScore?: ScheduledMatchTeamBoxProps;
   headToHeadMatches: MatchType[];
+  homeTeamWon?: number;
+  visitorTeamWon?: number;
   homeTeamPointsLeaders: LeadersCategoryStatsType[];
   homeTeamAssistsLeaders: LeadersCategoryStatsType[];
   homeTeamReboundsLeaders: LeadersCategoryStatsType[];
@@ -51,6 +50,8 @@ export default function ScheduledMatchPage({
   homeTeamBoxScore,
   visitorTeamBoxScore,
   headToHeadMatches,
+  homeTeamWon = 0,
+  visitorTeamWon = 0,
   homeTeamPointsLeaders,
   homeTeamAssistsLeaders,
   homeTeamReboundsLeaders,
@@ -58,42 +59,6 @@ export default function ScheduledMatchPage({
   visitorTeamAssistsLeaders,
   visitorTeamReboundsLeaders,
 }: Props) {
-  const homeTeamWon = useMemo(() => {
-    let won = 0;
-    headToHeadMatches.forEach((item) => {
-      if (
-        item.homeTeam.code === match.homeTeam.code &&
-        parseInt(item.homeTeam.score, 10) > parseInt(item.visitorTeam.score, 10)
-      ) {
-        won += 1;
-      } else if (
-        item.visitorTeam.code === match.homeTeam.code &&
-        parseInt(item.visitorTeam.score, 10) > parseInt(item.homeTeam.score, 10)
-      ) {
-        won += 1;
-      }
-    });
-    return won;
-  }, [headToHeadMatches, match.homeTeam.code]);
-
-  const visitorTeamWon = useMemo(() => {
-    let won = 0;
-    headToHeadMatches.forEach((item) => {
-      if (
-        item.homeTeam.code === match.visitorTeam.code &&
-        parseInt(item.homeTeam.score, 10) > parseInt(item.visitorTeam.score, 10)
-      ) {
-        won += 1;
-      } else if (
-        item.visitorTeam.code === match.visitorTeam.code &&
-        parseInt(item.visitorTeam.score, 10) > parseInt(item.homeTeam.score, 10)
-      ) {
-        won += 1;
-      }
-    });
-    return won;
-  }, [headToHeadMatches, match.visitorTeam.code]);
-
   return (
     <FullWidthLayout
       divider

@@ -65,20 +65,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function DetalleNoticiaPage({
-  params,
-  searchParams,
-}: {
+export default async function DetalleNoticiaPage({ params }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const { slug } = await params;
-  const query = await searchParams;
   const data: NewsType[] = await fetchSingleNews(slug);
   return (
-    <FullWidthLayout
-      hideStoreAppLinks={['1', 'true', 'yes'].includes(query?.hideStoreAppLinks ?? '')}
-    >
+    <FullWidthLayout>
       <div className="pb-16 pt-8 md:pb-24 md:pt-12">
         <div className="container">
           <div className="mb-4 md:mb-10">

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
 import { LiveMatchStream } from '../media/LiveMatchStream';
 
 type Props = {
@@ -31,7 +30,7 @@ export default function SportsRadarMatchPage({ matchProviderId, matchStreamUrl }
   }, [matchProviderId, matchStreamUrl]);
 
   return (
-    <FullWidthLayout>
+    <>
       {matchStreamUrl && (
         <div className="bg-bsn">
           <div className="container">
@@ -42,6 +41,6 @@ export default function SportsRadarMatchPage({ matchProviderId, matchStreamUrl }
         </div>
       )}
       <div ref={widgetRef} className="widget" />
-    </FullWidthLayout>
+    </>
   );
 }

@@ -30,6 +30,7 @@ import {
   SEASON_TEAM_LEADERS_DISPLAY_TOP,
 } from '@/constants';
 import SportsRadarMatchPage from '@/match/client/components/page/SportsRadarMatchPage';
+import FullWidthLayout from '@/shared/components/layout/fullwidth/FullWidthLayout';
 
 /*
  * Página de detalle de partido: el layout (live / finalizado / programado) y los datos extra
@@ -87,6 +88,8 @@ type MatchResponse = {
   visitorTeamAssistsLeaders: LeadersCategoryStatsType[];
   visitorTeamReboundsLeaders: LeadersCategoryStatsType[];
   headToHeadMatches: MatchType[];
+  homeTeamWon: number;
+  visitorTeamWon: number;
   homeTeamPlayersBoxScore: MatchPlayerBoxScore[];
   visitorTeamPlayersBoxScore: MatchPlayerBoxScore[];
   pointsLeaders: MatchPlayerBoxScore[];
@@ -354,6 +357,8 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
       foulsPersonal: 0,
     },
     headToHeadMatches: [],
+    homeTeamWon: 0,
+    visitorTeamWon: 0,
     homeTeamPointsLeaders: [],
     homeTeamAssistsLeaders: [],
     homeTeamReboundsLeaders: [],
@@ -686,6 +691,30 @@ const fetchMatch = async (matchProviderId: string): Promise<MatchResponse> => {
         (edge) => edge.node,
       ) ?? [];
 
+    response.homeTeamWon = response.headToHeadMatches.reduce((won, item) => {
+      if (
+        item.homeTeam.code === match.homeTeam.code &&
+        parseInt(item.homeTeam.score, 10) > parseInt(item.visitorTeam.score, 10)
+      ) return won + 1;
+      if (
+        item.visitorTeam.code === match.homeTeam.code &&
+        parseInt(item.visitorTeam.score, 10) > parseInt(item.homeTeam.score, 10)
+      ) return won + 1;
+      return won;
+    }, 0);
+
+    response.visitorTeamWon = response.headToHeadMatches.reduce((won, item) => {
+      if (
+        item.homeTeam.code === match.visitorTeam.code &&
+        parseInt(item.homeTeam.score, 10) > parseInt(item.visitorTeam.score, 10)
+      ) return won + 1;
+      if (
+        item.visitorTeam.code === match.visitorTeam.code &&
+        parseInt(item.visitorTeam.score, 10) > parseInt(item.homeTeam.score, 10)
+      ) return won + 1;
+      return won;
+    }, 0);
+
     const top = SEASON_TEAM_LEADERS_DISPLAY_TOP;
 
     response.homeTeamPointsLeaders = (
@@ -734,14 +763,16 @@ export default async function PartidoPage({
     <>
       {/* Layout “En vivo” solo según estado del partido (no según streamUrl). */}
       {shouldUseLiveMatchPageLayout(data.match) && (
-        <SportsRadarMatchPage
-          matchProviderId={id}
-          matchStreamUrl={
-            data.match.streamUrl ??
-            data.match.homeTeam.streamUrl ??
-            data.match.visitorTeam.streamUrl
-          }
-        />
+        <FullWidthLayout>
+          <SportsRadarMatchPage
+            matchProviderId={id}
+            matchStreamUrl={
+              data.match.streamUrl ??
+              data.match.homeTeam.streamUrl ??
+              data.match.visitorTeam.streamUrl
+            }
+          />
+        </FullWidthLayout>
       )}
       {/* Partido cerrado: mismo criterio que `!shouldUseLiveMatchPageLayout` cuando no es programado. */}
       {!isDevForcedLiveMatchPage(data.match.providerId) &&
@@ -749,7 +780,9 @@ export default async function PartidoPage({
           data.match.status,
           data.match.providerFixtureStatus,
         ) && (
-        <SportsRadarMatchPage matchProviderId={id} />
+        <FullWidthLayout>
+          <SportsRadarMatchPage matchProviderId={id} />
+        </FullWidthLayout>
       )}
       {/* SCHEDULED / RESCHEDULED y no cerrado: antes solo se cargaba preview si `status === SCHEDULED`. */}
       {!isDevForcedLiveMatchPage(data.match.providerId) &&
@@ -762,6 +795,8 @@ export default async function PartidoPage({
           homeTeamBoxScore={data.homeTeamBoxScore as { points: number; rebounds: number; assists: number; steals: number; blocks: number; turnovers: number }}
           visitorTeamBoxScore={data.visitorTeamBoxScore as { points: number; rebounds: number; assists: number; steals: number; blocks: number; turnovers: number }}
           headToHeadMatches={data.headToHeadMatches}
+          homeTeamWon={data.homeTeamWon ?? 0}
+          visitorTeamWon={data.visitorTeamWon ?? 0}
           homeTeamPointsLeaders={data.homeTeamPointsLeaders}
           homeTeamAssistsLeaders={data.homeTeamAssistsLeaders}
           homeTeamReboundsLeaders={data.homeTeamReboundsLeaders}
@@ -774,6 +809,8 @@ export default async function PartidoPage({
         <ScheduledMatchPage
           match={data.match}
           headToHeadMatches={data.headToHeadMatches}
+          homeTeamWon={data.homeTeamWon ?? 0}
+          visitorTeamWon={data.visitorTeamWon ?? 0}
           homeTeamPointsLeaders={data.homeTeamPointsLeaders}
           homeTeamAssistsLeaders={data.homeTeamAssistsLeaders}
           homeTeamReboundsLeaders={data.homeTeamReboundsLeaders}
