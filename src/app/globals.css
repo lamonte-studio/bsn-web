@@ -83,6 +83,15 @@ body {
 }
 
 /* Recent Calendar Slider */
+/* On touch devices: strip all transitions from slide contents so nothing
+ * competes with slick's translate3d during swipe (Tailwind's `transition`
+ * shorthand includes `transform`, which conflicts with slick animation). */
+@media (hover: none) {
+  .recent-calendar-slider .slick-slide * {
+    transition: none !important;
+  }
+}
+
 .recent-calendar-slider .slick-arrow {
   cursor: pointer;
   color: #0000;
