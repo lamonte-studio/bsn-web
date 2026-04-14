@@ -4,6 +4,7 @@ import { DEFAULT_MEDIA_PROVIDER } from '@/constants';
 import { MatchType } from '@/match/types';
 import {
   isCompletedMatchForUi,
+  isLiveMatchPageStatus,
   isScheduledMatchPageStatus,
 } from '@/match/utils/matchStatus';
 import RecentCalendarSlider from '@/match/client/components/slider/RecentCalendarSlider';
@@ -14,6 +15,7 @@ import CompletedMatchCard from '../components/card/CompletedMatchCard';
 import ScheduledMatchCard from '../components/card/ScheduledMatchCard';
 import { useRecentCalendar } from '../hooks/matches';
 import RecentCalendarDateItem from '../components/slider/RecentCalendarDateItem';
+import DefaultMatchCard from '../components/card/DefaultMatchCard';
 
 type DateItem = {
   type: 'date-item';
@@ -74,7 +76,10 @@ export default function RecentCalendarSliderWidget() {
   const initialSlide = useMemo(() => {
     const dateItemIndices = sortedMatches
       .map((item, idx) => ({ item, idx }))
-      .filter((entry): entry is { item: DateItem; idx: number } => entry.item.type === 'date-item');
+      .filter(
+        (entry): entry is { item: DateItem; idx: number } =>
+          entry.item.type === 'date-item',
+      );
 
     if (dateItemIndices.length === 0) return 0;
 
@@ -118,28 +123,24 @@ export default function RecentCalendarSliderWidget() {
           const match = item.data;
           return (
             <div key={`match-${match.providerId}`} className="px-[5px]">
-              {!isCompletedMatchForUi(
+              {isLiveMatchPageStatus(
                 match.status,
                 match.providerFixtureStatus,
-              ) &&
-                !isScheduledMatchPageStatus(
-                  match.status,
-                  match.providerFixtureStatus,
-                ) && (
-                  <LiveMatchCard
-                    matchProviderId={match.providerId}
-                    homeTeam={match.homeTeam}
-                    visitorTeam={match.visitorTeam}
-                    currentQuarter={match.currentPeriod}
-                    currentTime={match.currentTime}
-                    mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
-                    status={match.status}
-                    providerFixtureStatus={match.providerFixtureStatus}
-                    overtimePeriods={match.overtimePeriods}
-                    isFinals={match.isFinals}
-                    finalsDescription={match.finalsDescription}
-                  />
-                )}
+              ) && (
+                <LiveMatchCard
+                  matchProviderId={match.providerId}
+                  homeTeam={match.homeTeam}
+                  visitorTeam={match.visitorTeam}
+                  currentQuarter={match.currentPeriod}
+                  currentTime={match.currentTime}
+                  mediaProvider={match.channel || DEFAULT_MEDIA_PROVIDER}
+                  status={match.status}
+                  providerFixtureStatus={match.providerFixtureStatus}
+                  overtimePeriods={match.overtimePeriods}
+                  isFinals={match.isFinals}
+                  finalsDescription={match.finalsDescription}
+                />
+              )}
               {isCompletedMatchForUi(
                 match.status,
                 match.providerFixtureStatus,
@@ -157,7 +158,7 @@ export default function RecentCalendarSliderWidget() {
               {isScheduledMatchPageStatus(
                 match.status,
                 match.providerFixtureStatus,
-              ) && (
+              ) ? (
                 <ScheduledMatchCard
                   matchProviderId={match.providerId}
                   startAt={match.startAt}
@@ -167,6 +168,14 @@ export default function RecentCalendarSliderWidget() {
                   ticketUrl={match.homeTeam.ticketUrl}
                   isFinals={match.isFinals}
                   finalsDescription={match.finalsDescription}
+                />
+              ) : (
+                <DefaultMatchCard
+                  matchProviderId={match.providerId}
+                  startAt={match.startAt}
+                  homeTeam={match.homeTeam}
+                  visitorTeam={match.visitorTeam}
+                  status={match.status}
                 />
               )}
             </div>
