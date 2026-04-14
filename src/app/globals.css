@@ -895,25 +895,10 @@ a.sw-link.sw-leaders-top-person-entity.sw-link-active {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────────── */
-/* Site-wide hover & active states
- * Scoped to hover-capable devices (desktop) only — preserves touch/swipe behaviour
- * on mobile. CSS transitions on touch targets break react-slick's gesture detection.
+/* Site-wide hover & active states — desktop only.
+ * Scoped to (hover: hover) and (pointer: fine) so touch devices never trigger
+ * transitions during swipe, which conflict with slick's translate3d animation.
  * ─────────────────────────────────────────────────────────────────────────────────── */
-@media (hover: hover) and (pointer: fine) {
-  /* General links: visible opacity fade */
-  a:not(:has(.glass-match-card)) {
-    transition: opacity 0.12s ease;
-  }
-  a:not(:has(.glass-match-card)):hover {
-    opacity: 0.7;
-  }
-  a:not(:has(.glass-match-card)):active {
-    opacity: 0.45;
-  }
-
-/* Hover & active states — desktop only.
- * Scoped to (hover: hover) so touch devices never trigger :active transforms
- * during swipe, which conflict with slick's translate3d slider animation. */
 @media (hover: hover) and (pointer: fine) {
   /* General links: opacity fade */
   a:not(:has(.glass-match-card)) {
@@ -942,8 +927,7 @@ a.sw-link.sw-leaders-top-person-entity.sw-link-active {
     opacity: 0.8;
   }
 
-  /* Buttons: hover fade only — no transform:scale to avoid conflicting
-   * with slick translate3d on touch devices */
+  /* Buttons: hover fade only — no transform to avoid conflicting with slick */
   button {
     transition: opacity 0.15s ease, background-color 0.15s ease;
   }
@@ -965,7 +949,6 @@ a.sw-link.sw-leaders-top-person-entity.sw-link-active {
     transform: scale(1.06);
   }
 }
-
 
 /* Sportradar primary tabs */
 button.sw-sub-tabs-tab {
@@ -989,7 +972,6 @@ button.sw-sub-tabs-tab:not(.is-active):active {
 }
 .sw-multi-switch-item:not([data-sw-multiswitch-item-active="true"]):active {
   background-color: rgba(0, 0, 0, 0.18) !important;
-}
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────────── */
