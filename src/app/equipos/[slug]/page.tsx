@@ -53,6 +53,7 @@ const fetchTeam = async (code: string): Promise<TeamPageResponse> => {
   const { data, error } = await getClient().query<TeamPageResponse>({
     query: TEAM_DETAIL,
     variables: { code: code.toUpperCase() },
+    fetchPolicy: 'no-cache',
   });
 
   if (error) {
@@ -80,6 +81,7 @@ const fetchTeam = async (code: string): Promise<TeamPageResponse> => {
         code: team.code,
         first: 5,
       },
+      fetchPolicy: 'no-cache',
     });
 
   teamPageResponse.teamRecentCalendar =
@@ -94,6 +96,7 @@ const fetchTeam = async (code: string): Promise<TeamPageResponse> => {
         code: team.code,
         first: 3,
       },
+      fetchPolicy: 'no-cache',
     });
 
   teamPageResponse.teamUpcomingCalendar =
@@ -111,6 +114,7 @@ type CurrentSeasonResponse = {
 const fetchCurrentSeason = async (): Promise<SeasonType | null> => {
   const { data, error } = await getClient().query<CurrentSeasonResponse>({
     query: CURRENT_SEASON,
+    fetchPolicy: 'cache-first',
   });
 
   if (error) {
@@ -127,6 +131,7 @@ type LastSeasonResponse = {
 const fetchLastSeason = async (): Promise<SeasonType | null> => {
   const { data, error } = await getClient().query<LastSeasonResponse>({
     query: LAST_SEASON,
+    fetchPolicy: 'cache-first',
   });
 
   if (error) {
