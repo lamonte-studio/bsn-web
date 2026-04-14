@@ -83,38 +83,6 @@ body {
 }
 
 /* Recent Calendar Slider */
-/* Strip all transitions from slide contents unconditionally — some Android
- * browsers report (hover: hover) even on touch, so the media-query guard
- * was unreliable. Re-enable only border-color on desktop for hover effects. */
-.recent-calendar-slider .slick-slide * {
-  transition: none !important;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .recent-calendar-slider .slick-slide .glass-match-card {
-    transition: border-color 0.12s ease !important;
-  }
-}
-
-/* Real-device touch fix:
- * React-slick calls preventDefault() on touchmove to block page scroll during
- * horizontal swipes — but iOS Safari and modern Android Chrome mark touch
- * events as passive, silently ignoring preventDefault(). The result is that
- * page scroll and slider track translation fight each other, corrupting the
- * track position after a few swipes.
- * touch-action: pan-y tells the browser to own vertical panning natively and
- * hand horizontal movement to JS — no preventDefault() needed at all. */
-.recent-calendar-slider .slick-list {
-  touch-action: pan-y !important;
-}
-
-/* Promote the track to its own GPU layer so iOS compositing doesn't drop
- * or corrupt the translated layer mid-swipe. */
-.recent-calendar-slider .slick-track {
-  will-change: transform;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
 
 .recent-calendar-slider .slick-arrow {
   cursor: pointer;
