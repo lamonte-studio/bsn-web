@@ -586,7 +586,8 @@ span.sw-box-score-additional-persons-role {
 }
 
 /* Disable all links in the leaders widget */
-.sw-season-leaders a {
+.sw-season-leaders a.sw-leaders-non-leader-entity-name,
+.sw-season-leaders a.sw-leaders-top-person-entity {
   pointer-events: none !important;
   cursor: default !important;
 }
