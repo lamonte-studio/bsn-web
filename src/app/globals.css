@@ -58,7 +58,8 @@ body {
  * Only enable glass blur on fine pointer + hover-capable devices (typical desktop).
  */
 .glass-match-card {
-  background-color: rgba(54, 54, 54, 0.42);
+  background-color: rgba(54, 54, 54, 0.36);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
 }
 
 .glass-match-card-pill {
@@ -67,7 +68,7 @@ body {
 
 @media (hover: hover) and (pointer: fine) {
   .glass-match-card {
-    background-color: rgba(54, 54, 54, 0.3);
+    background-color: rgba(54, 54, 54, 0.26);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
   }
