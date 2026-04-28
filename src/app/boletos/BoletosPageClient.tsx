@@ -60,22 +60,24 @@ export default function BoletosPageClient({ teams }: Props) {
                   aria-label={`${team.fullName} — Comprar boletos`}
                 >
                   <div
-                    className="flex shrink-0 items-center justify-center bg-white"
+                    className="flex shrink-0 items-center justify-center bg-white w-[52px] h-[52px] md:w-[58px] md:h-[58px]"
                     style={{
-                      width: 58,
-                      height: 58,
                       borderRadius: '50%',
                       border: `1.5px solid ${team.borderColor}`,
                     }}
                   >
-                    <TeamLogoAvatar teamCode={team.code} size={38} />
+                    <div className="md:hidden">
+                      <TeamLogoAvatar teamCode={team.code} size={34} />
+                    </div>
+                    <div className="hidden md:block">
+                      <TeamLogoAvatar teamCode={team.code} size={38} />
+                    </div>
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div
-                      className="font-special-gothic-condensed-one"
+                      className="font-special-gothic-condensed-one text-[18px] md:text-[19px]"
                       style={{
-                        fontSize: 19,
                         lineHeight: 1.05,
                         letterSpacing: '0.020em',
                         color: '#0F171F',
@@ -84,10 +86,9 @@ export default function BoletosPageClient({ teams }: Props) {
                       {team.fullName}
                     </div>
                     <div
-                      className="font-barlow"
+                      className="font-barlow text-[12px] md:text-[13px]"
                       style={{
                         fontWeight: 400,
-                        fontSize: 13,
                         letterSpacing: '-0.010em',
                         color: '#717171',
                         marginTop: 4,
