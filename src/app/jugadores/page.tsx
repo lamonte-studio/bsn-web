@@ -88,9 +88,9 @@ export default async function JugadoresPage() {
     <FullWidthLayout
       divider
       subheader={
-        <section className="pt-8 pb-6 lg:pt-[50px] lg:pb-11">
+        <section className="hidden lg:block lg:pt-[50px] lg:pb-11">
           <div className="container">
-            <h1 className="font-special-gothic-condensed-one text-white text-center text-[38px] lg:text-[42px] tracking-[0.4px] mb-0">
+            <h1 className="font-special-gothic-condensed-one text-white text-center text-[42px] tracking-[0.4px] mb-0">
               Jugadores
             </h1>
           </div>

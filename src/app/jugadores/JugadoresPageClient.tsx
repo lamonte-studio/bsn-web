@@ -155,12 +155,17 @@ export default function JugadoresPageClient({ players }: Props) {
 
   return (
     <>
-      {/* Mobile filters — sit at the top of the white content area on small screens */}
-      <div className="bg-[#fdfdfd] lg:hidden">
-        <div className="container pt-6">
-          <div className="flex flex-col gap-3">
-            {searchInput(false)}
-            {teamDropdown(false)}
+      {/* Mobile hero — flat #0F171F continues seamlessly from the navbar's bg-bsn gradient end */}
+      <div className="bg-[#0F171F] border-b border-white/10 lg:hidden">
+        <div className="container">
+          <div className="pt-8 pb-6">
+            <h1 className="font-special-gothic-condensed-one text-white text-center text-[38px] tracking-[0.4px] mb-6">
+              Jugadores
+            </h1>
+            <div className="flex flex-col gap-3">
+              {searchInput(true)}
+              {teamDropdown(true)}
+            </div>
           </div>
         </div>
       </div>
@@ -174,7 +179,7 @@ export default function JugadoresPageClient({ players }: Props) {
             <div className="flex-1 min-w-0">
 
               {/* Count */}
-              <p className="font-barlow font-medium text-[13px] text-[rgba(15,23,31,0.7)] mb-[30px] lg:mb-[35px]">
+              <p className="font-barlow font-medium text-[14px] text-[rgba(15,23,31,0.7)] mb-[30px] lg:mb-[35px]">
                 Mostrando {visible.length} de {filtered.length} jugadores
               </p>
 

@@ -7,7 +7,7 @@ const TicketGlyph = ({ size = 28 }: { size?: number }) => (
 
 export default function BoletosHero() {
   return (
-    <section className="relative text-white text-center px-6 pt-[28px] pb-[56px] md:pt-[48px] md:pb-[60px]">
+    <section className="relative text-white text-center px-6 pt-[28px] pb-[56px] md:pt-[48px] md:pb-[90px]">
       <div className="relative mx-auto" style={{ maxWidth: 720 }}>
         <div
           className="mx-auto flex items-center justify-center w-[56px] h-[56px] md:w-[64px] md:h-[64px]"
@@ -22,7 +22,7 @@ export default function BoletosHero() {
           <TicketGlyph size={24} />
         </div>
         <h1
-          className="font-special-gothic-condensed-one text-white text-[34px] md:text-[64px] mt-[20px] md:mt-[24px]"
+          className="font-special-gothic-condensed-one text-white text-[34px] md:text-[61px] mt-[20px] md:mt-[24px]"
           style={{
             fontWeight: 400,
             lineHeight: 1.05,
@@ -32,7 +32,7 @@ export default function BoletosHero() {
           Vive la acción en vivo
         </h1>
         <p
-          className="font-barlow text-[14px] md:text-[17px] mt-[12px] md:mt-[14px]"
+          className="font-barlow text-[14px] md:text-[17px] mt-[12px] md:mt-[11px]"
           style={{
             fontWeight: 500,
             lineHeight: 1.5,

@@ -94,6 +94,7 @@ export default function TeamCalendarWidget({ teamCode }: Props) {
   };
 
   let lastDateKey = '';
+  let isFirstDateHeader = true;
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
@@ -146,14 +147,16 @@ export default function TeamCalendarWidget({ teamCode }: Props) {
             visibleMatches.map((match) => {
               const dateKey = moment(match.startAt).format('YYYY-MM-DD');
               const showHeader = dateKey !== lastDateKey;
+              const isFirstHeader = showHeader && isFirstDateHeader;
               if (showHeader) {
                 lastDateKey = dateKey;
+                isFirstDateHeader = false;
               }
 
               return (
                 <div key={`team-calendar-${match.providerId}`}>
                   {showHeader && (
-                    <div className="mb-2 hidden sm:block">
+                    <div className={`mb-[17px] hidden sm:block${isFirstHeader ? '' : ' md:mt-[16px]'}`}>
                       <p className="text-[20px] leading-normal text-black">
                         {formatDate(match.startAt, MATCH_DATE_FULL_FORMAT).toLowerCase()}
                       </p>
@@ -255,7 +258,7 @@ export default function TeamCalendarWidget({ teamCode }: Props) {
         {!loading &&
           visibleMatches.length > 0 &&
           visibleMatches.length < calendarMatches.length && (
-            <div className="mt-4 w-full">
+            <div className="mt-[26px] w-full">
               <button
                 type="button"
                 onClick={handleLoadMore}

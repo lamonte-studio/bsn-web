@@ -388,7 +388,7 @@ export default async function DetalleEquipoPage({
                       <TeamSeasonStatsWidget teamCode={data.team.code} />
                     </TabPanel>
                     <TabPanel>
-                      <div className="flex flex-row justify-between items-center mb-[30px]">
+                      <div className="flex flex-row justify-between items-center mb-[15px] md:mb-[30px]">
                         <div>
                           <h3 className="text-[22px] text-black md:text-[24px]">
                             Jugadores {currentSeason ? `- ${currentSeason.name}` : ''}
@@ -427,6 +427,7 @@ export default async function DetalleEquipoPage({
           </TabPanel>
         </TabPanels>
       </TabGroup>
+      <div className="hidden lg:block lg:h-[60px]" aria-hidden="true" />
     </FullWidthLayout>
   );
 }
